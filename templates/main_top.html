@@ -1,0 +1,27 @@
+<!-- JavaScript fuer BB-Code-Funktion -->
+<script src="<?PHP echo $tempdir; ?>javas.js" type="text/javascript"></script>
+<?php if ($settings['artikellightbox'] == 1): ?>
+<script src="<?PHP echo $subfolder; ?>01acp/system/js/mootools-core.js" type="text/javascript"></script>
+<script src="<?PHP echo $subfolder; ?>01acp/system/js/mootools-more.js" type="text/javascript"></script>
+<script src="<?PHP echo $subfolder; ?>01acp/system/js/mootools-remooz.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?PHP echo $subfolder; ?>01acp/system/js/mootools-remooz.css" />
+
+<script type="text/javascript">
+	window.addEvent('load', function() {
+	ReMooz.assign('#_01article a.lightbox', {
+		'origin': 'img',
+		'shadow': 'onOpenEnd', // fx is faster because shadow appears after resize animation
+		'resizeFactor': 0.9, // resize to maximum 80% of screen size
+		'cutOut': false, // don't hide the original
+		'opacityResize': 0.4, // opaque resize
+		'dragging': false, // disable dragging
+		'centered': true, // resize to center of the screen, not relative to the source element
+	});
+});
+</script>
+<?php endif; ?>
+<?php echo $echo_css; ?>
+
+<div id="_01article" class="box_out">
+
+<a name="01jumpartikel"></a>
