@@ -2,7 +2,7 @@
 <a name="01id<?php echo $row['id']; ?>"></a>
 
 <div class="artikel_self">
-	<div class="inner_box">
+	<div class="inner_box artikel_headline">
 		<h2 class="titel"><a href="<?PHP echo $system_link_row; ?>#01id<?PHP echo $row['id']; ?>" class="titel">
 			<?php if ($row['icon'] != 0): ?><img src="<?php echo $iconpf.$row['icon']; ?>" alt="Symbol-Icon" style="border:0;" /><?php endif; ?>
             <?php echo $titel; ?>
@@ -31,7 +31,7 @@
 		<?php endif; ?>
 	</div>
 	
-	<div class="inner_box footline_small">
+	<div class="inner_box artikel_footline footline_small">
 		<?PHP echo $row['hits']; ?> Views
 		<?php if(!empty($catname)): ?>
 			&bull;  Kategorien: <?PHP echo $catname; ?>
