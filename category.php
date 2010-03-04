@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2008 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel: Übersicht, Bearbeiten, Erstellen
-	#fv.3003#
+	#fv.3004#
 */
 
 // Berechtigungsabfragen
@@ -191,13 +191,6 @@ if(isset($_GET['do']) && $_GET['do'] == "editcatform" && isset($_GET['id']) && !
 <?PHP
         }
     }
-//Sicherheitsabfrage: Löschen
-elseif(isset($_GET['do']) && $_GET['do'] == "del1" && isset($_GET['id']) && !empty($_GET['id'])){
-    echo "<p class=\"meldung_frage\">
-		  Wollen Sie die Kategorie <i>\"".$_GET['catname']."\"</i> wirklich löschen?<br /><br />
-		  <a href=\"".$filename."&amp;do=del2&amp;id=".$_GET['id']."\">JA</a> | <a href=\"".$filename."\">NEIN</a>
-		  </p>";
-    }
 //Neue Kategorie anlegen
 else{
 ?>
@@ -274,9 +267,9 @@ while($row = mysql_fetch_array($list)){
 			  <td class=\"".$class."\" align=\"center\"><img src=\"images/icons/icon_delete.gif\" alt=\"L&ouml;schen - rotes X\" title=\"Eintrag l&ouml;schen\" class=\"fx_opener\" style=\"border:0; float:left;\" align=\"left\" /><div class=\"fx_content tr_red\" style=\"width:60px; display:none;\"><a href=\"#foo\" onclick=\"AjaxRequest.send('modul=".$modul."&ajaxaction=delcat&id=".$row['id']."');\">Ja</a> - <a href=\"#foo\">Nein</a></div></td>
           </tr>";
     }
-if($count == 1){ $class = "tra"; $count--; }else{ $class = "trb"; $count++; }
+
 echo "<tr>
-	<td align=\"center\" class=\"".$class."\"><input type=\"submit\" name=\"sort\" value=\"Sortieren\" class=\"input\" /></td>
+	<td align=\"center\"><input type=\"submit\" name=\"sort\" value=\"Sortieren\" class=\"input\" /></td>
 	<td colspan=\"4\">&nbsp;</td>
 </tr>";
 ?>
@@ -287,5 +280,4 @@ echo "<tr>
 <?PHP
 }else $flag_loginerror = true;
 
-// 01-Artikelsystem Copyright 2006-2008 by Michael Lorer - 01-Scripts.de
 ?>
