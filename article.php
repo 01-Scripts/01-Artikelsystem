@@ -501,7 +501,7 @@ if($flag_overview) $_REQUEST['action'] = $_REQUEST['who'];
 $subfolder		= "01scripts/"; // Unterverzeichnis<br />
 $modul			= "<?PHP echo $modul; ?>";<br />
 <br />
-$show['artid']	= <b class="red">ID</b> // ID der Seite, die angezeigt werden soll<br />
+$show['<?PHP echo $names['artid']; ?>']	= <b class="red">ID</b> // ID der Seite, die angezeigt werden soll<br />
 include($subfolder."01module/".$modul."/01article.php");<br />
 ?&gt;
 	</code>

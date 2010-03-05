@@ -107,7 +107,7 @@ return $form_data;
 * @param array $row
 * @return array
 
-RETURN: Array $input_fields mit $_POST-Werten
+RETURN: Array $input_fields mit Standardvorgabewerten / Werten aus DB
 */
 if(!function_exists("_01article_fillForm_DataArray")){
 function _01article_fillForm_DataArray($row=""){
@@ -424,5 +424,4 @@ return $add2query_cat;
 }
 }
 
-// 01-Artikelsystem Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
 ?>
