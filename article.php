@@ -28,6 +28,13 @@ else{
 	}
 if(!isset($_REQUEST['who'])) $_REQUEST['who'] = "";
 	
+// Notice: Undefined index: ... beheben
+if(!isset($_GET['search'])) 	$_GET['search'] = "";
+if(!isset($_GET['sort'])) 		$_GET['sort'] = "";
+if(!isset($_GET['orderby'])) 	$_GET['orderby'] = "";
+if(!isset($_GET['site'])) 		$_GET['site'] = "";
+if(!isset($_GET['catid']))		$_GET['catid'] = "";
+
 $add_filename 	= "&amp;search=".$_GET['search']."&amp;sort=".$_GET['sort']."&amp;orderby=".$_GET['orderby']."&amp;site=".$_GET['site']."";
 $flag_overview 	= FALSE;
 	
@@ -407,7 +414,7 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 		while($row = mysql_fetch_array($list)){			
 			$temp_uname = getUserdatafields($row['uid'],"username");
 			$form_data = _01article_fillForm_DataArray($row);
-			$form_data['username'] = $temp_uname;
+			$form_data['username'] = $temp_uname['username'];
 			}
 		
 		if($form_data['id'] > 0)
