@@ -134,6 +134,7 @@ if(isset($_POST['do']) && (isset($_POST['save']) || isset($_POST['publish'])) &&
 // NEUEN ARTIKEL / neue statische Seite anlegen (SPEICHERN)
 if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUEST['action'] == "newstatic")){
 	$flag_formular = TRUE;
+	$gotget = false;
 	
 	$input_do						= "save";
 	switch($_REQUEST['action']){
@@ -253,11 +254,12 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 				(Titel und Textfeld) ausgef&uuml;llt!</b></p>";
 
 		$form_data = _01article_getForm_DataArray();
+		$gotget = true;
 		}
 
 	// Formular ausgeben
 	if($flag_formular){
-		if(isset($_REQUEST['copyid']) && is_numeric($_REQUEST['copyid']) && $_REQUEST['copyid'] > 0){
+		if(isset($_REQUEST['copyid']) && is_numeric($_REQUEST['copyid']) && $_REQUEST['copyid'] > 0 && !$gotget){
 			$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($_REQUEST['copyid'])."' LIMIT 1";
 
 			$list = mysql_query($query);
@@ -267,7 +269,7 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 				$form_data['username']	= $userdata['username'];
 				}
 			}
-		elseif(!isset($form_data) || isset($form_data) && ($form_data['id'] <= 0 || empty($form_data['id']))){
+		elseif((!isset($form_data) || isset($form_data) && ($form_data['id'] <= 0 || empty($form_data['id']))) && !$gotget){
 			// Mit Standardwerten füllen
 			$form_data =  _01article_fillForm_DataArray();
 			$form_data['uid']		= $userdata['id'];
