@@ -1,6 +1,20 @@
 <?PHP
+// 3.0.0.3 --> 3.0.0.4
+if(isset($_REQUEST['update']) && $_REQUEST['update'] == "3003_zu_3004"){
+// Versionsnummer aktualisieren
+mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.4' WHERE idname = '".mysql_real_escape_string($modul)."' LIMIT 1");
+?>
+<h2>Update Version 3.0.0.3 nach 3.0.0.4</h2>
+
+<p class="meldung_erfolg">
+	Das Update von Version 3.0.0.3 auf Version 3.0.0.4 wurde erfolgreich durchgef&uuml;hrt.<br />
+	<br />
+	<a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a>
+</p>
+<?PHP
+	}
 // 3.0.0.2 --> 3.0.0.3
-if(isset($_REQUEST['update']) && $_REQUEST['update'] == "3002_zu_3003"){
+elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "3002_zu_3003"){
 // Artikel-Tabelle anpassem:
 mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` CHANGE `autozusammen` `autozusammen` TINYINT( 1 ) NULL");
 mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` CHANGE `top` `top` TINYINT( 1 ) NULL");
