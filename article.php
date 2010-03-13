@@ -335,7 +335,8 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 			$uidrow = mysql_fetch_array($list);
 			}
 		
-		if($userdata['editarticle'] == 2 || $userdata['editarticle'] == 1 && $userdata['id'] == $uidrow['uid']){
+		if($flag_static == 0 && $userdata['editarticle'] == 2 || $flag_static == 0 && $userdata['editarticle'] == 1 && $userdata['id'] == $uidrow['uid'] ||
+		   $flag_static == 1 && $userdata['staticarticle'] == 1){
 			// Anderen Autor für Artikel setzten
 			$autorid_q = "";
 			if($userdata['editarticle'] == 2){
