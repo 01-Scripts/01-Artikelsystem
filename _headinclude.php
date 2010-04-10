@@ -28,7 +28,8 @@ $iconpf 	= "images/icons/";		// Verzeichnis mit Icon-Dateien
 $tempdir	= "templates/";			// Template-Verzeichnis
 
 // Weitere Variablen
-$comment_desc = "DESC";				// Sortierreihenfolge der Kommentare
+$comment_desc	= "DESC";				// Sortierreihenfolge der Kommentare
+$ser_fields     = true;                 // Einfaches Hinzufügen von Feldern aktivieren
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
 
 // Language-Variablen
