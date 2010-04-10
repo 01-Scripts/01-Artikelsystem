@@ -29,7 +29,7 @@ $tempdir	= "templates/";			// Template-Verzeichnis
 
 // Weitere Variablen
 $comment_desc	= "DESC";				// Sortierreihenfolge der Kommentare
-$ser_fields     = true;                 // Einfaches Hinzufügen von Feldern aktivieren
+$ser_fields     = true;                 // Einfaches Hinzufügen von Feldern aktivieren Test
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
 
 // Language-Variablen
