@@ -111,6 +111,7 @@ RETURN: Array $input_fields mit Standardvorgabewerten / Werten aus DB
 */
 if(!function_exists("_01article_fillForm_DataArray")){
 function _01article_fillForm_DataArray($row=""){
+global $ser_fields;
 
 if(is_array($row)){
 	$form_data = array("id"				=> $row['id'],
@@ -138,6 +139,23 @@ if(is_array($row)){
 		$form_data['endtime_date'] = "";
 		$form_data['endtime_uhr'] = "00.00";
 		}
+		
+	// Get serialized data
+	if($ser_fields){
+		$return = unserialize($row['serialized_data']);
+
+		if(empty($return)){
+			for($x=1;$x<=ANZ_SER_FIELDS;$x++){
+				$form_data['ser_field_'.$x] = "";
+				}
+			}
+		else{
+			for($x=1;$x<=ANZ_SER_FIELDS;$x++){
+				$form_data['ser_field_'.$x] = htmlspecialchars(stripslashes($return['field_'.$x]));
+				}
+			}
+		}
+
 	}
 // Array mit Standardwerten füllen
 else{
@@ -154,6 +172,12 @@ $form_data = array("starttime_date"	=> date("d.m.Y"),
 				   "top"			=> 0,
 				   "hide_headline"	=> 1
 				  );
+
+	if($ser_fields){
+		for($x=1;$x<=ANZ_SER_FIELDS;$x++){
+			$form_data['ser_field_'.$x] = "";
+			}
+		}
 	}
 
 return $form_data;

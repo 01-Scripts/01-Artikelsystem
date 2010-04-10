@@ -126,6 +126,17 @@ if(isset($_POST['do']) && (isset($_POST['save']) || isset($_POST['publish'])) &&
 	
 	// Top
 	if(!isset($_POST['top']) || isset($_POST['top']) && empty($_POST['top'])) $_POST['top'] = 0;
+	
+	// Data2Serialize
+	if($ser_fields){
+		$ser_fieldarray = array();
+		for($x=1;$x<=ANZ_SER_FIELDS;$x++){
+			if(isset($_POST['ser_field_'.$x]) && !empty($_POST['ser_field_'.$x]))
+				$ser_fieldarray['field_'.$x] = addslashes($_POST['ser_field_'.$x]);
+			else
+				$ser_fieldarray['field_'.$x] = "";
+			}
+		}
 	}
 
 	
@@ -178,7 +189,7 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 			$autorid = $userdata['id'];
 			
 		//Eintragung in Datenbank vornehmen:
-		$sql_insert = "INSERT INTO ".$mysql_tables['artikel']." (timestamp,endtime,frei,hide,icon,titel,newscatid,text,autozusammen,zusammenfassung,comments,hide_headline,uid,static,top) VALUES (
+		$sql_insert = "INSERT INTO ".$mysql_tables['artikel']." (timestamp,endtime,frei,hide,icon,titel,newscatid,text,autozusammen,zusammenfassung,comments,hide_headline,uid,static,top,hits,serialized_data) VALUES (
 						'".$start_mysqldate."',
 						'".$ende_mysqldate."',
 						'".$frei."',
@@ -193,7 +204,9 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 						'".mysql_real_escape_string($_POST['hide_headline'])."',
 						'".$autorid."',
 						'".$flag_static."',
-						'".mysql_real_escape_string($_POST['top'])."'
+						'".mysql_real_escape_string($_POST['top'])."',
+						'0',
+						'".mysql_real_escape_string(serialize($ser_fieldarray))."'
 						)";
 		$result = mysql_query($sql_insert, $db) OR die(mysql_error());
 		$saved_id = mysql_insert_id();
@@ -357,7 +370,8 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 							zusammenfassung	= '".mysql_real_escape_string($zusammen)."',
 							comments		= '".$comments."',
 							hide_headline	= '".mysql_real_escape_string($_POST['hide_headline'])."',".$autorid_q."
-							top				= '".mysql_real_escape_string($_POST['top'])."'
+							top				= '".mysql_real_escape_string($_POST['top'])."',
+							serialized_data = '".mysql_real_escape_string(serialize($ser_fieldarray))."'
 							WHERE id = '".mysql_real_escape_string($_POST['id'])."'"))
 				$saved = TRUE;
 			else $saved = FALSE;

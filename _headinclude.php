@@ -31,6 +31,7 @@ $tempdir	= "templates/";			// Template-Verzeichnis
 $comment_desc	= "DESC";				// Sortierreihenfolge der Kommentare
 $ser_fields     = true;                 // Einfaches Hinzufügen von Feldern aktivieren Test
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
+define('ANZ_SER_FIELDS',25);            // Max. Anzahl an zusätzlichen Feldern für $ser_fields
 
 // Language-Variablen
 $lang['weiterlesen'] = " ...";

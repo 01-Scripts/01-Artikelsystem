@@ -284,7 +284,23 @@ else{
 		$static = $row['static'];
         $system_link_row = addParameter2Link($filename,$names['artid']."=".$row['id']."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
         
-        // artikel_self-Link
+		// Get serialized data
+		if($ser_fields){
+			$return_temp = unserialize($row['serialized_data']);
+
+			if(empty($return_temp)){
+				for($x=1;$x<=ANZ_SER_FIELDS;$x++){
+					$row['ser_field_'.$x] = "";
+					}
+				}
+			else{
+				for($x=1;$x<=ANZ_SER_FIELDS;$x++){
+					$row['ser_field_'.$x] = htmlspecialchars(stripslashes($return_temp['field_'.$x]));
+					}
+				}
+			}
+
+		// artikel_self-Link
         $artikeltext = str_replace("{artikel_self}",$system_link_row,$artikeltext);
 
         // ggf. Links zum vorherigen / nächsten Eintrag generieren
