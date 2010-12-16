@@ -29,6 +29,7 @@ $tempdir	= "templates/";			// Template-Verzeichnis
 
 // Weitere Variablen
 $comment_desc = "DESC";				// Sortierreihenfolge der Kommentare
+$server_domainname = $_SERVER['SERVER_NAME'];	// ggf. Abweichender Domainname für mod_rewrite (OHNE http://)
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
 
 // Language-Variablen

@@ -424,4 +424,90 @@ return $add2query_cat;
 }
 }
 
+
+
+
+
+
+
+
+// Artikellink als mod_rewrite oder ohne entsprechend generieren und ausgeben
+/* @params string $artid			ArtikelID
+ * @params string $arttitle			Artikelname (optional; wenn = "" --> wird aus DB geholt)
+ * @params string $domain			Domain (optional)
+
+RETURN: Entsprechend (mod_rewrite) formatierter Link an den weitere Parameter angehängt werden können
+  */
+if(!function_exists("_01article_echo_ArticleLink")){
+function _01article_echo_ArticleLink($artid,$arttitle="",$domain=$server_domainname){
+global $mysql_tables,$settings,$names;
+
+if($settings['modrewrite'] == 1){
+	// ggf. Artikeltitel holen
+	if($arttitle == ""){
+		$arttitel = _01article_getArtTitle($artid);
+		
+		return "http://".$domain."/"._01article_parseMod_rewriteLinks($arttitel).",".$artid.".html";
+		}
+	}
+else{
+	return addParameter2Link($_SERVER['PHP_SELF'],$names['artid']."=".$artid);
+	}
+
+}
+}
+
+
+
+
+
+
+
+
+// Artikelnamen aus DB holen
+/* @params string $artid			ArtikelID
+ * @return string					Artikel-Titel
+*/
+if(!function_exists("_01article_getArtTitle")){
+function _01article_getArtTitle($artid){
+global $mysql_tables;
+
+if(is_numeric($artid) && $artid != 0 && !empty($artid)){
+	$list = mysql_query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($artid)."'");
+	$row = mysql_fetch_assoc($list);
+	
+	return stripslashes($row['titel']);
+	}
+else return "";
+}
+}
+
+
+
+
+
+
+
+
+// Artikelnamen aus DB holen
+/* @params string $string			Zu parsender Link-String
+ * @return string					geparstert Link-String
+*/
+if(!function_exists("_01article_parseMod_rewriteLinks")){
+function _01article_parseMod_rewriteLinks($string){
+
+$string = strtolower($string);
+$string = str_replace("ä","ae",$string);
+$string = str_replace("ö","oe",$string);
+$string = str_replace("ü","ue",$string);
+$string = str_replace(" ","-",$string);
+$string = str_replace(",","_",$string);
+$string = str_replace("ß","ss",$string);
+$string = rawurlencode($string);
+
+return $string;
+
+}
+}
+
 ?>
