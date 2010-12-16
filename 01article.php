@@ -78,8 +78,8 @@ if(!isset($static))						$static						= 0;
 if(!isset($_POST['deaktiv_bbc']))		$_POST['deaktiv_bbc']		= 0;
 
 //Link-String generieren
-$system_link 		= addParameter2Link($filename,$names['artid']."=".$_GET[$names['artid']]."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
-$system_link_index 	= addParameter2Link($filename,$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
+$system_link 		= parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
+$system_link_index 	= parse_cleanerlinks(addParameter2Link($filename,$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
 $system_link_rss	= $subfolder."01module/".$modul."/01article.php";
 
 
@@ -282,7 +282,7 @@ else{
 		
         $titel = stripslashes($row['titel']);
 		$static = $row['static'];
-        $system_link_row = addParameter2Link($filename,$names['artid']."=".$row['id']."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
+        $system_link_row = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($row['id'],stripslashes($row['titel'])),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
         
         // artikel_self-Link
         $artikeltext = str_replace("{artikel_self}",$system_link_row,$artikeltext);
@@ -292,16 +292,14 @@ else{
 			$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
 		
 			$listnext = mysql_query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp > '".$row['timestamp']."' AND timestamp <= '".time()."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp LIMIT 1");
-            while($rownext = mysql_fetch_assoc($listnext)){
-                $next_link = addParameter2Link($filename,$names['artid']."=".$rownext['id']."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel");
-                $next_titel = stripslashes($rownext['titel']);
-                }
+            $rownext = mysql_fetch_assoc($listnext);
+            $next_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rownext['id'],stripslashes($rownext['titel'])),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
+            $next_titel = stripslashes($rownext['titel']);
 			
             $listprev = mysql_query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp < '".$row['timestamp']."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.")  ORDER BY timestamp DESC LIMIT 1");
-            while($rowprev = mysql_fetch_assoc($listprev)){
-                $prev_link = addParameter2Link($filename,$names['artid']."=".$rowprev['id']."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel");
-                $prev_titel = stripslashes($rowprev['titel']);
-                }
+            $rowprev = mysql_fetch_assoc($listprev);
+            $prev_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rowprev['id'],stripslashes($rowprev['titel'])),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
+            $prev_titel = stripslashes($rowprev['titel']);
             }
 
         // Template einbinden

@@ -439,15 +439,22 @@ return $add2query_cat;
 RETURN: Entsprechend (mod_rewrite) formatierter Link an den weitere Parameter angehängt werden können
   */
 if(!function_exists("_01article_echo_ArticleLink")){
-function _01article_echo_ArticleLink($artid,$arttitle="",$domain=$server_domainname){
-global $mysql_tables,$settings,$names;
+function _01article_echo_ArticleLink($artid,$arttitle="",$domain=""){
+global $mysql_tables,$settings,$names,$server_domainname;
 
 if($settings['modrewrite'] == 1){
-	// ggf. Artikeltitel holen
-	if($arttitle == ""){
-		$arttitel = _01article_getArtTitle($artid);
+	if(empty($artid) || $artid == 0){
+		return $_SERVER['PHP_SELF'];
+		}
+	else{
+		if(empty($domain)) $domain = $server_domainname;
 		
-		return "http://".$domain."/"._01article_parseMod_rewriteLinks($arttitel).",".$artid.".html";
+		// ggf. Artikeltitel holen
+		if($arttitle == ""){
+			$arttitel = _01article_getArtTitle($artid);
+			
+			return "http://".$domain."/"._01article_parseMod_rewriteLinks($arttitel).",".$artid.".html";
+			}
 		}
 	}
 else{
@@ -500,6 +507,10 @@ $string = strtolower($string);
 $string = str_replace("ä","ae",$string);
 $string = str_replace("ö","oe",$string);
 $string = str_replace("ü","ue",$string);
+$string = str_replace("&auml;","ae",$string);
+$string = str_replace("&ouml;","oe",$string);
+$string = str_replace("&uuml;","ue",$string);
+$string = str_replace("&amp;","und",$string);
 $string = str_replace(" ","-",$string);
 $string = str_replace(",","_",$string);
 $string = str_replace("ß","ss",$string);
