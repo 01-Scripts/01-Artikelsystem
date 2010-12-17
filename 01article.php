@@ -282,7 +282,7 @@ else{
 		
         $titel = stripslashes($row['titel']);
 		$static = $row['static'];
-        $system_link_row = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($row['id'],stripslashes($row['titel'])),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
+        $system_link_row = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['timestamp']),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
         
         // artikel_self-Link
         $artikeltext = str_replace("{artikel_self}",$system_link_row,$artikeltext);

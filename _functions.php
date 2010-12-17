@@ -432,14 +432,15 @@ return $add2query_cat;
 
 
 // Artikellink als mod_rewrite oder ohne entsprechend generieren und ausgeben
-/* @params string $artid			ArtikelID
- * @params string $arttitle			Artikelname (optional; wenn = "" --> wird aus DB geholt)
- * @params string $domain			Domain (optional)
+/* @params string	$artid				ArtikelID
+ * @params string 	$arttitle			Artikelname (optional; wenn = "" --> wird aus DB geholt)
+ * @params int		$timestamp			Datums-Timestamp
+ * @params string	$domain				Domain (optional)
 
 RETURN: Entsprechend (mod_rewrite) formatierter Link an den weitere Parameter angehängt werden können
   */
 if(!function_exists("_01article_echo_ArticleLink")){
-function _01article_echo_ArticleLink($artid,$arttitle="",$domain=""){
+function _01article_echo_ArticleLink($artid,$arttitle="",$timestamp="",$domain=""){
 global $mysql_tables,$settings,$names,$server_domainname;
 
 if($settings['modrewrite'] == 1){
@@ -450,16 +451,19 @@ if($settings['modrewrite'] == 1){
 		if(empty($domain)) $domain = $server_domainname;
 		
 		// ggf. Artikeltitel holen
-		if($arttitle == ""){
-			$arttitel = _01article_getArtTitle($artid);
+		if($arttitle == "")
+			$arttitle = _01article_getArtTitle($artid);
 			
-			return "http://".$domain."/"._01article_parseMod_rewriteLinks($arttitel).",".$artid.".html";
-			}
+		// Timestamp vorhanden & verwenden?
+		if(!empty($timestamp) && is_numeric($timestamp) && $timestamp > 0)
+		    $adddate = date("Y/m/d/",$timestamp);
+		else $adddate = "";
+			
+		return "http://".$domain."/".$adddate._01article_parseMod_rewriteLinks($arttitle).",".$artid.".html";
 		}
 	}
-else{
+else
 	return addParameter2Link($_SERVER['PHP_SELF'],$names['artid']."=".$artid);
-	}
 
 }
 }
