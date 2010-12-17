@@ -45,7 +45,7 @@
 <?php if (isset($ssearch) && $ssearch >= 1 && !$z): ?>
     <tr>
         <td align="center" colspan="3" valign="top">
-		<b><a href="<?PHP echo addParameter2Link($filename,$names['catid']."=&amp;".$names['search']."="); ?>">Zur&uuml;ck zu allen Artikeln</a></b>
+		<b><a href="<?PHP echo parse_cleanerlinks(addParameter2Link($filename,$names['catid']."=&amp;".$names['search']."=")); ?>">Zur&uuml;ck zu allen Artikeln</a></b>
         </td>
     </tr>
 <?php endif; ?>
@@ -80,21 +80,21 @@
            
 <?php if (!empty($settings['archiv_time']) && $settings['archiv_time'] > 0 && $_GET[$names['artid']] != "archiv"): ?>
             <td align="center" valign="top">
-              <a href="<?PHP echo addParameter2Link($filename,$names['artid']."=archiv&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"); ?>">Archiv</a>
+              <a href="<?PHP echo parse_cleanerlinks(addParameter2Link($filename,$names['artid']."=archiv&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel")); ?>">Archiv</a>
             </td>
 <?php elseif (isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv"): ?>
             <td align="center" valign="top">
-              <a href="<?PHP echo addParameter2Link($filename,$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"); ?>">Aktuell</a>
+              <a href="<?PHP echo parse_cleanerlinks(addParameter2Link($filename,$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel")); ?>">Aktuell</a>
             </td>
 <?php endif; ?>
 
 <?php if ($settings['rss_aktiv'] == 1): ?>
             <td align="left" valign="top">
 	<?php if ($settings['artikelrssfeedaktiv'] == 1): ?>
-              <a href="<?PHP echo addParameter2Link($system_link_rss,$names['rss']."=show_rssfeed&amp;modul=".$modul); ?>" target="_blank"><img src="<?PHP echo $basicdir; ?>images/icon_rss.gif" alt="RSS-Feed (Eintr&auml;ge) abonnieren" title="RSS2.0-Feed" style="border:0;" /> Eintr&auml;ge</a><br />
+              <a href="<?PHP echo parse_cleanerlinks(addParameter2Link($system_link_rss,$names['rss']."=show_rssfeed&amp;modul=".$modul)); ?>" target="_blank"><img src="<?PHP echo $basicdir; ?>images/icon_rss.gif" alt="RSS-Feed (Eintr&auml;ge) abonnieren" title="RSS2.0-Feed" style="border:0;" /> Eintr&auml;ge</a><br />
 	<?php endif; ?>
 	<?php if ($settings['artikelkommentarfeed'] == 1): ?>
-              <a href="<?PHP echo addParameter2Link($system_link_rss,$names['rss']."=show_commentrssfeed&amp;modul=".$modul); ?>" target="_blank"><img src="<?PHP echo $basicdir; ?>images/icon_rss.gif" alt="RSS-Feed (Eintr&auml;ge) abonnieren" title="RSS2.0-Feed" style="border:0;" /> Kommentare</a>
+              <a href="<?PHP echo parse_cleanerlinks(addParameter2Link($system_link_rss,$names['rss']."=show_commentrssfeed&amp;modul=".$modul)); ?>" target="_blank"><img src="<?PHP echo $basicdir; ?>images/icon_rss.gif" alt="RSS-Feed (Eintr&auml;ge) abonnieren" title="RSS2.0-Feed" style="border:0;" /> Kommentare</a>
 	<?php endif; ?>
             </td>
 <?php endif; ?>
