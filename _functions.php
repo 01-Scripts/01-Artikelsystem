@@ -455,9 +455,10 @@ if($settings['modrewrite'] == 1){
 			$arttitle = _01article_getArtTitle($artid);
 			
 		// Timestamp vorhanden & verwenden?
+		/*
 		if(!empty($timestamp) && is_numeric($timestamp) && $timestamp > 0)
 		    $adddate = date("Y/m/d/",$timestamp);
-		else $adddate = "";
+		else*/ $adddate = "";
 			
 		return "http://".$domain."/".$adddate._01article_parseMod_rewriteLinks($arttitle).",".$artid.".html";
 		}
