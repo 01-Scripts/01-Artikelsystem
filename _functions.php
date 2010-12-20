@@ -186,6 +186,9 @@ else
 	$limit = $settings['artikelrssanzahl'];
 
 	
+$mod = get_html_translation_table(HTML_ENTITIES);
+$mod = array_flip($mod);
+
 // RSS-Feed für KOMMENTARE
 if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentarfeed'] == 1){
 	// Newstitel in Array einlesen (um MySQL-Abfragen zu verringern)
@@ -208,7 +211,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 		$echotext = bb_code_comment($echotext,1,1,0);
 		
 		$write_text .= "<item>
-  <title>Neuer Kommentar zu ".$arttitel[$row['postid']]."</title>
+  <title>Neuer Kommentar zu ".str_replace("&","&amp;",strtr($arttitel[$row['postid']],$mod))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext."]]></description>
   <author>".stripslashes(str_replace("&","&amp;",$row['autor']))."</author>
@@ -235,9 +238,6 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 	else
 		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') ORDER BY timestamp DESC LIMIT ".$limit."";
 	
-	$mod = get_html_translation_table(HTML_ENTITIES);
-	$mod = array_flip($mod);
-
 	$list = mysql_query($query);
 	while($row = mysql_fetch_assoc($list)){
 
