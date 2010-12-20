@@ -174,7 +174,7 @@ RETURN: RSS-XML-Daten
 */
 if(!function_exists("_01article_RSS")){
 function _01article_RSS($show,$entrynrs,$cats){
-global $mysql_tables,$settings,$modul,$names,$lang;
+global $mysql_tables,$settings,$modul,$names,$lang,$server_domainname;
 
 $rssdata = create_RSSFramework($settings['artikelrsstitel'],$settings['artikelrsstargeturl'],$settings['artikelrssbeschreibung']);
 $write_text = "";
@@ -197,7 +197,9 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 	$list = mysql_query("SELECT postid,timestamp,autor,comment FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY timestamp DESC LIMIT ".mysql_real_escape_string($settings['artikelrssanzahl'])."");
 	while($row = mysql_fetch_assoc($list)){
 
-		if(substr_count($settings['artikelrsstargeturl'], "?") < 1)
+		if($settings['modrewrite'] == 1)
+			$echolink = _01article_echo_ArticleLink($row['postid'],$arttitel[$row['postid']],$row['timestamp']);
+		elseif(substr_count($settings['artikelrsstargeturl'], "?") < 1)
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['postid']."#01id".$row['postid'];
 		else
 			$echolink = str_replace("&","&amp;",$settings['artikelrsstargeturl'])."&amp;".$names['artid']."=".$row['postid']."#01id".$row['postid'];	
@@ -239,7 +241,9 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 	$list = mysql_query($query);
 	while($row = mysql_fetch_assoc($list)){
 
-		if(substr_count($settings['artikelrsstargeturl'], "?") < 1)
+		if($settings['modrewrite'] == 1)
+			$echolink = _01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['timestamp']);
+		elseif(substr_count($settings['artikelrsstargeturl'], "?") < 1)
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['id']."#01id".$row['id'];
 		else
 			$echolink = str_replace("&","&amp;",$settings['artikelrsstargeturl'])."&amp;".$names['artid']."=".$row['id']."#01id".$row['id'];

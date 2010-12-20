@@ -30,13 +30,14 @@ Achten Sie dabei auf die genaue Bezeichnung (es wird KEINE Endung verwendet)!</p
 
 <code>
 RewriteEngine On<br />
-..
+RewriteRule ^(.*),([0-9]+).html$ /<b>includepage.php</b>?<?php echo $names['artid']; ?>=$2#01id$2 [L]
 </code>
+
+<p><b>includepage.php</b> durch den entsprechenden Dateinamen ersetzen.</p>
 
 <p>Speichern Sie die Datei und aktivieren Sie die mod_rewrite-Funktion in den Einstellungen.<br />
 Danach sollten sog. "sprechende" Links zur Verf&uuml;gung stehen.</p>
 
 <?PHP
 	}
-
 ?>
