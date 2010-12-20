@@ -7,7 +7,7 @@
 	Modul:		01article
 	Dateiinfo: 	Modulspezifische Grundeinstellungen, Variablendefinitionen etc.
 				Wird automatisch am Anfang jeden Modulaufrufs automatisch includiert.
-	#fv.3003#
+	#fv.3010#
 */
 
 // Modul-Spezifische MySQL-Tabellen
@@ -43,7 +43,4 @@ $names['page']		= "page";
 $names['cpage']		= "cpage";
 $names['rss']		= "rss";		//Bei Änderung ist zusätzlich eine manuelle Änderung in 01article.php Zeile 31 nötig!
 
-
-
-// 01-Artikelsystem Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
 ?>
