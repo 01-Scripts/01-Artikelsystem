@@ -101,7 +101,7 @@
 
 <?php if (isset($sites) && $sites > 1): ?>
             <td align="center" valign="top">
-              <form action="<?PHP echo $filename; ?>#01jumpartikel" method="post">
+              <form action="<?PHP echo $filename; ?>#01jumpartikel" method="get">
               <select name="<?PHP echo $names['page']; ?>" size="1" class="input_selectfield">
               <?PHP echo $option_sites; ?>
               </select> <input type="submit" value="Go" class="input_button" />
