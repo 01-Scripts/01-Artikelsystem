@@ -78,8 +78,8 @@ if(!isset($static))						$static						= 0;
 if(!isset($_POST['deaktiv_bbc']))		$_POST['deaktiv_bbc']		= 0;
 
 //Link-String generieren
-$system_link 		= addParameter2Link($filename,$names['artid']."=".$_GET[$names['artid']]."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
-$system_link_index 	= addParameter2Link($filename,$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
+$system_link 		= addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
+$system_link_index 	= parse_cleanerlinks(addParameter2Link($filename,$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
 $system_link_rss	= $subfolder."01module/".$modul."/01article.php";
 
 
@@ -282,7 +282,7 @@ else{
 		
         $titel = stripslashes($row['titel']);
 		$static = $row['static'];
-        $system_link_row = addParameter2Link($filename,$names['artid']."=".$row['id']."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
+        $system_link_row = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['timestamp']),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
         
 		// Get serialized data
 		if($ser_fields){
@@ -307,17 +307,15 @@ else{
         if(isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) && $_GET[$names['artid']] != "archiv" && $row['static'] == 0){
 			$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
 		
-			$listnext = mysql_query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp > '".$row['timestamp']."' AND timestamp <= '".time()."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp LIMIT 1");
-            while($rownext = mysql_fetch_assoc($listnext)){
-                $next_link = addParameter2Link($filename,$names['artid']."=".$rownext['id']."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel");
-                $next_titel = stripslashes($rownext['titel']);
-                }
+			$listnext = mysql_query("SELECT id,timestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp > '".$row['timestamp']."' AND timestamp <= '".time()."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp LIMIT 1");
+            $rownext = mysql_fetch_assoc($listnext);
+            $next_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rownext['id'],stripslashes($rownext['titel']),$rownext['timestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
+            $next_titel = stripslashes($rownext['titel']);
 			
-            $listprev = mysql_query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp < '".$row['timestamp']."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.")  ORDER BY timestamp DESC LIMIT 1");
-            while($rowprev = mysql_fetch_assoc($listprev)){
-                $prev_link = addParameter2Link($filename,$names['artid']."=".$rowprev['id']."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel");
-                $prev_titel = stripslashes($rowprev['titel']);
-                }
+            $listprev = mysql_query("SELECT id,timestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp < '".$row['timestamp']."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.")  ORDER BY timestamp DESC LIMIT 1");
+            $rowprev = mysql_fetch_assoc($listprev);
+            $prev_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rowprev['id'],stripslashes($rowprev['titel']),$rowprev['timestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
+            $prev_titel = stripslashes($rowprev['titel']);
             }
 
         // Template einbinden
@@ -410,8 +408,8 @@ else{
                 if(isset($_GET[$names['cpage']]) && $_GET[$names['cpage']] > 1){
                     $c_sz = $_GET[$names['cpage']]-1;
                     if($c_sz > 1)
-						$c_szl1 = addParameter2Link($filename,$names['artid']."=".$_GET[$names['artid']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=1&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments");
-                    $c_szl2 = addParameter2Link($filename,$names['artid']."=".$_GET[$names['artid']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$c_sz."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments");
+						$c_szl1 = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=1&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments"));
+                    $c_szl2 = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$c_sz."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments"));
                     }
                 else{ $c_szl1 = ""; $c_szl2 = ""; }
                 
@@ -426,9 +424,9 @@ else{
                     }
                 
 				if(isset($_GET[$names['cpage']]) && $_GET[$names['cpage']] < $comment_sites || !isset($_GET[$names['cpage']]) && $comment_sites > 1){
-                    $c_svl1 = addParameter2Link($filename,$names['artid']."=".$_GET[$names['artid']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$c_sv."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments");
+                    $c_svl1 = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$c_sv."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments"));
                     if($c_sv != $comment_sites)
-						$c_svl2 = addParameter2Link($filename,$names['artid']."=".$_GET[$names['artid']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$comment_sites."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments");
+						$c_svl2 = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$comment_sites."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments"));
                     }
                 else{ $c_svl1 = ""; $c_svl2 = ""; }
                 }
@@ -441,7 +439,7 @@ else{
 			if($settings['commentfreischaltung'] == 0) $jumpto = "01comment".$jumpto_id; else $jumpto = "01jumpcomments";
             if($comment_desc == "") $jumpto_csite = "last"; else $jumpto_csite = "1";
 			
-            $system_link_form = addParameter2Link($filename,$names['artid']."=".$_GET[$names['artid']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$jumpto_csite."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments_add");
+            $system_link_form = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$jumpto_csite."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments_add"));
 
 
             if($row['comments'] == 1 && $settings['comments'] == 1){
@@ -469,10 +467,10 @@ if($sites > 1){
         $sz = $_REQUEST[$names['page']]-1;
 
         if($sz != 1)
-			$szl1 = addParameter2Link($filename,$names['page']."=1&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel");
+			$szl1 = parse_cleanerlinks(addParameter2Link($filename,$names['page']."=1&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel"));
 		else $szl1 = "";
 
-		$szl2 = addParameter2Link($filename,$names['page']."=".$sz."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel");
+		$szl2 = parse_cleanerlinks(addParameter2Link($filename,$names['page']."=".$sz."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel"));
         }
     else{ $szl1 = ""; $szl2 = ""; }
 	
@@ -487,9 +485,9 @@ if($sites > 1){
     
 	if(isset($_REQUEST[$names['page']]) && $_REQUEST[$names['page']] < $sites || !isset($_REQUEST[$names['page']]) && $sites > 1){
         
-		$svl1 = addParameter2Link($filename,$names['page']."=".$sv."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel"); 
+		$svl1 = parse_cleanerlinks(addParameter2Link($filename,$names['page']."=".$sv."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel")); 
         if($sv != $sites) 
-			$svl2 = addParameter2Link($filename,$names['page']."=".$sites."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel"); 
+			$svl2 = parse_cleanerlinks(addParameter2Link($filename,$names['page']."=".$sites."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']].$flag_archiv."#01jumpartikel"));
         }
     else{
 		$svl1 = "";
@@ -497,7 +495,7 @@ if($sites > 1){
 
 		if(isset($_REQUEST[$names['page']]) && $_REQUEST[$names['page']] == $sites &&
 		   !empty($settings['archiv_time']) && $settings['archiv_time'] > 0 && $_GET[$names['artid']] != "archiv")
-			$svl2a = "<a href=\"".addParameter2Link($filename,$names['artid']."=archiv&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel")."\">Archiv &raquo;</a>";
+			$svl2a = "<a href=\"".parse_cleanerlinks(addParameter2Link($filename,$names['artid']."=archiv&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"))."\">Archiv &raquo;</a>";
 		}
     }
 
@@ -543,6 +541,4 @@ $iconpf		= "images/icons/";
 $query		= "";
 
 //mysql_close();
-
-// 01-Artikelsystem Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
 ?>

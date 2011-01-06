@@ -198,7 +198,7 @@ RETURN: RSS-XML-Daten
 */
 if(!function_exists("_01article_RSS")){
 function _01article_RSS($show,$entrynrs,$cats){
-global $mysql_tables,$settings,$modul,$names,$lang;
+global $mysql_tables,$settings,$modul,$names,$lang,$server_domainname;
 
 $rssdata = create_RSSFramework($settings['artikelrsstitel'],$settings['artikelrsstargeturl'],$settings['artikelrssbeschreibung']);
 $write_text = "";
@@ -210,6 +210,9 @@ else
 	$limit = $settings['artikelrssanzahl'];
 
 	
+$mod = get_html_translation_table(HTML_ENTITIES);
+$mod = array_flip($mod);
+
 // RSS-Feed für KOMMENTARE
 if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentarfeed'] == 1){
 	// Newstitel in Array einlesen (um MySQL-Abfragen zu verringern)
@@ -221,7 +224,9 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 	$list = mysql_query("SELECT postid,timestamp,autor,comment FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY timestamp DESC LIMIT ".mysql_real_escape_string($settings['artikelrssanzahl'])."");
 	while($row = mysql_fetch_assoc($list)){
 
-		if(substr_count($settings['artikelrsstargeturl'], "?") < 1)
+		if($settings['modrewrite'] == 1)
+			$echolink = _01article_echo_ArticleLink($row['postid'],$arttitel[$row['postid']],$row['timestamp']);
+		elseif(substr_count($settings['artikelrsstargeturl'], "?") < 1)
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['postid']."#01id".$row['postid'];
 		else
 			$echolink = str_replace("&","&amp;",$settings['artikelrsstargeturl'])."&amp;".$names['artid']."=".$row['postid']."#01id".$row['postid'];	
@@ -230,7 +235,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 		$echotext = bb_code_comment($echotext,1,1,0);
 		
 		$write_text .= "<item>
-  <title>Neuer Kommentar zu ".$arttitel[$row['postid']]."</title>
+  <title>Neuer Kommentar zu ".str_replace("&","&amp;",strtr($arttitel[$row['postid']],$mod))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext."]]></description>
   <author>".stripslashes(str_replace("&","&amp;",$row['autor']))."</author>
@@ -257,13 +262,12 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 	else
 		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') ORDER BY timestamp DESC LIMIT ".$limit."";
 	
-	$mod = get_html_translation_table(HTML_ENTITIES);
-	$mod = array_flip($mod);
-
 	$list = mysql_query($query);
 	while($row = mysql_fetch_assoc($list)){
 
-		if(substr_count($settings['artikelrsstargeturl'], "?") < 1)
+		if($settings['modrewrite'] == 1)
+			$echolink = _01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['timestamp']);
+		elseif(substr_count($settings['artikelrsstargeturl'], "?") < 1)
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['id']."#01id".$row['id'];
 		else
 			$echolink = str_replace("&","&amp;",$settings['artikelrsstargeturl'])."&amp;".$names['artid']."=".$row['id']."#01id".$row['id'];
@@ -445,6 +449,108 @@ if($catids != NULL){
 		$add2query_cat = " newscatid LIKE '%,".mysql_real_escape_string($catids).",%' ";
 	}
 return $add2query_cat;
+}
+}
+
+
+
+
+
+
+
+
+// Artikellink als mod_rewrite oder ohne entsprechend generieren und ausgeben
+/* @params string	$artid				ArtikelID
+ * @params string 	$arttitle			Artikelname (optional; wenn = "" --> wird aus DB geholt)
+ * @params int		$timestamp			Datums-Timestamp
+ * @params string	$domain				Domain (optional)
+
+RETURN: Entsprechend (mod_rewrite) formatierter Link an den weitere Parameter angehängt werden können
+  */
+if(!function_exists("_01article_echo_ArticleLink")){
+function _01article_echo_ArticleLink($artid,$arttitle="",$timestamp="",$domain=""){
+global $mysql_tables,$settings,$names,$server_domainname;
+
+if($settings['modrewrite'] == 1){
+	if(empty($artid) || $artid == 0){
+		return $_SERVER['PHP_SELF'];
+		}
+	else{
+		if(empty($domain)) $domain = $server_domainname;
+		
+		// ggf. Artikeltitel holen
+		if($arttitle == "")
+			$arttitle = _01article_getArtTitle($artid);
+			
+		// Timestamp vorhanden & verwenden?
+		/*
+		if(!empty($timestamp) && is_numeric($timestamp) && $timestamp > 0)
+		    $adddate = date("Y/m/d/",$timestamp);
+		else*/ $adddate = "";
+			
+		return "http://".$domain."/".$adddate._01article_parseMod_rewriteLinks($arttitle).",".$artid.".html";
+		}
+	}
+else
+	return addParameter2Link($_SERVER['PHP_SELF'],$names['artid']."=".$artid);
+
+}
+}
+
+
+
+
+
+
+
+
+// Artikelnamen aus DB holen
+/* @params string $artid			ArtikelID
+ * @return string					Artikel-Titel
+*/
+if(!function_exists("_01article_getArtTitle")){
+function _01article_getArtTitle($artid){
+global $mysql_tables;
+
+if(is_numeric($artid) && $artid != 0 && !empty($artid)){
+	$list = mysql_query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($artid)."'");
+	$row = mysql_fetch_assoc($list);
+	
+	return stripslashes($row['titel']);
+	}
+else return "";
+}
+}
+
+
+
+
+
+
+
+
+// Artikelnamen aus DB holen
+/* @params string $string			Zu parsender Link-String
+ * @return string					geparstert Link-String
+*/
+if(!function_exists("_01article_parseMod_rewriteLinks")){
+function _01article_parseMod_rewriteLinks($string){
+
+$string = strtolower($string);
+$string = str_replace("ä","ae",$string);
+$string = str_replace("ö","oe",$string);
+$string = str_replace("ü","ue",$string);
+$string = str_replace("&auml;","ae",$string);
+$string = str_replace("&ouml;","oe",$string);
+$string = str_replace("&uuml;","ue",$string);
+$string = str_replace("&amp;","und",$string);
+$string = str_replace(" ","-",$string);
+$string = str_replace(",","_",$string);
+$string = str_replace("ß","ss",$string);
+$string = rawurlencode($string);
+
+return $string;
+
 }
 }
 

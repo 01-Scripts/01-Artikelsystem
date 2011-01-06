@@ -4,12 +4,12 @@
 <p align="center" class="page_text"><b class="highlight">
 	<?php if (isset($message) && $message == 1): ?>
 	Ihr Kommentar wurde erfolgreich hinzugef&uuml;gt und wird so schnell wie m&ouml;glich freigeschaltet.<br />
-	Bitte klicken Sie <a href="<?PHP echo $system_link; ?>&amp;<?php echo $names['cpage']; ?>=<?PHP echo $jumpto_csite; ?>#<?PHP echo $jumpto; ?>">hier</a>.
+	Bitte klicken Sie <a href="<?PHP echo parse_cleanerlinks(addParameter2Link($system_link,$names['cpage']."=".$jumpto_csite."#".$jumpto)); ?>">hier</a>.
 	<?php elseif (isset($message) && $message == 2): ?>
 	Ihr Kommentar wurde erfolgreich hinzugef&uuml;gt.<br />
-	Bitte klicken Sie <a href="<?PHP echo $system_link; ?>&amp;<?php echo $names['cpage']; ?>=<?PHP echo $jumpto_csite; ?>#<?PHP echo $jumpto; ?>">hier</a>.
+	Bitte klicken Sie <a href="<?PHP echo parse_cleanerlinks(addParameter2Link($system_link,$names['cpage']."=".$jumpto_csite."#".$jumpto)); ?>">hier</a>.
 	<?php elseif (isset($message) && $message == 3): ?>
-	Sie haben vor kurzem bereits einen Kommentar abgegeben. Bitte klicken Sie <a href="<?PHP echo $system_link; ?>#01jumpcomments_add">hier</a>
+	Sie haben vor kurzem bereits einen Kommentar abgegeben. Bitte klicken Sie <a href="<?PHP echo parse_cleanerlinks($system_link); ?>#01jumpcomments_add">hier</a>
 	<?php elseif (isset($message) && $message == 4): ?>
 	Sie haben nicht alle ben&ouml;tigten Felder (Name, Kommentar, Spamschutz) ausgef&uuml;llt,<br />
 	oder Ihr Kommentar wurde vom Anti-Spam-System blockiert!
