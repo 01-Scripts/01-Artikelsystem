@@ -1,10 +1,10 @@
--- 01-Artikelsystem V3 - Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
+-- 01-Artikelsystem V3 - Copyright 2006-2011 by Michael Lorer - 01-Scripts.de
 -- Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 -- Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
 -- Modul:		01article
 -- Dateiinfo:	SQL-Befehle für die Erstinstallation des Artikelsystems V3
--- #fv.3003#
+-- #fv.310#
 --  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  *  *
 
 -- --------------------------------------------------------
@@ -53,11 +53,11 @@ INSERT INTO 01prefix_settings (modul,is_cat,catid,sortid,idname,name,exp,formena
 -- 
 
 INSERT INTO 01prefix_menue (name,link,modul,sicherheitslevel,rightname,rightvalue,sortorder,subof,hide) VALUES 
-('<b>Neuen Artikel schreiben</b>', '_loader.php?modul=#modul_idname#&amp;action=newarticle&amp;loadpage=article', '#modul_idname#', '1', 'newarticle', '1', '1', '', '0'),
-('Artikel bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=articles&amp;loadpage=article', '#modul_idname#', '1', 'editarticle', '1', '2', '', '0'),
-('Artikel bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=articles&amp;loadpage=article', '#modul_idname#', '1', 'editarticle', '2', '2', '', '0'),
-('Neue statische Seite', '_loader.php?modul=#modul_idname#&amp;action=newstatic&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '1', '3', '', '0'),
-('Statische Seiten', '_loader.php?modul=#modul_idname#&amp;action=statics&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '1', '4', '', '0'),
+('<b>Neuen Artikel schreiben</b>', '_loader.php?modul=#modul_idname#&amp;action=newarticle&amp;loadpage=article', '#modul_idname#', '1', 'newarticle', '1', '1', '0', '0'),
+('Artikel bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=articles&amp;loadpage=article', '#modul_idname#', '1', 'editarticle', '1', '2', '0', '0'),
+('Artikel bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=articles&amp;loadpage=article', '#modul_idname#', '1', 'editarticle', '2', '2', '0', '0'),
+('Neue statische Seite', '_loader.php?modul=#modul_idname#&amp;action=newstatic&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '1', '3', '0', '0'),
+('Statische Seiten', '_loader.php?modul=#modul_idname#&amp;action=statics&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '1', '4', '0', '0'),
 ('Kategorien verwalten', '_loader.php?modul=#modul_idname#&amp;action=&amp;loadpage=category', '#modul_idname#', '1', 'editcats', '1', '5', '0', '0'),
 ('Kommentare verwalten', 'comments.php?modul=#modul_idname#', '#modul_idname#', '1', 'editcomments', '1', '6', '0', '0');
 
@@ -119,7 +119,7 @@ CREATE TABLE `01modulprefix_article` (
   `top` tinyint(1),
   `hits` int(10) default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM AUTO_INCREMENT=2 ;
 
 -- 
 -- Daten für Tabelle `01prefix_article`
@@ -141,11 +141,9 @@ CREATE TABLE `01modulprefix_articlecategory` (
   `catpic` varchar(15),
   `sortid` int(5) NOT NULL DEFAULT '1',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 
 
 -- --------------------------------------------------------
 
 COMMIT;
-
--- 01-Artikelsystem V3 Copyright 2006-2008 by Michael Lorer - 01-Scripts.de
