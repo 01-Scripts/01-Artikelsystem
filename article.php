@@ -285,8 +285,10 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 			$list = mysql_query($query);
 			while($row = mysql_fetch_array($list)){
 				$form_data =  _01article_fillForm_DataArray($row);
-				$form_data['uid']		= $userdata['id'];
-				$form_data['username']	= $userdata['username'];
+				$form_data['uid']				= $userdata['id'];
+				$form_data['username']			= $userdata['username'];
+				$form_data['starttime_date']	= date("d.m.Y");
+				$form_data['starttime_uhr']		= date("G.i");
 				}
 			}
 		elseif((!isset($form_data) || isset($form_data) && ($form_data['id'] <= 0 || empty($form_data['id']))) && !$gotget){
