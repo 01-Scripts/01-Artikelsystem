@@ -17,6 +17,9 @@
 		'dragging': false, // disable dragging
 		'centered': true // resize to center of the screen, not relative to the source element
 	});
+
+	document.getElementById('addcomment<?PHP echo $modul; ?>').style.display = 'none';
+	document.getElementById('addcomment<?PHP echo $modul; ?>_link').style.display = 'block';
 });
 </script>
 <?php endif; ?>

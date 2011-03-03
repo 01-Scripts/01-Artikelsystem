@@ -17,8 +17,10 @@
 </b></p>
 <?php endif; ?>
 
+<p id="addcomment<?PHP echo $modul; ?>_link" style="display: none;" class="page_text"><a href="javascript:hide_unhide('addcomment<?PHP echo $modul; ?>'); hide_unhide('addcomment<?PHP echo $modul; ?>_link');">Kommentar schreiben &darr;</a></p>
+
 <form action="<?PHP echo $system_link_form; ?>" method="post" name="post">
-<table align="center" class="page_text commentaddbox">
+<table align="center" class="page_text commentaddbox" id="addcomment<?PHP echo $modul; ?>">
 
 	<tr>
 		<td colspan="2"><h2><label for="input_comment">Kommentar</label> hinzuf&uuml;gen</h2></td>
