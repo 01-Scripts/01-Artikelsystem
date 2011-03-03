@@ -6,7 +6,7 @@
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel-Formular
-	#fv.3003#
+	#fv.310#
 */
 
 echo loadTinyMCE("advanced","","","","top");
@@ -31,21 +31,6 @@ der bestehende Artikel wird dabei nicht ver&auml;ndert.</p>
     <tr>
         <td class="tra" width="35%"><b>Datum &amp; Uhrzeit (Start)</b></td>
         <td class="tra" valign="bottom"><input type="text" name="starttime_date" value="<?PHP echo $form_data['starttime_date']; ?>" class="DatePicker" size="10" /> - <input type="text" name="starttime_uhr" value="<?PHP echo $form_data['starttime_uhr']; ?>" size="5" /> Uhr</td>
-    </tr>
-
-    <tr>
-        <td class="tra"><b>Test 1</b></td>
-        <td class="tra" valign="bottom"><input type="text" name="ser_field_1" value="<?PHP echo $form_data['ser_field_1']; ?>"  size="10" /></td>
-    </tr>
-    
-    <tr>
-        <td class="tra"><b>Test 2</b></td>
-        <td class="tra" valign="bottom"><input type="text" name="ser_field_2" value="<?PHP echo $form_data['ser_field_2']; ?>"  size="10" /></td>
-    </tr>
-    
-    <tr>
-        <td class="tra"><b>Test 3</b></td>
-        <td class="tra" valign="bottom"><input type="text" name="ser_field_3" value="<?PHP echo $form_data['ser_field_3']; ?>"  size="10" /></td>
     </tr>
 	
     <tr>

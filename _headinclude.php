@@ -1,13 +1,13 @@
 <?PHP
 /*
-	01-Artikelsystem V3 - Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2011 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
 	Modul:		01article
 	Dateiinfo: 	Modulspezifische Grundeinstellungen, Variablendefinitionen etc.
 				Wird automatisch am Anfang jeden Modulaufrufs automatisch includiert.
-	#fv.3010#
+	#fv.310#
 */
 
 // Modul-Spezifische MySQL-Tabellen
@@ -29,7 +29,7 @@ $tempdir	= "templates/";			// Template-Verzeichnis
 
 // Weitere Variablen
 $comment_desc	= "DESC";				// Sortierreihenfolge der Kommentare
-$ser_fields     = true;                 // Einfaches Hinzufügen von Feldern aktivieren Test
+$ser_fields     = false;                 // Einfaches Hinzufügen von Feldern aktivieren
 $server_domainname = $_SERVER['SERVER_NAME'];	// ggf. Abweichender Domainname für mod_rewrite (OHNE http://)
 
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
