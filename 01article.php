@@ -52,6 +52,9 @@ include_once($moduldir.$modulvz."_functions.php");
 $iconpf 	= $moduldir.$modulvz.$iconpf;			// Verzeichnis mit Icon-Dateien
 $tempdir	= $moduldir.$modulvz.$tempdir;			// Template-Verzeichnis
 
+// Language-File einbinden
+include_once($tempdir."lang_vars.php");
+
 $filename = $_SERVER['PHP_SELF'];
 $sites = 0;
 $qt = 0;
@@ -178,14 +181,33 @@ if(mysql_num_rows($list) == 0) $iderror = 1;
 if(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !empty($settings['archiv_time']) && $settings['archiv_time'] > 0 && is_numeric($settings['archiv_time'])){
     include($tempdir."archiv_top.html");
     
+	$round = 1;
 	while($row = mysql_fetch_assoc($list)){
-        $datum = date("d.m.y",$row['timestamp'])." ".date("G:i",$row['timestamp']);
+        if($round == 1){
+        	$archiv_year = date("Y",$row['timestamp']);
+			$archiv_month = date("n",$row['timestamp']);
+			
+			include($tempdir."archiv_top_year.html");
+			include($tempdir."archiv_top_month.html");
+		}
+		
+		if($archiv_year != date("Y",$row['timestamp'])){
+			$archiv_year = date("Y",$row['timestamp']);
+			include($tempdir."archiv_top_year.html");
+			}
+		if($archiv_month != date("n",$row['timestamp'])){
+			$archiv_month = date("n",$row['timestamp']);
+			include($tempdir."archiv_top_month.html");
+			}
+		
+		$datum = date("d.m.y",$row['timestamp']).", ".date("G:i",$row['timestamp']);
         $titel = stripslashes($row['titel']);
 		
         $username_array = getUserdatafields($row['uid'],"username");
 		$autor = stripslashes($username_array['username']);
 		
         include($tempdir."archiv_bit.html");
+        $round++;
         }
 		
     include($tempdir."archiv_bottom.html");
