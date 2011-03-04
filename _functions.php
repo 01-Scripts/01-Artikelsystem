@@ -49,27 +49,12 @@ $modul = mysql_real_escape_string($modul);
 mysql_query("DROP TABLE `".$mysql_tables['artikel']."`");
 mysql_query("DROP TABLE `".$mysql_tables['cats']."`");
 
-// Modul-Eintrag entfernen
-mysql_query("DELETE FROM ".$mysql_tables['module']." WHERE idname = '".$modul."' LIMIT 1");
-
-// Menü-Einträge entfernen
-mysql_query("DELETE FROM ".$mysql_tables['menue']." WHERE modul = '".$modul."'");
-
-// Settings entfernen
-mysql_query("DELETE FROM ".$mysql_tables['settings']." WHERE modul = '".$modul."'");
-
 // Rechte entfernen
-mysql_query("DELETE FROM ".$mysql_tables['rights']." WHERE modul = '".$modul."'");
-mysql_query("DELETE FROM ".$mysql_tables['rights']." WHERE modul = '01acp' AND idname = '".$modul."' LIMIT 1");
 mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_newarticle`");
 mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_editarticle`");
 mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_staticarticle`");
 mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_freischaltung`");
 mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_editcats`");
-mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `01acp_".$modul."`");
-
-// ACP-Startseite ggf zurücksetzen
-mysql_query("UPDATE ".$mysql_tables['user']." SET startpage = '01acp' WHERE startpage = '".$modul."'");
 
 return TRUE;
 }
