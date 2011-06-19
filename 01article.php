@@ -68,17 +68,26 @@ if(!isset($_REQUEST[$names['search']]) && isset($show['search']) && !empty($show
 if(!isset($_REQUEST[$names['page']]) && isset($show['page']) && !empty($show['page'])) $_REQUEST[$names['page']] = $show['page'];
 if(!isset($_GET[$names['artid']]) && isset($show['artid']) && !empty($show['artid'])) $_GET[$names['artid']] = $show['artid'];
 
-// Notice: Undefined index: ... beheben
+// Notice: Undefined index: ... beheben & strip_tags auf übergebene Werte anwenden (Anti-XSS)
 if(!isset($_REQUEST[$names['search']])) $_REQUEST[$names['search']] = "";
+else $_REQUEST[$names['search']]		= strip_tags($_REQUEST[$names['search']]);
 if(!isset($_REQUEST[$names['page']])) 	$_REQUEST[$names['page']] 	= "";
+else $_REQUEST[$names['page']]			= strip_tags($_REQUEST[$names['page']]);
 if(!isset($_REQUEST[$names['catid']])) 	$_REQUEST[$names['catid']] 	= "";
+else $_REQUEST[$names['catid']]			= strip_tags($_REQUEST[$names['catid']]);
 if(!isset($_REQUEST[$names['cpage']])) 	$_REQUEST[$names['cpage']] 	= "";
+else $_REQUEST[$names['cpage']]			= strip_tags($_REQUEST[$names['cpage']]);
 if(!isset($_REQUEST[$names['rss']])) 	$_REQUEST[$names['rss']] 	= "";
+else $_REQUEST[$names['rss']]			= strip_tags($_REQUEST[$names['rss']]);
 if(!isset($_GET[$names['artid']])) 		$_GET[$names['artid']] 		= "";
+else $_GET[$names['artid']]				= strip_tags($_GET[$names['artid']]);
 if(!isset($_GET[$names['cpage']])) 		$_GET[$names['cpage']] 		= "";
+else $_GET[$names['cpage']]				= strip_tags($_GET[$names['cpage']]);
 if(!isset($_GET[$names['rss']])) 		$_GET[$names['rss']] 		= "";
+else $_GET[$names['rss']]				= strip_tags($_GET[$names['rss']]);
 if(!isset($static))						$static						= 0;
 if(!isset($_POST['deaktiv_bbc']))		$_POST['deaktiv_bbc']		= 0;
+else $_POST['deaktiv_bbc']				= strip_tags($_POST['deaktiv_bbc']);
 
 //Link-String generieren
 $system_link 		= addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
@@ -94,6 +103,7 @@ if(isset($_GET[$names['rss']]) && ($_GET[$names['rss']] == "show_rssfeed" || $_G
    $settings['rss_aktiv'] == 1 && ($settings['artikelrssfeedaktiv'] == 1 || $settings['artikelkommentarfeed'] == 1)){
 	
 	if(!isset($_GET['entries'])) $_GET['entries'] = "";
+	else $_GET['entries'] = strip_tags($_GET['entries']);
 	
 	header("Content-type: text/xml");
 	echo _01article_RSS($_GET[$names['rss']],$_GET['entries'],$_REQUEST[$names['catid']]);
@@ -361,7 +371,18 @@ else{
             //Template einbinden
             include($tempdir."comments_head.html");
 
-            $message = 0;
+            // Anti-XSS
+            if(isset($_POST['send_comment']))	$_POST['send_comment']		= strip_tags($_POST['send_comment']);
+            if(isset($_POST['modul_comment']))	$_POST['modul_comment']		= strip_tags($_POST['modul_comment']);
+            if(isset($_POST['autor']))			$_POST['autor']				= strip_tags($_POST['autor']);
+            if(isset($_POST['email']))			$_POST['email']				= strip_tags($_POST['email']);
+            if(isset($_POST['url']))			$_POST['url']				= strip_tags($_POST['url']);
+            if(isset($_POST['comment']))		$_POST['comment']			= strip_tags($_POST['comment']);
+            if(isset($_POST['antispam']))		$_POST['antispam']			= strip_tags($_POST['antispam']);
+            if(isset($_POST['deaktiv_bbc']))	$_POST['deaktiv_bbc']		= strip_tags($_POST['deaktiv_bbc']);
+            if(isset($_POST['uid']))			$_POST['uid']				= strip_tags($_POST['uid']);
+			
+			$message = 0;
             // Neuen Kommentar hinzufügen
             if(isset($_POST['send_comment']) && $_POST['send_comment'] == 1 &&
 			   isset($_POST['modul_comment']) && $_POST['modul_comment'] == $modul){
@@ -566,5 +587,4 @@ $tempdir	= "templates/";
 $iconpf		= "images/icons/";
 $query		= "";
 
-//mysql_close();
 ?>
