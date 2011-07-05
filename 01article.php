@@ -374,7 +374,7 @@ else{
             // Anti-XSS
             if(isset($_POST['send_comment']))	$_POST['send_comment']		= strip_tags($_POST['send_comment']);
             if(isset($_POST['modul_comment']))	$_POST['modul_comment']		= strip_tags($_POST['modul_comment']);
-            if(isset($_POST['autor']))			$_POST['autor']				= strip_tags($_POST['autor']);
+            if(isset($_POST['autor']))			$_POST['autor']				= filter_var($_POST['autor'],FILTER_SANITIZE_SPECIAL_CHARS);
             if(isset($_POST['email']))			$_POST['email']				= strip_tags($_POST['email']);
             if(isset($_POST['url']))			$_POST['url']				= strip_tags($_POST['url']);
             if(isset($_POST['comment']))		$_POST['comment']			= strip_tags($_POST['comment']);
