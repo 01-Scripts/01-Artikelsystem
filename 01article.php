@@ -159,7 +159,10 @@ else{
 	else $qt_query = "";
 	
     if(isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]) && $settings['artikelsuche'] == 1){
-		$parsed_searchstring = mysql_real_escape_string(parse_uml(str_replace("*","%",$_REQUEST[$names['search']])));
+		if($flag_utf8)
+			$parsed_searchstring = mysql_real_escape_string(parse_uml(utf8_decode(str_replace("*","%",$_REQUEST[$names['search']]))));
+		else
+			$parsed_searchstring = mysql_real_escape_string(parse_uml(str_replace("*","%",$_REQUEST[$names['search']])));
 		$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
         $add2query = "AND (titel LIKE '%".$parsed_searchstring."%' OR text LIKE '%".$parsed_searchstring."%' OR zusammenfassung LIKE '%".$parsed_searchstring."%') AND (".$add2query_cat.")";
 		}
