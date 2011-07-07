@@ -88,6 +88,7 @@ else $_GET[$names['rss']]				= strip_tags($_GET[$names['rss']]);
 if(!isset($static))						$static						= 0;
 if(!isset($_POST['deaktiv_bbc']))		$_POST['deaktiv_bbc']		= 0;
 else $_POST['deaktiv_bbc']				= strip_tags($_POST['deaktiv_bbc']);
+if(!isset($_GET[$names['page']]) || isset($_GET[$names['page']]) && $_GET[$names['page']] != $_REQUEST[$names['page']]) $_GET[$names['page']] = $_REQUEST[$names['page']];  
 
 //Link-String generieren
 $system_link 		= addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
