@@ -5,8 +5,8 @@
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
-	Dateiinfo: 	Frontend-Ausgabe
-	#fv.3010#
+	Dateiinfo: 	Frontend-Ausgabe 01-Artikelsystem
+	#fv.310#
 */
 
 //Hinweis zum Einbinden des Artikelsystems per include();
@@ -24,9 +24,9 @@ include($subfolder."01module/".$modul."01article.php");
 $frontp = 1;
 $flag_acp = FALSE;
 $flag_archiv = "";
-if(!isset($flag_utf8)) $flag_utf8 = FALSE;
-if(!isset($flag_nocss)) $flag_nocss = FALSE;
-if(!isset($flag_second)) $flag_second = FALSE;
+if(!isset($flag_utf8))		$flag_utf8 = FALSE;
+if(!isset($flag_nocss))		$flag_nocss = FALSE;
+if(!isset($flag_second))	$flag_second = FALSE;
 
 @ini_set('session.use_trans_sid',0);
 
@@ -294,7 +294,7 @@ else{
 	        else
 				$artikeltext = "<p>".substr(strip_tags(stripslashes($row['text'])),0,$settings['artikeleinleitungslaenge']).$lang['weiterlesen']."</p>";
 
-			// Weiterlesen-Link nur einbinden, wenn Text länger als zusammenfassung oder eigener Text eingebunden wurde
+			// Weiterlesen-Link nur einbinden, wenn Text länger als Zusammenfassung oder eigener Text eingegeben wurde
 			if($row['autozusammen'] == 0 && !empty($row['zusammenfassung']) || 
 			   strlen($artikeltext) < strlen(stripslashes($row['text'])))
 				$more = 1;

@@ -24,16 +24,16 @@ $loadfile['article'] 	= "article.php";
 $loadfile['category']	= "category.php";
 
 // Weitere Pfadangaben
-$iconpf 	= "images/icons/";		// Verzeichnis mit Icon-Dateien
-$tempdir	= "templates/";			// Template-Verzeichnis
+$iconpf 	= "images/icons/";					// Verzeichnis mit Icon-Dateien
+$tempdir	= "templates/";						// Template-Verzeichnis
 
 // Weitere Variablen
-$comment_desc	= "DESC";				// Sortierreihenfolge der Kommentare
-$ser_fields     = false;                 // Einfaches Hinzufügen von Feldern aktivieren
+$comment_desc	= "DESC";				 		// Sortierreihenfolge der Kommentare
+$ser_fields     = FALSE;                 		// Einfaches Hinzufügen von Feldern aktivieren
 $server_domainname = $_SERVER['SERVER_NAME'];	// ggf. Abweichender Domainname für mod_rewrite (OHNE http://)
 
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
-define('ANZ_SER_FIELDS',25);            // Max. Anzahl an zusätzlichen Feldern für $ser_fields
+define('ANZ_SER_FIELDS',25);            		// Max. Anzahl an zusätzlichen Feldern für $ser_fields
 
 // Language-Variablen
 $lang['weiterlesen'] = " ...";

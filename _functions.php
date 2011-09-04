@@ -229,10 +229,9 @@ $write_text = "";
 
 // LIMIT
 if(isset($entrynrs) && is_numeric($entrynrs) && $entrynrs > 0)
-	$limit = mysql_real_escape_string($entrynrs);
+	$limit = mysql_real_escape_string(strip_tags($entrynrs));
 else
-	$limit = $settings['artikelrssanzahl'];
-
+	$limit = $settings['artikelrssanzahl'];	
 	
 $mod = get_html_translation_table(HTML_ENTITIES);
 $mod = array_flip($mod);
