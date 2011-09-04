@@ -150,6 +150,9 @@ if($settings['artikeleinleitung'] >= 1 && $settings['artikeleinleitungslaenge'] 
     <tr>
         <td class="trb" colspan="2"><input type="checkbox" name="top" value="1"<?PHP if($form_data['top'] == 1){ echo " checked=\"checked\""; } ?> /> Artikel oben anpinnen</td>
     </tr>
+    <tr>
+        <td class="trb" colspan="2"><input type="checkbox" name="hide_signature" value="1"<?PHP if($form_data['hide_signature'] == 1){ echo " checked=\"checked\""; } ?> /> Signatur bei diesem Artikel nicht anzeigen</td>
+    </tr>
 <?PHP
 		}
 	if($settings['comments'] == 1 && $settings['artikelcomments'] == 1){
@@ -208,5 +211,4 @@ if($form_data['autozusammen'] == 1)
 hide_unhide_tr('zeditor');
 </script>";
 
-// 01-Artikelsystem Copyright 2006-2009 by Michael Lorer - 01-Scripts.de
 ?>

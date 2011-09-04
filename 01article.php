@@ -311,7 +311,7 @@ else{
         // Weitere Variablen für die Template-Ausgabe aufbereiten
         $username_array = getUserdatafields($row['uid'],"username,01acp_signatur");
 		$username = stripslashes($username_array['username']);
-		if(!empty($username_array['signatur']) && $more == 0)
+		if(!empty($username_array['signatur']) && $more == 0 && $row['hide_signature'] == 0)
 			$signatur = "<p class=\"signatur\">".nl2br(stripslashes(str_replace("&","&amp;",$username_array['signatur'])))."</p>";
 		else
 			$signatur = "";

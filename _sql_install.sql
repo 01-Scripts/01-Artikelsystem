@@ -118,6 +118,7 @@ CREATE TABLE `01modulprefix_article` (
   `static` tinyint(1),
   `top` tinyint(1),
   `hits` int(10) default '0',
+  `hide_signature` tinyint(1) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 ;
 

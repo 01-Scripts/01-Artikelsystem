@@ -125,11 +125,15 @@ if(isset($_POST['do']) && (isset($_POST['save']) || isset($_POST['publish'])) &&
 	if(!isset($_POST['hide_headline'])) $_POST['hide_headline'] = 0;
 	
 	// Top
-	if(!isset($_POST['top']) || isset($_POST['top']) && empty($_POST['top'])) $_POST['top'] = 0;
+	if(!isset($_POST['top']) || isset($_POST['top']) && (empty($_POST['top']) || !is_numeric($_POST['top']))) $_POST['top'] = 0;
+	
+	// Signatur ausblenden
+	if($_REQUEST['action'] == "newstatic") $_POST['hide_signature'] = 0; 
+	elseif(!isset($_POST['hide_signature']) || isset($_POST['hide_signature']) && (empty($_POST['hide_signature']) || !is_numeric($_POST['hide_signature']))) $_POST['hide_signature'] = 0;
 	
 	// Data2Serialize
+	$ser_fieldarray = array();
 	if($ser_fields){
-		$ser_fieldarray = array();
 		for($x=1;$x<=ANZ_SER_FIELDS;$x++){
 			if(isset($_POST['ser_field_'.$x]) && !empty($_POST['ser_field_'.$x]))
 				$ser_fieldarray['field_'.$x] = addslashes($_POST['ser_field_'.$x]);
@@ -189,7 +193,7 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 			$autorid = $userdata['id'];
 			
 		//Eintragung in Datenbank vornehmen:
-		$sql_insert = "INSERT INTO ".$mysql_tables['artikel']." (timestamp,endtime,frei,hide,icon,titel,newscatid,text,autozusammen,zusammenfassung,comments,hide_headline,uid,static,top,hits,serialized_data) VALUES (
+		$sql_insert = "INSERT INTO ".$mysql_tables['artikel']." (timestamp,endtime,frei,hide,icon,titel,newscatid,text,autozusammen,zusammenfassung,comments,hide_headline,uid,static,top,hits,hide_signature,serialized_data) VALUES (
 						'".$start_mysqldate."',
 						'".$ende_mysqldate."',
 						'".$frei."',
@@ -206,6 +210,7 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 						'".$flag_static."',
 						'".mysql_real_escape_string($_POST['top'])."',
 						'0',
+						'".mysql_real_escape_string($_POST['hide_signature'])."',
 						'".mysql_real_escape_string(serialize($ser_fieldarray))."'
 						)";
 		$result = mysql_query($sql_insert, $db) OR die(mysql_error());
@@ -373,6 +378,7 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 							comments		= '".$comments."',
 							hide_headline	= '".mysql_real_escape_string($_POST['hide_headline'])."',".$autorid_q."
 							top				= '".mysql_real_escape_string($_POST['top'])."',
+							hide_signature	= '".mysql_real_escape_string($_POST['hide_signature'])."',
 							serialized_data = '".mysql_real_escape_string(serialize($ser_fieldarray))."'
 							WHERE id = '".mysql_real_escape_string($_POST['id'])."'"))
 				$saved = TRUE;

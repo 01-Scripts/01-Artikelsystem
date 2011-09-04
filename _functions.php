@@ -149,7 +149,8 @@ if(is_array($row)){
 					   "zusammenfassung"=> stripslashes($row['zusammenfassung']),
 					   "hide_headline"	=> $row['hide_headline'],
 					   "top"			=> $row['top'],
-					   "uid"			=> $row['uid']
+					   "uid"			=> $row['uid'],
+					   "hide_signature" => $row['hide_signature']
 					  );
 	
 	if($row['comments'] == 1) $form_data['comments'] = 0;
@@ -194,7 +195,8 @@ $form_data = array("starttime_date"	=> date("d.m.Y"),
 				   "zusammenfassung"=> "",
 				   "comments" 		=> 0,
 				   "top"			=> 0,
-				   "hide_headline"	=> 1
+				   "hide_headline"	=> 1,
+				   "hide_signature" => 0
 				  );
 
 	if($ser_fields){
