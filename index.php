@@ -34,7 +34,7 @@
 	<h4>5 neueste Artikel</h4>
 
 	<?PHP
-	$query = "SELECT id,titel,text FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND timestamp < '".time()."' AND (endtime = '0' OR endtime < '".time()."') ORDER BY timestamp DESC LIMIT 5";
+	$query = "SELECT id,titel,text FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND timestamp < '".time()."' AND (endtime = '0' OR endtime >= '".time()."') ORDER BY timestamp DESC LIMIT 5";
 	$list = mysql_query($query);
 	while($row = mysql_fetch_array($list)){
 		echo "<p><b><a href=\"_loader.php?modul=".$modul."&amp;loadpage=article&amp;action=edit&amp;id=".$row['id']."&amp;static=0\">".stripslashes($row['titel'])."</a></b><br />
