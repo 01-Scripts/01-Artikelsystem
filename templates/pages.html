@@ -1,7 +1,7 @@
 <table align="center" class="table_page page_text">
 <?php if (isset($sites) && $sites > 1 && $row['static'] == 0): ?>
     <tr>
-        <td align="center" width="33%" valign="top">
+        <td align="center" style="width:33%" valign="top">
 	        <?php if (isset($szl1) && !empty($szl1)): ?>
 				<a href="<?php echo $szl1; ?>">&laquo; 1</a>
 			<?php endif; ?>
@@ -9,10 +9,10 @@
 				<a href="<?php echo $szl2; ?>">&laquo; Zur Seite <?php echo $sz; ?></a>
 			<?php endif; ?>
         </td>
-        <td align="center" width="33%" valign="top">
+        <td align="center" style="width:33%" valign="top">
             <b><?PHP echo $current; ?>/<?PHP echo $sites; ?></b>
         </td>
-        <td align="center" width="33%" valign="top">
+        <td align="center" style="width:33%" valign="top">
 			<?php if (isset($sv) && $sv <= $sites): ?>
 				<a href="<?php echo $svl1; ?>">Zur Seite <?php echo $sv; ?> &raquo;</a>
 	        <?php endif; ?>
@@ -20,32 +20,6 @@
 				<a href="<?php echo $svl2; ?>"><?php echo $sites; ?>&raquo;</a>
 			<?php endif; ?>
 			<?php echo $svl2a; ?>
-        </td>
-    </tr>
-<?php endif; ?>
-
-<?php if (isset($iderror) && $iderror == 1 && (!isset($searcherror) || isset($searcherror) && $searcherror != 1)): ?>
-    <tr>
-        <td align="center" colspan="3" valign="top">
-        <b>Fehler:</b> Es existiert kein zur übergebenen ID passender Artikel!<br />
-        <a href="<?PHP echo $filename; ?>#01jumpartikel">Zur Startseite</a>
-        </td>
-    </tr>
-<?php endif; ?>
-
-<?php if (isset($searcherror) && $searcherror == 1): ?>
-    <tr>
-        <td align="center" colspan="3" valign="top">
-        <b>Fehler:</b> Ihre Suche nach <i><?PHP echo stripslashes($_REQUEST[$names['search']]); ?></i> brachte leider kein Ergebnis.<br />
-        Bitte gehen Sie <a href="javascript:history.back()">zur&uuml;ck</a>.
-        </td>
-    </tr>
-<?php endif; ?>
-
-<?php if (isset($ssearch) && $ssearch >= 1 && !$z): ?>
-    <tr>
-        <td align="center" colspan="3" valign="top">
-		<b><a href="<?PHP echo parse_cleanerlinks(addParameter2Link($filename,$names['catid']."=&amp;".$names['search']."=")); ?>">Zur&uuml;ck zu allen Artikeln</a></b>
         </td>
     </tr>
 <?php endif; ?>

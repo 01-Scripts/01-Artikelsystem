@@ -35,6 +35,7 @@ $server_domainname = $_SERVER['SERVER_NAME'];	// ggf. Abweichender Domainname fü
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
 define('ANZ_SER_FIELDS',25);            		// Max. Anzahl an zusätzlichen Feldern für $ser_fields
 define('FULLTEXT_INDEX_SEARCH_SCHWELLE',1.5);	// Schwellenwert für Suchergebnisse vgl. http://dev.mysql.com/doc/refman/5.1/de/fulltext-search.html
+define('ANZ_PP_ARCHIV',30);						// Anzahl Artikel pro Seite in der Archivansicht
 
 // Language-Variablen
 $lang['weiterlesen'] = " ...";

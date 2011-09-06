@@ -21,12 +21,11 @@ include($subfolder."01module/".$modul."01article.php");
 
 */
 
-$frontp = 1;
-$flag_acp = FALSE;
-$flag_archiv = "";
-if(!isset($flag_utf8))		$flag_utf8 = FALSE;
+$frontp		= 1;
+$flag_acp	= FALSE;
+if(!isset($flag_utf8))		$flag_utf8	= FALSE;
 if(!isset($flag_nocss))		$flag_nocss = FALSE;
-if(!isset($flag_second))	$flag_second = FALSE;
+if(!isset($flag_second))	$flag_second= FALSE;
 
 @ini_set('session.use_trans_sid',0);
 
@@ -51,15 +50,20 @@ include_once($moduldir.$modulvz."_functions.php");
 // Variablen
 $iconpf 	= $moduldir.$modulvz.$iconpf;			// Verzeichnis mit Icon-Dateien
 $tempdir	= $moduldir.$modulvz.$tempdir;			// Template-Verzeichnis
+$filename	= $_SERVER['PHP_SELF'];					// Variable enthält die Adresse der Datei, auf der das Artikelsystem eingebunden wurde
+$flag_comments_js	= FALSE;							// Kommentar-Feld per Default via JavaScript ausblenden?
 
 // Language-File einbinden
 include_once($tempdir."lang_vars.php");
 
-$filename = $_SERVER['PHP_SELF'];
-$sites = 0;
-$qt = 0;
-$svl2a = "";
-$z = false;
+// Weitere Variablen +Bitte nehmen Sie hier keine Änderungen vor+
+$sites				= 0;
+$qt					= 0;
+$svl2a				= "";
+$qt_query			= "";
+$flag_archiv		= "";
+$z					= FALSE;
+$flag_IamStandard	= FALSE;
 
 // ggf. Zuweisung $show[] -> $_GET[]
 if(isset($_REQUEST[$names['catid']]) && isset($show['catid']) && !empty($show['catid']) && $show['catid'] == $_REQUEST[$names['catid']]) $z = true;
@@ -68,7 +72,7 @@ if(!isset($_REQUEST[$names['search']]) && isset($show['search']) && !empty($show
 if(!isset($_REQUEST[$names['page']]) && isset($show['page']) && !empty($show['page'])) $_REQUEST[$names['page']] = $show['page'];
 if(!isset($_GET[$names['artid']]) && isset($show['artid']) && !empty($show['artid'])) $_GET[$names['artid']] = $show['artid'];
 
-// Notice: Undefined index: ... beheben & strip_tags auf übergebene Werte anwenden (Anti-XSS)
+// Notice: Undefined index: ... beheben & strip_tags auf übergebene Werte anwenden (+ Anti-XSS)
 if(!isset($_REQUEST[$names['search']])) $_REQUEST[$names['search']] = "";
 else $_REQUEST[$names['search']]		= strip_tags($_REQUEST[$names['search']]);
 if(!isset($_REQUEST[$names['page']])) 	$_REQUEST[$names['page']] 	= "";
@@ -127,8 +131,14 @@ elseif(isset($settings['csscode']) && !empty($settings['csscode']) && !$flag_noc
 </style>";
 else $echo_css = "";
 
-// Head 2 einfügen
-include($tempdir."main_top.html");
+// Alle Kategorien in einen mehrdimensionalen Array einlesen
+$listcat = mysql_query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
+while($rowcat = mysql_fetch_assoc($listcat)){
+	$category[$rowcat['id']]['id'] 		= $rowcat['id'];
+	$category[$rowcat['id']]['name']	= htmlentities(stripslashes($rowcat['name']));
+	$category[$rowcat['id']]['catpic']	= stripslashes($rowcat['catpic']);
+	}
+
 
 
 
@@ -139,6 +149,7 @@ if(!empty($settings['archiv_time']) && $settings['archiv_time'] > 0 && is_numeri
 // Alternative Abfrage, wenn nur ein Artikel / eine Seite angezeigt werden soll
 if(isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) && $_GET[$names['artid']] != "archiv" && $_GET[$names['artid']] > 0 && is_numeric($_GET[$names['artid']])){
     $query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND id = '".mysql_real_escape_string($_GET[$names['artid']])."' LIMIT 1";
+	$iderror = 1;
 
     //Hits +1:
     mysql_query("UPDATE ".$mysql_tables['artikel']." SET hits = hits+1 WHERE id = '".mysql_real_escape_string($_GET[$names['artid']])."' LIMIT 1");
@@ -149,9 +160,10 @@ elseif(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !e
 	$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
     $query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static = '0' AND timestamp <= '".$qt."' AND (endtime >= '".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp DESC";
 
-    //Einträge pro Seite für Archiv-Funktion ändern:
-    $settings['articleperpage'] = 30;
+    $settings['articleperpage'] = ANZ_PP_ARCHIV;
 	makepages($query,$sites,$names['page'],$settings['articleperpage']);
+	
+	$iderror = 1;
     }
 // Alle Artikel anzeigen
 else{
@@ -164,28 +176,52 @@ else{
 			$parsed_searchstring = mysql_real_escape_string(parse_uml(utf8_decode(str_replace("*","",$_REQUEST[$names['search']]))));
 		else
 			$parsed_searchstring = mysql_real_escape_string(parse_uml(str_replace("*","",$_REQUEST[$names['search']])));
+
 		$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
         $add2query = "AND MATCH (titel,text,zusammenfassung) AGAINST ('".$parsed_searchstring."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND (".$add2query_cat.")";
+        $iderror = 2;	// Flag für Fehlermeldung in main_top
 		}
     elseif(isset($_REQUEST[$names['catid']]) && !empty($_REQUEST[$names['catid']])){
         $add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
 		$add2query = $qt_query."AND (".$add2query_cat.") ORDER BY top DESC,timestamp DESC";
+		$iderror = 3;	// Flag für Fehlermeldung in main_top
 		}
-    else
+    else{
         $add2query = $qt_query."ORDER BY top DESC,timestamp DESC";
+        $flag_IamStandard = true;
+        $iderror = 1;	// Flag für Fehlermeldung in main_top
+        }
 
 	$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime='0') ".$add2query;
 	makepages($query,$sites,$names['page'],$settings['articleperpage']);		
 	}
-echo $query;
+
 // List > 0?
 $list = mysql_query($query);
 echo "<!-- 2559ad821dde361560dbf967c3406f51 -->";
-if(mysql_num_rows($list) == 0) $iderror = 1;
+
+// Wenn nichts angezeigt werden konnte neuer Versuch mit Standardabfrage
+if(mysql_num_rows($list) == 0 && !$flag_IamStandard){
+	$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime='0') ".$qt_query."ORDER BY top DESC,timestamp DESC";
+	makepages($query,$sites,$names['page'],$settings['articleperpage']);
+	$list = mysql_query($query);
+	
+	$_GET[$names['artid']] = "";
+	}
+elseif(mysql_num_rows($list) > 0){
+	if(isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]) && $settings['artikelsuche'] == 1)
+		$iderror = 4;
+	elseif(isset($_REQUEST[$names['catid']]) && !empty($_REQUEST[$names['catid']]))
+	    $iderror = 5;
+	else
+		$iderror = 0;	// Flag für Fehlermeldung zurücksetzen, wenn mind. 1 Artikel angezeigt werden kann
+	}
 
 
 
 
+// main_top einbinden
+include($tempdir."main_top.html");
 
 
 
@@ -239,15 +275,6 @@ if(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !empty
 	
 // NORMALE AUSGABE
 else{
-    // Alle Kategorien in einen mehrdimensionalen Array einlesen
-	$listcat = mysql_query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
-	while($rowcat = mysql_fetch_assoc($listcat)){
-		$category[$rowcat['id']]['id'] 		= $rowcat['id'];
-		$category[$rowcat['id']]['name']	= htmlentities(stripslashes($rowcat['name']));
-		$category[$rowcat['id']]['catpic']	= stripslashes($rowcat['catpic']);
-		}
-	
-	//DB-Daten zur Ausgabe auswerten:
 	while($row = mysql_fetch_assoc($list)){
         $datum 		= date("d.m.y",$row['timestamp']);
         $uhrzeit 	= date("G:i",$row['timestamp']);
@@ -255,8 +282,7 @@ else{
         //Catid & Catimage auslesen
         if($row['newscatid'] != "0"){
             $c = 0;
-			$catimg = "";
-			$catname = "";
+			$catimg = ""; $catname = "";
             $newscatids_array = explode(",",substr($row['newscatid'],1,strlen($row['newscatid'])-2));
             foreach($newscatids_array as $newscatid_s){
 				if(isset($category[$newscatid_s]['name'])){
@@ -278,7 +304,7 @@ else{
 		if((isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) ||
 		   $settings['artikeleinleitung'] == 0 ||
 		   $settings['artikeleinleitung'] == 2 && $row['autozusammen'] == 0 && empty($row['zusammenfassung'])) &&
-		   (!isset($_REQUEST[$names['search']]) || isset($_REQUEST[$names['search']]) && empty($_REQUEST[$names['search']]))){
+		   (!isset($_REQUEST[$names['search']]) || isset($_REQUEST[$names['search']]) && empty($_REQUEST[$names['search']]) || $iderror == 2)){
 
 	        $artikeltext = stripslashes($row['text']);
 			$artikeltext = str_replace("../01pics/",$picuploaddir,$artikeltext);
@@ -300,7 +326,6 @@ else{
 				$more = 1;
 			else $more = 0;
 			}
-
 
         // Anzahl bisheriger Kommentare ermitteln
         if($settings['comments'] == 1){ 
@@ -372,9 +397,7 @@ else{
 		if(isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) && $_GET[$names['artid']] > 0 && 
 		   is_numeric($_GET[$names['artid']]) && $_GET[$names['artid']] != "archiv" && 
 		   $settings['comments'] == 1 && $settings['artikelcomments'] == 1 && $row['comments'] == 1){
-            //Template einbinden
-            include($tempdir."comments_head.html");
-
+            
             // Anti-XSS
             if(isset($_POST['send_comment']))	$_POST['send_comment']		= strip_tags($_POST['send_comment']);
             if(isset($_POST['modul_comment']))	$_POST['modul_comment']		= strip_tags($_POST['modul_comment']);
@@ -395,6 +418,9 @@ else{
 				else
 					$message = insert_Comment($_POST['autor'],$_POST['email'],$_POST['url'],$_POST['comment'],$_POST['antispam'],$_POST['deaktiv_bbc'],$row['id'],$_POST['uid']);
 				}
+
+			//Template einbinden
+            include($tempdir."comments_head.html");
 
             // KOMMENTARE AUSGEBEN
             $nr = 1;
@@ -462,7 +488,7 @@ else{
 						$c_szl1 = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=1&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments"));
                     $c_szl2 = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$c_sz."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments"));
                     }
-                else{ $c_szl1 = ""; $c_szl2 = ""; }
+                else{ $c_szl1 = ""; $c_szl2 = ""; $c_sz = 0; }
                 
 				if(!isset($_GET[$names['cpage']]) || isset($_GET[$names['cpage']]) && empty($_GET[$names['cpage']]))
                     {
@@ -482,7 +508,8 @@ else{
                 else{ $c_svl1 = ""; $c_svl2 = ""; }
                 }
 
-            //Template ausgeben
+			//Template ausgeben
+            if($message > 2) $flag_comments_js = FALSE;			// Formular nicht per JS ausblenden, wenn eine Fehlermeldung erzeugt wurde.
             include($tempdir."comments_end.html");
 
             //Unterschiedliche Sprungmarken nach Absenden des Kommentarformulars
@@ -549,20 +576,6 @@ if($sites > 1){
 			$svl2a = "<a href=\"".parse_cleanerlinks(addParameter2Link($filename,$names['artid']."=archiv&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"))."\">Archiv &raquo;</a>";
 		}
     }
-
-// Link: Zurück zur Übersicht
-if(isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]))
-    $ssearch = 1;
-elseif(isset($_REQUEST[$names['catid']]) && !empty($_REQUEST[$names['catid']]) && $sites != 0)
-	$ssearch = 2;
-
-// Ansicht ändern: Suche erfolglos, Zurück
-if($sites == 0 && isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]) ||
-   isset($sc) && $sc == 0 && isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]))
-    $searcherror = 1;
-
-// Seitenzahl ausblenden, wenn nur eine Seite
-if($sites == 1) $sites = "";
 
 // Kategorien vorhanden? --> Ausgeben
 if(isset($category) && count($category) > 0){

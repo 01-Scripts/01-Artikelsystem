@@ -17,9 +17,6 @@
 		'dragging': false, // disable dragging
 		'centered': true // resize to center of the screen, not relative to the source element
 	});
-
-	document.getElementById('addcomment<?PHP echo $modul; ?>').style.display = 'none';
-	document.getElementById('addcomment<?PHP echo $modul; ?>_link').style.display = 'block';
 });
 </script>
 <?php endif; ?>
@@ -28,3 +25,23 @@
 <div id="_01article" class="box_out">
 
 <a name="01jumpartikel"></a>
+
+<?php if (isset($iderror) && $iderror > 0): ?>
+    <p class="meldungen_01">
+		<?php if (isset($iderror) && $iderror == 1): ?>
+		<b>Fehler:</b> Es konnten keine passenden Artikel gefunden werden!
+		<?php endif; ?>
+		<?php if (isset($iderror) && $iderror == 2): ?>
+		<b>Fehler:</b> Ihre Suche nach <i><?php echo $_REQUEST[$names['search']]; ?></i> brachte leider kein Ergebnis.
+		<?php endif; ?>
+		<?php if (isset($iderror) && $iderror == 3): ?>
+		<b>Fehler:</b> In dieser Kategorie befinden sich leider noch keine Artikel.
+		<?php endif; ?>
+		<?php if (isset($iderror) && $iderror == 4): ?>
+		[<a href="<?php echo $filename; ?>">Suche beenden</a>] <b>Suche erfolgreich:</b> Ihre Suche nach <i><?php echo $_REQUEST[$names['search']]; ?></i> brachte folgende Ergebnisse:
+		<?php endif; ?>
+		<?php if (isset($iderror) && $iderror == 5): ?>
+		[<a href="<?php echo $filename; ?>">Kategorie entfernen</a>] <b>Kategorie <?php echo $category[$_REQUEST[$names['catid']]]['name']; ?>:</b> Es werden ausschlie&szlig;lich Artikel dieser Kategorie angezeigt.
+		<?php endif; ?>
+	</p>
+<?php endif; ?>
