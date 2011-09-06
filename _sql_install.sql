@@ -122,7 +122,8 @@ CREATE TABLE `01modulprefix_article` (
   `hits` int(10) default '0',
   `hide_signature` tinyint(1) default '0',
   `serialized_data` mediumblob COMMENT 'use unserialize() to get data back',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FULLTEXT (`titel`,`text`,`zusammenfassung`) 
 ) ENGINE=MyISAM AUTO_INCREMENT=2 ;
 
 -- 

@@ -161,23 +161,23 @@ else{
 	
     if(isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]) && $settings['artikelsuche'] == 1){
 		if($flag_utf8)
-			$parsed_searchstring = mysql_real_escape_string(parse_uml(utf8_decode(str_replace("*","%",$_REQUEST[$names['search']]))));
+			$parsed_searchstring = mysql_real_escape_string(parse_uml(utf8_decode(str_replace("*","",$_REQUEST[$names['search']]))));
 		else
-			$parsed_searchstring = mysql_real_escape_string(parse_uml(str_replace("*","%",$_REQUEST[$names['search']])));
+			$parsed_searchstring = mysql_real_escape_string(parse_uml(str_replace("*","",$_REQUEST[$names['search']])));
 		$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
-        $add2query = "AND (titel LIKE '%".$parsed_searchstring."%' OR text LIKE '%".$parsed_searchstring."%' OR zusammenfassung LIKE '%".$parsed_searchstring."%') AND (".$add2query_cat.")";
+        $add2query = "AND MATCH (titel,text,zusammenfassung) AGAINST ('".$parsed_searchstring."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND (".$add2query_cat.")";
 		}
     elseif(isset($_REQUEST[$names['catid']]) && !empty($_REQUEST[$names['catid']])){
         $add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
-		$add2query = $qt_query."AND (".$add2query_cat.")";
+		$add2query = $qt_query."AND (".$add2query_cat.") ORDER BY top DESC,timestamp DESC";
 		}
     else
-        $add2query = $qt_query;
+        $add2query = $qt_query."ORDER BY top DESC,timestamp DESC";
 
-	$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime='0') ".$add2query." ORDER BY top DESC,timestamp DESC";
+	$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime='0') ".$add2query;
 	makepages($query,$sites,$names['page'],$settings['articleperpage']);		
 	}
-
+echo $query;
 // List > 0?
 $list = mysql_query($query);
 echo "<!-- 2559ad821dde361560dbf967c3406f51 -->";

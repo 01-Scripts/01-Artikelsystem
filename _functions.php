@@ -349,14 +349,18 @@ return $return;
 
 
 // Dropdown-Box aus angelegten Kategorien generieren (ohne Select-Tag)
-/* @return string				Option-Elemente für Select-Formularelement
+/* @param array $plain_data		Optionaler Parameter. Enthält danach einen Array mit den Cat-Namen
+ * @return string				Option-Elemente für Select-Formularelement
 */
 if(!function_exists("_01article_CatDropDown")){
-function _01article_CatDropDown(){
+function _01article_CatDropDown(&$plain_data){
 global $mysql_tables;
+
+$plain_data = array();
 
 $list = mysql_query("SELECT id,name FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
 while($row = mysql_fetch_assoc($list)){
+	$plain_data[$row['id']] = stripslashes($row['name']);
 	$return .= "<option value=\"".$row['id']."\">".stripslashes($row['name'])."</option>\n";
 	}
 	

@@ -530,10 +530,11 @@ include($subfolder."01module/".$modul."/01article.php");<br />
 </form>
 <?PHP
 if($input_action == "articles" && $catmenge > 0){
+$cat_data = array();
 ?>
 <form action="<?PHP echo $filename; ?>" method="get">
 	<select name="catid" size="1" class="input_select">
-		<?PHP echo _01article_CatDropDown(); ?>
+		<?PHP echo _01article_CatDropDown($cat_data); ?>
 	</select>
 	<input type="hidden" name="action" value="articles" />
 	<input type="hidden" name="modul" value="<?PHP echo $modul; ?>" />
@@ -550,7 +551,7 @@ if($input_action == "articles" && $catmenge > 0){
 	elseif(isset($_GET['sort']) && $_GET['sort'] == "desc") $sortorder = "DESC";
 	else $sortorder = "ASC";
 	
-	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE (titel LIKE '%".mysql_real_escape_string($_GET['search'])."%' OR text LIKE '%".mysql_real_escape_string($_GET['search'])."%' OR zusammenfassung LIKE '%".mysql_real_escape_string($_GET['search'])."%') AND static = '".$flag_static."' ";
+	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,text,zusammenfassung) AGAINST ('".mysql_real_escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
 	elseif(isset($_GET['catid']) && !empty($_GET['catid']) && is_numeric($_GET['catid'])) $where = " WHERE newscatid LIKE '%,".mysql_real_escape_string($_GET['catid']).",%' ";
 	else $where = " WHERE static = '".$flag_static."' ";
 	
@@ -617,7 +618,7 @@ if($input_action == "articles" && $catmenge > 0){
 		$artuserdata[$userdata['id']] = $userdata;
 	else
 		$artuserdata = getUserdatafields_Queryless("username");
-	
+
 	// Ausgabe der Datensätze (Liste) aus DB
 	$count = 0;
 	$list = mysql_query($query);
@@ -645,10 +646,18 @@ if($input_action == "articles" && $catmenge > 0){
 		elseif($row['entdime'] == 0 && $row['timestamp'] > time())
 			$status = "<b class=\"public\">Wird ver&ouml;ffentlicht</b>";
 		
+		// Kategorien
+		$cats = "";
+		if(isset($row['newscatid']) && $row['newscatid'] != "0" && $input_action == "articles" && $catmenge > 0){
+			$newscatids_array = explode(",",substr($row['newscatid'],1,(strlen($row['newscatid'])-2)));
+			foreach($newscatids_array as $cat)
+				$cats .= "<a href=\"_loader.php?catid=".$cat."&action=articles&modul=".$modul."&loadpage=article\" title=\"".$cat_data[$cat]."\">".$cat."</a>, "; 
+			}
+		
 		echo "    <tr id=\"id".$row['id']."\">
 		<td class=\"".$class."\" align=\"center\">".$row['id']."</td>";
 		if($input_action == "articles" && $catmenge > 0)
-			echo "<td class=\"".$class."\" align=\"center\">".substr($row['newscatid'],1,(strlen($row['newscatid'])-2))."</td>";
+			echo "<td class=\"".$class."\" align=\"center\">".substr($cats,0,(strlen($cats)-2))."</td>";
 		echo "
 		<td class=\"".$class."\">".$top.date("d.m.Y - G:i",$row['timestamp'])."</td>
 		<td class=\"".$class."\" align=\"center\">".$status."</td>
