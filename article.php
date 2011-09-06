@@ -1,19 +1,19 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2011 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel: Übersicht, Bearbeiten, Erstellen
-	#fv.3003#
+	#fv.310#
 */
 
 // Berechtigungsabfragen
 if((isset($_REQUEST['action']) && $_REQUEST['action'] == "newarticle" && $userdata['newarticle'] == 1) ||
    (isset($_REQUEST['action']) && $_REQUEST['action'] == "articles" && $userdata['editarticle'] >= 1) ||
-   (isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata['editarticle'] >= 1 || $userdata['staticarticle'] == 1)) ||
-   (isset($_REQUEST['action']) && ($_REQUEST['action'] == "newstatic" || $_REQUEST['action'] == "statics") && $userdata['staticarticle'] == 1))
+   (isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata['editarticle'] >= 1 || $userdata['staticarticle'] >= 1)) ||
+   (isset($_REQUEST['action']) && ($_REQUEST['action'] == "newstatic" || $_REQUEST['action'] == "statics") && $userdata['staticarticle'] >= 1))
 {
 _01article_CreateCSSCache(CSS_CACHE_DATEI);
 
@@ -187,7 +187,7 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 		isset($_POST['titel']) && !empty($_POST['titel'])){
 		
 		// Anderen Autor für Artikel setzten
-		if(isset($_POST['autor']) && !empty($_POST['autor']) && $userdata['editarticle'] == 2)
+		if(isset($_POST['autor']) && !empty($_POST['autor']) && ($userdata['editarticle'] == 2 && $flag_static == 0 || $flag_static == 1 && $userdata['staticarticle'] == 2))
 			$autorid = mysql_real_escape_string($_POST['autor']);
 		else
 			$autorid = $userdata['id'];
@@ -228,8 +228,8 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 		elseif($saved_id > 0 && $hide == 0 && $frei == 1){
 			// Artikel / Seite wurde gespeichert UND veröffentlicht (sichtbar)
 			echo "<p class=\"meldung_erfolg\"><b>".$input_field['site_titel']." wurde hinzugef&uuml;gt</b><br /><br />
-					<a href=\"".$filename."&amp;action=".$input_action."\">".$input_field['next']." erstellen &raquo;</a><br />
-					<a href=\"".$filename."&amp;action=edit&amp;id=".$saved_id."&amp;static=".$_POST['static']."\">".$input_field['bezeichnung']." erneut bearbeiten &raquo;</a></p>";
+					<a href=\"".$filename."&amp;action=edit&amp;id=".$saved_id."&amp;static=".$_POST['static']."\">".$input_field['bezeichnung']." erneut bearbeiten &raquo;</a><br />
+					<a href=\"".$filename."&amp;action=".$input_action."\">".$input_field['next']." erstellen &raquo;</a></p>";
 			$flag_formular = FALSE;
 			$flag_overview = TRUE;
 			}
@@ -237,17 +237,17 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 			// Artikel / Seite wurde gespeichert UND wartet auf die Freischaltung
 			echo "<p class=\"meldung_erfolg\"><b>".$input_field['site_titel']." wurde gespeichert und muss nun vor seiner Ver&ouml;ffentlichung freigeschaltet werden.</b><br />
 					Benutzer mit entsprechenden Rechten wurden bereits informiert!<br /><br />
-					<a href=\"".$filename."&amp;action=".$input_action."\">".$input_field['next']." erstellen &raquo;</a><br />
-					<a href=\"".$filename."&amp;action=edit&amp;id=".$saved_id."&amp;static=".$_POST['static']."\">".$input_field['bezeichnung']." erneut bearbeiten &raquo;</a></p>";
+					<a href=\"".$filename."&amp;action=edit&amp;id=".$saved_id."&amp;static=".$_POST['static']."\">".$input_field['bezeichnung']." erneut bearbeiten &raquo;</a><br />
+					<a href=\"".$filename."&amp;action=".$input_action."\">".$input_field['next']." erstellen &raquo;</a></p>";
 			$flag_formular = FALSE;
 			$flag_overview = TRUE;
 			
-			// E-Mails an "Moderatoren" verschicken
+			// E-Mails an Moderatoren verschicken
 			$header = "From:".$settings['email_absender']."<".$settings['email_absender'].">\n";
 			$email_betreff = $settings['sitename']." - ".$input_field['site_titel']." - bitte freischalten";
 			$emailbody = "Es wurde soeben ein neuer Artikel / eine neue Seite erstellt, die von Ihnen überprüft und freigeschaltet werden kann.
-Bitte loggen Sie sich in den Administrationsbereich ein
-".$settings['absolut_url']."/01acp/
+Bitte loggen Sie sich dazu in den Administrationsbereich ein
+".$settings['absolut_url']."01acp/
 und überprüfen Sie ihn.\n\n---\nWebmailer";
 				
 			// Es werden 10 beliebige Benutzer mit den entsprechenden Rechten per E-Mail informiert.
@@ -315,7 +315,7 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 	
 	
 // Artikel / Seite bearbeiten
-elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata['editarticle'] >= 1 || $userdata['staticarticle'] == 1) &&
+elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata['editarticle'] >= 1 || $userdata['staticarticle'] >= 1) &&
 	   isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id']) &&
 	   isset($_REQUEST['static']) && is_numeric($_REQUEST['static'])){
 	
@@ -350,17 +350,18 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 		isset($_POST['titel']) && !empty($_POST['titel'])){
 		
 		// Benutzerberechtigung überprüfen
-		if($userdata['editarticle'] == 1){
+		if($userdata['editarticle'] == 1 || $userdata['staticarticle'] == 1){
 			$list = mysql_query("SELECT uid FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($_POST['id'])."' LIMIT 1");
 			$uidrow = mysql_fetch_array($list);
 			}
-		
 		if(($userdata['editarticle'] == 2 || $userdata['editarticle'] == 1 && $userdata['id'] == $uidrow['uid']) && $flag_static == 0 || 
-		$flag_static == 1 && $userdata['staticarticle'] == 1){
+		   $flag_static == 1 && ($userdata['staticarticle'] == 2 || $userdata['staticarticle'] == 1 && $userdata['id'] == $uidrow['uid'])){
+			
+			
 			// Anderen Autor für Artikel setzten
 			$autorid_q = "";
-			if($userdata['editarticle'] == 2){
-				if(isset($_POST['autor']) && (!empty($_POST['autor']) || (int)$_POST['autor'] == 0) && $_POST['autor'] != $_POST['uid'] && $userdata['editarticle'] == 2)
+			if($userdata['editarticle'] == 2 && $flag_static == 0 || $flag_static == 1 && $userdata['staticarticle'] == 2){
+				if(isset($_POST['autor']) && (!empty($_POST['autor']) || (int)$_POST['autor'] == 0) && $_POST['autor'] != $_POST['uid'] && ($userdata['editarticle'] == 2 || $userdata['staticarticle'] == 2))
 					$autorid_q = "uid = '".mysql_real_escape_string($_POST['autor'])."',";
 				}
 				
@@ -417,6 +418,7 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 		
 		include_once($modulpath."write_form.php");
 		}
+	// Eintrag bearbeiten (Formular anzeigen)
 	else{
 		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($_REQUEST['id'])."'";
 		switch($_REQUEST['static']){
@@ -427,12 +429,15 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 				$query .= " AND uid = '".$userdata['id']."' AND static = '0'";
 		  break;
 		  case "1":
-			if($userdata['staticarticle'] == 1)
+			if($userdata['staticarticle'] == 2)
 				$query .= " AND static = '1'";
+			elseif($userdata['staticarticle'] == 1)
+				$query .= " AND uid = '".$userdata['id']."' AND static = '1'";
 		  break;
 		  }
 		$query .= " LIMIT 1";
 		
+		// Werte aus DB holen
 		$list = mysql_query($query);
 		while($row = mysql_fetch_array($list)){			
 			$temp_uname = getUserdatafields($row['uid'],"username");
@@ -485,8 +490,10 @@ if($flag_overview) $_REQUEST['action'] = $_REQUEST['who'];
 	$filename2 = $filename."&amp;action=".$input_action."&amp;serach=".$_GET['search']."&amp;sort=".$_GET['sort']."&amp;orderby=".$_GET['orderby']."";
 	
 	// Artikel / Seiten freischalten
-	if(isset($_GET['do']) && $_GET['do'] == "free" && isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && $userdata['editarticle'] == 2){
-		mysql_query("UPDATE ".$mysql_tables['artikel']." SET frei='1' WHERE id='".mysql_real_escape_string($_GET['id'])."' LIMIT 1");
+	if(isset($_GET['do']) && $_GET['do'] == "free" && isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
+		if($userdata['editarticle'] == 2 && $flag_static == 0 || $userdata['staticarticle'] == 2 && $flag_static == 1)
+		    mysql_query("UPDATE ".$mysql_tables['artikel']." SET frei='1' WHERE id='".mysql_real_escape_string($_GET['id'])."' AND static = '".$flag_static."' LIMIT 1");
+		
 		echo "<p class=\"meldung_erfolg\"><b>".$input_field['bezeichnung']." wurde freigeschaltet</b></p>";
 		}
 		
@@ -494,30 +501,6 @@ if($flag_overview) $_REQUEST['action'] = $_REQUEST['who'];
 	if(isset($_GET['do']) && $_GET['do'] == "publish" && isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
 		mysql_query("UPDATE ".$mysql_tables['artikel']." SET hide='0' WHERE id='".mysql_real_escape_string($_GET['id'])."' AND uid = '".$userdata['id']."' LIMIT 1");
 		echo "<p class=\"meldung_erfolg\"><b>".$input_field['bezeichnung']." wurde ver&ouml;ffentlicht</b></p>";
-		}
-		
-	// Sicherheitsabfrage: Löschen
-	if(isset($_GET['do']) && $_GET['do'] == "ask_del" && isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
-		echo "<p class=\"meldung_frage\">
-				M&ouml;chten Sie <i>\"".stripslashes($_GET['titel'])."\"</i> wirklich l&ouml;schen?<br /><br />
-				<b><a href=\"".$filename."&amp;action=".$input_action."&amp;do=do_del&amp;id=".$_GET['id'].$add_filename."\">JA</a> | <a href=\"javascript:history.back();\">NEIN</a></b>
-			</p>";
-		}
-	
-	// Löschen
-	if(isset($_GET['do']) && $_GET['do'] == "do_del" && isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
-		if($flag_static == 0 && $userdata['editarticle'] == 2){
-			mysql_query("DELETE FROM ".$mysql_tables['artikel']." WHERE id='".mysql_real_escape_string($_GET['id'])."' AND static = '0' LIMIT 1");
-			delComments($_GET['id']);
-			}
-		elseif($flag_static == 0 && $userdata['editarticle'] == 1){
-			mysql_query("DELETE FROM ".$mysql_tables['artikel']." WHERE id='".mysql_real_escape_string($_GET['id'])."' AND uid = '".$userdata['id']."' AND static = '0' LIMIT 1");
-			delComments($_GET['id']);
-			}
-		elseif($flag_static == 1 && $userdata['staticarticle'] == 1){
-			mysql_query("DELETE FROM ".$mysql_tables['artikel']." WHERE id='".mysql_real_escape_string($_GET['id'])."' AND static = '1' LIMIT 1");
-			delComments($_GET['id']);
-			}
 		}
 
 	// Auflistung
@@ -571,10 +554,10 @@ if($input_action == "articles" && $catmenge > 0){
 	elseif(isset($_GET['catid']) && !empty($_GET['catid']) && is_numeric($_GET['catid'])) $where = " WHERE newscatid LIKE '%,".mysql_real_escape_string($_GET['catid']).",%' ";
 	else $where = " WHERE static = '".$flag_static."' ";
 	
-	if($userdata['editarticle'] == 1 && $flag_static == 0)
+	if($userdata['editarticle'] == 1 && $flag_static == 0 || $userdata['staticarticle'] == 1 && $flag_static == 1)
 		$where .= " AND uid = '".$userdata['id']."' ";
 		
-	if($userdata['editarticle'] == 2)
+	if($userdata['editarticle'] == 2 || $userdata['staticarticle'] == 2)
 	    $where .= " AND (hide = '0' OR hide = '1' AND (uid = '".$userdata['id']."' OR uid = '0')) ";
 	else
 		$where .= " AND (hide = '0' OR hide = '1' AND uid = '".$userdata['id']."') ";
@@ -607,18 +590,18 @@ if($input_action == "articles" && $catmenge > 0){
 <table border="0" align="center" width="100%" cellpadding="3" cellspacing="5" class="rundrahmen">
 
     <tr>
-		<td class="tra" width="50" align="center"><b>ID</b>
+		<td class="tra" align="center" style="width: 50px;"><b>ID</b>
 			<a href="<?PHP echo $filename; ?>&amp;action=<?PHP echo $input_action; ?>&amp;search=<?PHP echo $_GET['search']; ?>&amp;orderby=id&amp;sort=asc"><img src="images/icons/sort_asc.gif" alt="Icon: Pfeil nach oben" title="Aufsteigend sortieren (ASC)" /></a>
 			<a href="<?PHP echo $filename; ?>&amp;action=<?PHP echo $input_action; ?>&amp;search=<?PHP echo $_GET['search']; ?>&amp;orderby=id&amp;sort=desc"><img src="images/icons/sort_desc.gif" alt="Icon: Pfeil nach unten" title="Absteigend sortieren (DESC)" /></a>
 		</td>
 		<?PHP if($input_action == "articles" && $catmenge > 0){ ?>
-		<td class="tra" width="50" align="center"><b>Cat-ID</b></td>
+		<td class="tra" align="center" style="width: 50px;"><b>Cat-ID</b></td>
 		<?PHP } ?>
-        <td class="tra" width="110"><b>Datum / Zeit</b>
+        <td class="tra" style="width: 110px;"><b>Datum / Zeit</b>
 			<a href="<?PHP echo $filename; ?>&amp;action=<?PHP echo $input_action; ?>&amp;search=<?PHP echo $_GET['search']; ?>&amp;sort=asc&amp;orderby=timestamp"><img src="images/icons/sort_asc.gif" alt="Icon: Pfeil nach oben" title="Aufsteigend sortieren" /></a>
 			<a href="<?PHP echo $filename; ?>&amp;action=<?PHP echo $input_action; ?>&amp;search=<?PHP echo $_GET['search']; ?>&amp;sort=desc&amp;orderby=timestamp"><img src="images/icons/sort_desc.gif" alt="Icon: Pfeil nach unten" title="Absteigend sortieren (DESC)" /></a>
 		</td>
-		<td class="tra" width="200"><b>Status</b>			
+		<td class="tra" style="width: 200px;"><b>Status</b>			
 			<a href="<?PHP echo $filename; ?>&amp;action=<?PHP echo $input_action; ?>&amp;search=<?PHP echo $_GET['search']; ?>&amp;sort=asc&amp;orderby=status"><img src="images/icons/sort_asc.gif" alt="Icon: Pfeil nach oben" title="Aufsteigend sortieren" /></a>
 		</td>
 		<td class="tra"><b>Titel</b>			
@@ -626,11 +609,11 @@ if($input_action == "articles" && $catmenge > 0){
 			<a href="<?PHP echo $filename; ?>&amp;action=<?PHP echo $input_action; ?>&amp;search=<?PHP echo $_GET['search']; ?>&amp;sort=desc&amp;orderby=titel"><img src="images/icons/sort_desc.gif" alt="Icon: Pfeil nach unten" title="Absteigend sortieren (DESC)" /></a>
 		</td>
 		<td class="tra"><b>Benutzer</b></td>
-		<td class="tra" width="25">&nbsp;<!--Bearbeiten--></td>
-		<td class="tra" width="25" align="center"><!--Löschen--><img src="images/icons/icon_trash.gif" alt="M&uuml;lleimer" title="Datei l&ouml;schen" /></td>
+		<td class="tra" style="width: 25px;">&nbsp;<!--Bearbeiten--></td>
+		<td class="tra" align="center" style="width: 25px;"><!--Löschen--><img src="images/icons/icon_trash.gif" alt="M&uuml;lleimer" title="Datei l&ouml;schen" /></td>
     </tr>
 <?PHP
-	if($userdata['editarticle'] == 1 && $flag_static == 0)
+	if($userdata['editarticle'] == 1 && $flag_static == 0 || $userdata['staticarticle'] == 1 && $flag_static == 1)
 		$artuserdata[$userdata['id']] = $userdata;
 	else
 		$artuserdata = getUserdatafields_Queryless("username");
@@ -649,7 +632,7 @@ if($input_action == "articles" && $catmenge > 0){
 						<a href=\"".$filename2."&amp;do=publish&amp;id=".$row['id']."\"><img src=\"images/icons/ok.gif\" alt=\"gr&uuml;ner Hacken\" title=\"Beitrag jetzt ver&ouml;ffentlichen\" /></a>";
 		elseif($row['frei'] == 0){
 			$status = "<b class=\"free_wait\">&Uuml;berpr&uuml;fung n&ouml;tig</b>";
-			if($userdata['editarticle'] == 2) $status .="<a href=\"".$filename2."&amp;do=free&amp;id=".$row['id']."\"><img src=\"images/icons/ok.gif\" alt=\"gr&uuml;ner Hacken\" title=\"Beitrag jetzt freischalten\" /></a>";
+			if($userdata['editarticle'] == 2 && $flag_static == 0 || $userdata['staticarticle'] == 2 && $flag_static == 1) $status .="<a href=\"".$filename2."&amp;do=free&amp;id=".$row['id']."\"><img src=\"images/icons/ok.gif\" alt=\"gr&uuml;ner Hacken\" title=\"Beitrag jetzt freischalten\" /></a>";
 			}
 		elseif($row['endtime'] > 0 && $row['endtime'] > time() && $row['timestamp'] > time())
 			$status = "<b class=\"public\">".date("d.m.y, G:i",$row['timestamp'])." - ".date("d.m.y, G:i",$row['endtime'])."</b>";
@@ -683,5 +666,4 @@ if($input_action == "articles" && $catmenge > 0){
 
 }else $flag_loginerror = true;
 
-// 01-Artikelsystem Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
 ?>

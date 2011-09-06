@@ -57,7 +57,9 @@ INSERT INTO 01prefix_menue (name,link,modul,sicherheitslevel,rightname,rightvalu
 ('Artikel bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=articles&amp;loadpage=article', '#modul_idname#', '1', 'editarticle', '1', '2', '0', '0'),
 ('Artikel bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=articles&amp;loadpage=article', '#modul_idname#', '1', 'editarticle', '2', '2', '0', '0'),
 ('Neue statische Seite', '_loader.php?modul=#modul_idname#&amp;action=newstatic&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '1', '3', '0', '0'),
-('Statische Seiten', '_loader.php?modul=#modul_idname#&amp;action=statics&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '1', '4', '0', '0'),
+('Statische Seiten bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=statics&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '1', '4', '0', '0'),
+('Neue statische Seite', '_loader.php?modul=#modul_idname#&amp;action=newstatic&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '2', '3', '0', '0'),
+('Statische Seiten bearbeiten', '_loader.php?modul=#modul_idname#&amp;action=statics&amp;loadpage=article', '#modul_idname#', '1', 'staticarticle', '2', '4', '0', '0'),
 ('Kategorien verwalten', '_loader.php?modul=#modul_idname#&amp;action=&amp;loadpage=category', '#modul_idname#', '1', 'editcats', '1', '5', '0', '0'),
 ('Kommentare verwalten', 'comments.php?modul=#modul_idname#', '#modul_idname#', '1', 'editcomments', '1', '6', '0', '0');
 
@@ -72,9 +74,9 @@ INSERT INTO 01prefix_menue (name,link,modul,sicherheitslevel,rightname,rightvalu
 INSERT INTO 01prefix_rights (modul,is_cat,catid,sortid,idname,name,exp,formename,formwerte,input_exp,standardwert,nodelete,hide,in_profile) VALUES
 ('#modul_idname#', '1', '1', '1', '01article_userrights', 'Benutzerrechte', NULL , '', '', NULL , NULL , '0', '0', '0'),
 ('#modul_idname#', '0', '1', '1', 'newarticle', 'Neue Artikel verfassen', '', 'Ja|Nein', '1|0', '', '1', '0', '0', '0'),
-('#modul_idname#', '0', '1', '2', 'editarticle', 'Artikel bearbeiten', '', 'Nur eigene Artikel bearbeiten|Alle Artikel bearbeiten &amp; freischalten|kein Zugriff', '1|2|0', '', '1', '0', '0', '0'),
-('#modul_idname#', '0', '1', '3', 'staticarticle', 'Statische Seiten erstellen & bearbeiten', '', 'Ja|Nein', '1|0', '', '0', '0', '0', '0'),
-('#modul_idname#', '0', '1', '4', 'freischaltung', 'Freischaltung von Artikeln', '', 'Artikel des Benutzers m&uuml;ssen vor der Ver&ouml;ffentlichung freigeschaltet werden|Keine Freischaltung n&ouml;tig', '1|0', '', '1', '0', '0', '0'),
+('#modul_idname#', '0', '1', '2', 'editarticle', 'Artikel bearbeiten', '', 'Nur eigene Artikel bearbeiten|Alle Artikel bearbeiten &amp; freischalten|Kein Zugriff', '1|2|0', '', '1', '0', '0', '0'),
+('#modul_idname#', '0', '1', '3', 'staticarticle', 'Statische Seiten erstellen & bearbeiten', '', 'Nur eigene Seiten|Alle Seiten|Kein Zugriff', '1|2|0', '', '0', '0', '0', '0'),
+('#modul_idname#', '0', '1', '4', 'freischaltung', 'Freischaltung von Artikeln &amp; Seiten', 'Artikel und statische Seiten dieses Benutzers m&uuml;ssen vor der Ver&ouml;ffentlichung von einem Moderator freigeschaltet werden.', 'Freischaltung n&ouml;tig|Keine Freischaltung n&ouml;tig', '1|0', '', '1', '0', '0', '0'),
 ('#modul_idname#', '0', '1', '5', 'editcats', 'Kategorien verwalten', '', 'Ja|Nein', '1|0', '', '0', '0', '0', '0');
 
 

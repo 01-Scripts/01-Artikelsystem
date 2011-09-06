@@ -173,7 +173,7 @@ if($settings['artikeleinleitung'] >= 1 && $settings['artikeleinleitungslaenge'] 
     <tr>
         <td class="trb" colspan="2">
 			<b>Autor:</b> <?PHP echo $form_data['username']; ?>
-			<?PHP if($userdata['editarticle'] == 2){ echo "[ <a href=\"javascript:fade_element('change_autor');\">Autor ändern</a> ]"; ?>
+			<?PHP if($userdata['editarticle'] == 2 && $flag_static == 0 || $flag_static == 1 && $userdata['staticarticle'] == 2){ echo "[ <a href=\"javascript:fade_element('change_autor');\">Autor ändern</a> ]"; ?>
 			<div id="change_autor" class="moo_hide" style="float:right; margin-right:40%;">
 				<b>Neuer Autor:</b>
 				<select name="autor" size="1" class="input_select">

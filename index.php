@@ -26,6 +26,7 @@
 	<br />
 	
 	<?PHP if($userdata['editarticle'] == 2){ ?><a href="_loader.php?modul=<?PHP echo $modul; ?>&amp;loadpage=article&amp;action=articles&amp;search=&amp;sort=asc&amp;orderby=status">&raquo; <?PHP list($artmenge) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei = '0' AND hide = '0' AND static = '0'")); echo $artmenge; ?> Artikel freischalten</a><br /><?PHP } ?>
+	<?PHP if($userdata['staticarticle'] == 2){ ?><a href="_loader.php?modul=<?PHP echo $modul; ?>&amp;loadpage=article&amp;action=statics&amp;search=&amp;sort=asc&amp;orderby=status">&raquo; <?PHP list($artmenge) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei = '0' AND hide = '0' AND static = '1'")); echo $artmenge; ?> Seiten freischalten</a><br /><?PHP } ?>
 	<?PHP if($settings['comments'] && $userdata['editcomments'] == 1){ ?><a href="comments.php?modul=<?PHP echo $modul; ?>">&raquo; <?PHP list($commentsmenge) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['comments']." WHERE frei = '0' AND modul = '".$modul."'")); echo $commentsmenge; ?> Kommentare freischalten</a><?PHP } ?>
 	</p>
 </div>
@@ -58,7 +59,7 @@
 	</form>
 <?PHP } ?>
 
-<?PHP if($userdata['staticarticle'] == 1){ ?>
+<?PHP if($userdata['staticarticle'] >= 1){ ?>
 	<form action="_loader.php" method="get">
 		<p><input type="text" name="search" value="Seiten suchen" size="20" onfocus="clearField(this);" onblur="checkField(this);" class="input_search" /> <input type="submit" value="Suchen &raquo;" class="input" /></p>
 		<input type="hidden" name="action" value="statics" />
