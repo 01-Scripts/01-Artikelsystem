@@ -51,7 +51,7 @@ include_once($moduldir.$modulvz."_functions.php");
 $iconpf 	= $moduldir.$modulvz.$iconpf;			// Verzeichnis mit Icon-Dateien
 $tempdir	= $moduldir.$modulvz.$tempdir;			// Template-Verzeichnis
 $filename	= $_SERVER['PHP_SELF'];					// Variable enthält die Adresse der Datei, auf der das Artikelsystem eingebunden wurde
-$flag_comments_js	= FALSE;							// Kommentar-Feld per Default via JavaScript ausblenden?
+$flag_comments_js	= TRUE;							// Kommentar-Feld per Default via JavaScript ausblenden?
 
 // Language-File einbinden
 include_once($tempdir."lang_vars.php");
@@ -519,7 +519,6 @@ else{
 			
             $system_link_form = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$jumpto_csite."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments_add"));
 
-
             if($row['comments'] == 1 && $settings['comments'] == 1){
                 mt_srand((double)microtime()*1000000); 
 				$zahl = mt_rand(1, 9999999999999);
@@ -532,7 +531,7 @@ else{
         unset($catimg);
         unset($catname);
         }
-    }//ENDE: "Normale News-Ausgabe"
+    }
 
 // Ausgabe der Seiten
 if($sites > 1){
