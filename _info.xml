@@ -5,9 +5,9 @@
 	<titel>01-Artikelsystem</titel>
 	<beschreibung>Artikel, News-Eintraege, statische Seiten erstellen und verwalten.</beschreibung>
 	<icon>images/article.gif</icon>
-	<version>3.0.0.4</version>
+	<version>3.1.0</version>
 	<need01acpv>1.0.0.2</need01acpv>
-	<datum>09.03.2010</datum>
+	<datum>07.09.2011</datum>
 	<includeinfo><![CDATA[
 Verwenden Sie folgenden PHP-Code um das 01-Artikelsystem in Ihre Seite zu integrieren:<br />
 <code>
@@ -56,6 +56,11 @@ $flag_nocss     = FALSE; // Setzen Sie $flag_nocss = TRUE; wenn kein CSS eingebu
 			<zielv>3.0.0.4</zielv>
 			<action>3003_zu_3004</action>
 		</v3003_v3004>
+		<v3004_v310>
+			<startv>3.0.0.4</startv>
+			<zielv>3.1.0</zielv>
+			<action>3004_zu_310</action>
+		</v3004_v310>
 	</updates>	
 
 </modul>
