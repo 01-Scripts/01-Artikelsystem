@@ -498,13 +498,13 @@ RETURN: Entsprechend (mod_rewrite) formatierter Link an den weitere Parameter an
   */
 if(!function_exists("_01article_echo_ArticleLink")){
 function _01article_echo_ArticleLink($artid,$arttitle="",$timestamp="",$domain=""){
-global $mysql_tables,$settings,$names,$server_domainname;
+global $mysql_tables,$settings,$names,$server_domainname,$filename;
 
 $artid = strip_tags($artid);
 
 if($settings['modrewrite'] == 1){
 	if(empty($artid) || $artid == 0){
-		return $_SERVER['PHP_SELF'];
+		return $filename;
 		}
 	else{
 		if(empty($domain)) $domain = $server_domainname;
@@ -523,7 +523,7 @@ if($settings['modrewrite'] == 1){
 		}
 	}
 else
-	return addParameter2Link($_SERVER['PHP_SELF'],$names['artid']."=".$artid);
+	return addParameter2Link($filename,$names['artid']."=".$artid);
 
 }
 }
