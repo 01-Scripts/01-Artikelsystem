@@ -6,7 +6,7 @@
 	
 	Modul:		01article
 	Dateiinfo: 	Frontend-Ausgabe 01-Artikelsystem
-	#fv.310#
+	#fv.311#
 */
 
 //Hinweis zum Einbinden des Artikelsystems per include();
@@ -48,6 +48,7 @@ include_once($moduldir.$modulvz."_headinclude.php");
 include_once($moduldir.$modulvz."_functions.php");
 
 // Variablen
+$imagepf 	= $moduldir.$modulvz.$imagepf;          // Pfad zum Bild-Verzeichnis
 $iconpf 	= $moduldir.$modulvz.$iconpf;			// Verzeichnis mit Icon-Dateien
 $tempdir	= $moduldir.$modulvz.$tempdir;			// Template-Verzeichnis
 $filename	= $_SERVER['PHP_SELF'];					// Variable enthält die Adresse der Datei, auf der das Artikelsystem eingebunden wurde
@@ -309,6 +310,7 @@ else{
 	        $artikeltext = stripslashes($row['text']);
 			$artikeltext = str_replace("../01pics/",$picuploaddir,$artikeltext);
 			$artikeltext = str_replace("../01files/",$attachmentuploaddir,$artikeltext);
+			if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
 			}
 		// Zusammenfassung anzeigen
 		else{
@@ -316,9 +318,12 @@ else{
 	            $artikeltext = stripslashes($row['zusammenfassung']);
 				$artikeltext = str_replace("../01pics/",$picuploaddir,$artikeltext);
 				$artikeltext = str_replace("../01files/",$attachmentuploaddir,$artikeltext);
+				if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
 	            }
-	        else
+	        else{
 				$artikeltext = "<p>".substr(strip_tags(stripslashes($row['text'])),0,$settings['artikeleinleitungslaenge']).$lang['weiterlesen']."</p>";
+				if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
+				}
 
 			// Weiterlesen-Link nur einbinden, wenn Text länger als Zusammenfassung oder eigener Text eingegeben wurde
 			if($row['autozusammen'] == 0 && !empty($row['zusammenfassung']) || 

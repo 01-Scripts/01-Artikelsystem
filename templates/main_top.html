@@ -3,22 +3,18 @@
 <?php if ($settings['artikellightbox'] == 1): ?>
 <script src="<?PHP echo $subfolder; ?>01acp/system/js/mootools-core.js" type="text/javascript"></script>
 <script src="<?PHP echo $subfolder; ?>01acp/system/js/mootools-more.js" type="text/javascript"></script>
-<script src="<?PHP echo $subfolder; ?>01acp/system/js/mootools-remooz.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="<?PHP echo $subfolder; ?>01acp/system/js/mootools-remooz.css" />
+<script src="<?PHP echo $tempdir; ?>slimbox.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-	window.addEvent('load', function() {
-	ReMooz.assign('#_01article a.lightbox', {
-		'origin': 'img',
-		'shadow': 'onOpenEnd', // fx is faster because shadow appears after resize animation
-		'resizeFactor': 0.9, // resize to maximum 80% of screen size
-		'cutOut': false, // don't hide the original
-		'opacityResize': 0.4, // opaque resize
-		'dragging': false, // disable dragging
-		'centered': true // resize to center of the screen, not relative to the source element
-	});
-});
-</script>
+<style type="text/css">
+/* Die übrigen CSS-Defitionen werden im 01ACP->Einstellungen->Bildergalerie vorgenommen!
+Dieser Abschnitt ist nur für korrekte Pfadangaben an dieser Stelle nötig */
+
+.lbLoading { background: #fff url(<?php echo $imagepf; ?>loading.gif) no-repeat center; }
+#lbPrevLink:hover { background: transparent url(<?php echo $imagepf; ?>prevlabel.gif) no-repeat 0 15%; }
+#lbNextLink:hover { background: transparent url(<?php echo $imagepf; ?>nextlabel.gif) no-repeat 100% 15%; }
+#lbCloseLink { background: transparent url(<?php echo $imagepf; ?>closelabel.gif) no-repeat center; }
+</style>
+
 <?php endif; ?>
 <?php echo $echo_css; ?>
 

@@ -7,7 +7,7 @@
 	Modul:		01article
 	Dateiinfo: 	Modulspezifische Grundeinstellungen, Variablendefinitionen etc.
 				Wird automatisch am Anfang jeden Modulaufrufs automatisch includiert.
-	#fv.310#
+	#fv.311#
 */
 
 // Modul-Spezifische MySQL-Tabellen
@@ -24,6 +24,7 @@ $loadfile['article'] 	= "article.php";
 $loadfile['category']	= "category.php";
 
 // Weitere Pfadangaben
+$imagepf 	= "images/";						// Pfad zum Bild-Verzeichnis
 $iconpf 	= "images/icons/";					// Verzeichnis mit Icon-Dateien
 $tempdir	= "templates/";						// Template-Verzeichnis
 
