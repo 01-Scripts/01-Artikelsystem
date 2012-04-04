@@ -1,5 +1,6 @@
+<?php if ($static == 0): ?>
 <table align="center" class="table_page page_text">
-<?php if (isset($sites) && $sites > 1 && $row['static'] == 0): ?>
+<?php if (isset($sites) && $sites > 1): ?>
     <tr>
         <td align="center" style="width:33%" valign="top">
 	        <?php if (isset($szl1) && !empty($szl1)): ?>
@@ -24,7 +25,6 @@
     </tr>
 <?php endif; ?>
 
-<?php if ($static == 0): ?>
     <tr>
         <td colspan="3">
 		
@@ -88,8 +88,8 @@
 		
         </td>
     </tr>
-<?php endif; ?>
 </table>
+<?php endif; ?>
 
 <p align="center" class="copyright">
 <b>01-Artikelsystem</b> &copy; 2006-<?PHP echo date("Y"); ?> by <a href="http://www.01-scripts.de" target="_blank">01-Scripts.de</a>
