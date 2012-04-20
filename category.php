@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2012 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel: Übersicht, Bearbeiten, Erstellen
-	#fv.3004#
+	#fv.311#
 */
 
 // Berechtigungsabfragen
@@ -153,12 +153,10 @@ if(isset($_GET['do']) && $_GET['do'] == "editcatform" && isset($_GET['id']) && !
                     echo "<a href=\"".$catuploaddir.$row['catpic']."\" target=\"_blank\"><img src=\"".$catuploaddir.$row['catpic']."\" border=\"0\" alt=\"Kategoriebild: ".stripslashes($row['name'])."\" width=\"".$picwidth."\" height=\"".$picheight."\" /></a>";
                     echo "<br /><br /><a href=\"".$filename."&amp;do=editcatform&amp;do2=delpic&amp;id=".$_GET['id']."&amp;pic=".$row['catpic']."\"><img src=\"images/icons/icon_delete.gif\" alt=\"Rotes Kreuz\" title=\"Kategoriebild l&ouml;schen\" /> Bild l&ouml;schen</a>";
                     }
-                elseif(isset($do2deldone) && $do2deldone == 1){
+                elseif(isset($do2deldone) && $do2deldone == 1)
                     echo "<b>Bild wurde erfolgreich gel&ouml;scht</b>";
-                    }
-                else{
+                else
                     echo "&nbsp;";
-                    }
             ?>
         </td>
         <td align="center" class="trb" valign="middle">
@@ -201,9 +199,9 @@ else{
 <table border="0" align="center" width="100%" cellpadding="3" cellspacing="5" class="rundrahmen">
 
     <tr>
-        <td width="30%" class="tra"><b>Kategoriename</b></td>
-        <td width="40%" class="tra"><b>Kategoriebild</b></td>
-        <td width="20%" class="tra">&nbsp;</td>
+        <td class="tra" style="width: 30%;"><b>Kategoriename</b></td>
+        <td class="tra" style="width: 40%;"><b>Kategoriebild</b></td>
+        <td class="tra" style="width: 20%;">&nbsp;</td>
     </tr>
 
     <tr>
@@ -234,11 +232,12 @@ if(isset($_POST['sort']) && !empty($_POST['sort'])){
 <table border="0" align="center" width="100%" cellpadding="3" cellspacing="5" class="rundrahmen">
 
     <tr>
-		<td width="80" class="tra" align="center"><b>Reihenfolge</b></td>
-		<td width="100" class="tra" align="center"><b>Bild</b></td>
+		<td class="tra" align="center" style="width: 80px;"><b>Reihenfolge</b></td>
+		<td class="tra" align="center" style="width: 25px;"><b>ID</b></td>
+        <td class="tra" align="center" style="width: 100px;"><b>Bild</b></td>
         <td class="tra"><b>Kategoriename</b></td>
-        <td width="25" class="tra"><!--Bearbeiten--></td>
-        <td width="25" class="tra" align="center"><!--Löschen--><img src="images/icons/icon_trash.gif" alt="M&uuml;lleimer" title="Kategorie l&ouml;schen" /></td>
+        <td class="tra" style="width: 25px;"><!--Bearbeiten--></td>
+        <td class="tra" align="center" style="width: 25px;"><!--Löschen--><img src="images/icons/icon_trash.gif" alt="M&uuml;lleimer" title="Kategorie l&ouml;schen" /></td>
     </tr>
 
 <?PHP
@@ -255,13 +254,13 @@ while($row = mysql_fetch_array($list)){
         picbig(ACP_TB_WIDTH,$picwidth,$picheight);
         $catpic = "<a href=\"".$catuploaddir.$row['catpic']."\" target=\"_blank\"><img src=\"".$catuploaddir.$row['catpic']."\" alt=\"Kategoriebild: ".stripslashes($row['name'])."\" width=\"".$picwidth."\" height=\"".$picheight."\" /></a>";
         }
-    else{
+    else
         $catpic = "&nbsp;";
-        }
 
     echo "<tr id=\"id".$row['id']."\">
               <td align=\"center\" class=\"".$class."\"><select name=\"cat_".$row['id']."\" size=\"1\" class=\"input_select\">"._01article_CatSortDropDown($row['sortid'])."</select></td>
-			  <td align=\"center\" class=\"".$class."\">".$catpic."</td>
+			  <td align=\"center\" class=\"".$class."\">".$row['id']."</td>
+              <td align=\"center\" class=\"".$class."\">".$catpic."</td>
               <td align=\"left\" class=\"".$class."\">".stripslashes($row['name'])."</td>
               <td align=\"center\" class=\"".$class."\"><a href=\"".$filename."&amp;do=editcatform&amp;id=".$row['id']."\"><img src=\"images/icons/icon_edit.gif\" alt=\"Stift\" title=\"Kategorie bearbeiten\" /></a></td>
 			  <td class=\"".$class."\" align=\"center\"><img src=\"images/icons/icon_delete.gif\" alt=\"L&ouml;schen - rotes X\" title=\"Eintrag l&ouml;schen\" class=\"fx_opener\" style=\"border:0; float:left;\" align=\"left\" /><div class=\"fx_content tr_red\" style=\"width:60px; display:none;\"><a href=\"#foo\" onclick=\"AjaxRequest.send('modul=".$modul."&ajaxaction=delcat&id=".$row['id']."');\">Ja</a> - <a href=\"#foo\">Nein</a></div></td>
