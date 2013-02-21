@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2011 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel: Übersicht, Bearbeiten, Erstellen
-	#fv.310#
+	#fv.311#
 */
 
 // Berechtigungsabfragen
@@ -199,7 +199,7 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 						'".$frei."',
 						'".$hide."',
 						'".mysql_real_escape_string($_POST['icon'])."',
-						'".mysql_real_escape_string(htmlentities($_POST['titel']))."',
+						'".mysql_real_escape_string(htmlentities($_POST['titel']),$htmlent_flags,$htmlent_encoding_acp)."',
 						'".mysql_real_escape_string($newscats_string)."',
 						'".mysql_real_escape_string($text)."',
 						'".$autozusammen."',
@@ -371,7 +371,7 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 							endtime			= '".$ende_mysqldate."',
 							hide			= '".$hide."',
 							icon			= '".mysql_real_escape_string($_POST['icon'])."',
-							titel			= '".mysql_real_escape_string(htmlentities($_POST['titel']))."',
+							titel			= '".mysql_real_escape_string(htmlentities($_POST['titel']),$htmlent_flags,$htmlent_encoding_acp)."',
 							newscatid		= '".mysql_real_escape_string($newscats_string)."',
 							text			= '".mysql_real_escape_string($text)."',
 							autozusammen	= '".$autozusammen."',

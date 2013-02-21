@@ -136,7 +136,7 @@ else $echo_css = "";
 $listcat = mysql_query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
 while($rowcat = mysql_fetch_assoc($listcat)){
 	$category[$rowcat['id']]['id'] 		= $rowcat['id'];
-	$category[$rowcat['id']]['name']	= htmlentities(stripslashes($rowcat['name']));
+	$category[$rowcat['id']]['name']	= htmlentities(stripslashes($rowcat['name']),$htmlent_flags,$htmlent_encoding_acp);
 	$category[$rowcat['id']]['catpic']	= stripslashes($rowcat['catpic']);
 	}
 
