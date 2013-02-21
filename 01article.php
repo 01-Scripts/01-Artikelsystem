@@ -418,9 +418,6 @@ else{
             // Neuen Kommentar hinzufügen
             if(isset($_POST['send_comment']) && $_POST['send_comment'] == 1 &&
 			   isset($_POST['modul_comment']) && $_POST['modul_comment'] == $modul){
-				if($flag_utf8)
-				    $message = insert_Comment(htmlentities(utf8_decode($_POST['autor'])),$_POST['email'],$_POST['url'],utf8_decode($_POST['comment']),$_POST['antispam'],$_POST['deaktiv_bbc'],$row['id'],$_POST['uid']);
-				else
 					$message = insert_Comment($_POST['autor'],$_POST['email'],$_POST['url'],$_POST['comment'],$_POST['antispam'],$_POST['deaktiv_bbc'],$row['id'],$_POST['uid']);
 				}
 
