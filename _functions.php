@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2011 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Modulspezifische Funktionen
-	#fv.310#
+	#fv.311#
 */
 
 /* SYNTAKTISCHER AUFBAU VON FUNKTIONSNAMEN BEACHTEN!!!
@@ -135,7 +135,7 @@ RETURN: Array $input_fields mit Standardvorgabewerten / Werten aus DB
 */
 if(!function_exists("_01article_fillForm_DataArray")){
 function _01article_fillForm_DataArray($row=""){
-global $ser_fields;
+global $ser_fields,$htmlent_flags,$htmlent_encoding_acp;
 
 if(is_array($row)){
 	$form_data = array("id"				=> $row['id'],
@@ -176,7 +176,7 @@ if(is_array($row)){
 			}
 		else{
 			for($x=1;$x<=ANZ_SER_FIELDS;$x++){
-				$form_data['ser_field_'.$x] = htmlspecialchars(stripslashes($return['field_'.$x]));
+				$form_data['ser_field_'.$x] = htmlspecialchars(stripslashes($return['field_'.$x]),$htmlent_flags,$htmlent_encoding_acp);
 				}
 			}
 		}
