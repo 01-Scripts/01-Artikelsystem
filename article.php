@@ -26,22 +26,17 @@ else{
 	$input_field['publish'] 	= "Veröffentlichen";
 	$input_field['save'] 		= "Zwischenspeichern";
 	}
-if(!isset($_REQUEST['who'])) $_REQUEST['who'] = "";
+if(!isset($_REQUEST['who']))	$_REQUEST['who'] 	= "";
 	
 // Notice: Undefined index: ... beheben
-if(!isset($_GET['search'])) 	$_GET['search'] = "";
-if(!isset($_GET['sort'])) 		$_GET['sort'] = "";
-if(!isset($_GET['orderby'])) 	$_GET['orderby'] = "";
-if(!isset($_GET['site'])) 		$_GET['site'] = "";
-if(!isset($_GET['catid']))		$_GET['catid'] = "";
+if(!isset($_GET['search'])) 	$_GET['search']		= "";
+if(!isset($_GET['sort'])) 		$_GET['sort']		= "";
+if(!isset($_GET['orderby'])) 	$_GET['orderby']	= "";
+if(!isset($_GET['site'])) 		$_GET['site']		= "";
+if(!isset($_GET['catid']))		$_GET['catid']		= "";
 
 $add_filename 	= "&amp;search=".$_GET['search']."&amp;sort=".$_GET['sort']."&amp;orderby=".$_GET['orderby']."&amp;site=".$_GET['site']."";
 $flag_overview 	= FALSE;
-	
-	
-	
-	
-	
 	
 	
 	
@@ -188,7 +183,7 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 		
 		// Anderen Autor für Artikel setzten
 		if(isset($_POST['autor']) && !empty($_POST['autor']) && ($userdata['editarticle'] == 2 && $flag_static == 0 || $flag_static == 1 && $userdata['staticarticle'] == 2))
-			$autorid = mysql_real_escape_string($_POST['autor']);
+			$autorid = $mysqli->escape_string($_POST['autor']);
 		else
 			$autorid = $userdata['id'];
 			
@@ -198,23 +193,23 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 						'".$ende_mysqldate."',
 						'".$frei."',
 						'".$hide."',
-						'".mysql_real_escape_string($_POST['icon'])."',
-						'".mysql_real_escape_string(htmlentities($_POST['titel'],$htmlent_flags,$htmlent_encoding_acp))."',
-						'".mysql_real_escape_string($newscats_string)."',
-						'".mysql_real_escape_string($text)."',
+						'".$mysqli->escape_string($_POST['icon'])."',
+						'".$mysqli->escape_string(htmlentities($_POST['titel'],$htmlent_flags,$htmlent_encoding_acp))."',
+						'".$mysqli->escape_string($newscats_string)."',
+						'".$mysqli->escape_string($text)."',
 						'".$autozusammen."',
-						'".mysql_real_escape_string($zusammen)."',
+						'".$mysqli->escape_string($zusammen)."',
 						'".$comments."',
-						'".mysql_real_escape_string($_POST['hide_headline'])."',
+						'".$mysqli->escape_string($_POST['hide_headline'])."',
 						'".$autorid."',
 						'".$flag_static."',
-						'".mysql_real_escape_string($_POST['top'])."',
+						'".$mysqli->escape_string($_POST['top'])."',
 						'0',
-						'".mysql_real_escape_string($_POST['hide_signature'])."',
-						'".mysql_real_escape_string(serialize($ser_fieldarray))."'
+						'".$mysqli->escape_string($_POST['hide_signature'])."',
+						'".$mysqli->escape_string(serialize($ser_fieldarray))."'
 						)";
-		$result = mysql_query($sql_insert, $db) OR die(mysql_error());
-		$saved_id = mysql_insert_id();
+		$result = $mysqli->query($sql_insert) OR die($mysqli->error);
+		$saved_id = $mysqli->insert_id;
 		
 		if($saved_id > 0 && $hide == 1){
 			// Artikel / Seite wurde NUR zwischengespeichert
@@ -251,8 +246,8 @@ Bitte loggen Sie sich dazu in den Administrationsbereich ein
 und überprüfen Sie ihn.\n\n---\nWebmailer";
 				
 			// Es werden 10 beliebige Benutzer mit den entsprechenden Rechten per E-Mail informiert.
-			$list = mysql_query("SELECT id,username,mail FROM ".$mysql_tables['user']." WHERE ".mysql_real_escape_string($modul)."_editarticle = '2' AND sperre = '0' AND 01acp_".mysql_real_escape_string($modul)." = '1' ORDER BY rand() LIMIT 10");
-			while($row = mysql_fetch_array($list)){
+			$list = $mysqli->query("SELECT id,username,mail FROM ".$mysql_tables['user']." WHERE ".$mysqli->escape_string($modul)."_editarticle = '2' AND sperre = '0' AND 01acp_".$mysqli->escape_string($modul)." = '1' ORDER BY rand() LIMIT 10");
+			while($row = $list->fetch_assoc()){
 		        mail(stripslashes($row['mail']),$email_betreff,$emailbody,$header);
 				}
 			}
@@ -285,10 +280,10 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 	// Formular ausgeben
 	if($flag_formular){
 		if(isset($_REQUEST['copyid']) && is_numeric($_REQUEST['copyid']) && $_REQUEST['copyid'] > 0 && !$gotget){
-			$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($_REQUEST['copyid'])."' LIMIT 1";
+			$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE id = '".$mysqli->escape_string($_REQUEST['copyid'])."' LIMIT 1";
 
-			$list = mysql_query($query);
-			while($row = mysql_fetch_array($list)){
+			$list = $mysqli->query($query);
+			while($row = $list->fetch_assoc()){
 				$form_data =  _01article_fillForm_DataArray($row);
 				$form_data['uid']				= $userdata['id'];
 				$form_data['username']			= $userdata['username'];
@@ -351,8 +346,8 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 		
 		// Benutzerberechtigung überprüfen
 		if($userdata['editarticle'] == 1 || $userdata['staticarticle'] == 1){
-			$list = mysql_query("SELECT uid FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($_POST['id'])."' LIMIT 1");
-			$uidrow = mysql_fetch_array($list);
+			$list = $mysqli->query("SELECT uid FROM ".$mysql_tables['artikel']." WHERE id = '".$mysqli->escape_string($_POST['id'])."' LIMIT 1");
+			$uidrow = $list->fetch_assoc();
 			}
 		if(($userdata['editarticle'] == 2 || $userdata['editarticle'] == 1 && $userdata['id'] == $uidrow['uid']) && $flag_static == 0 || 
 		   $flag_static == 1 && ($userdata['staticarticle'] == 2 || $userdata['staticarticle'] == 1 && $userdata['id'] == $uidrow['uid'])){
@@ -362,26 +357,26 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 			$autorid_q = "";
 			if($userdata['editarticle'] == 2 && $flag_static == 0 || $flag_static == 1 && $userdata['staticarticle'] == 2){
 				if(isset($_POST['autor']) && (!empty($_POST['autor']) || (int)$_POST['autor'] == 0) && $_POST['autor'] != $_POST['uid'] && ($userdata['editarticle'] == 2 || $userdata['staticarticle'] == 2))
-					$autorid_q = "uid = '".mysql_real_escape_string($_POST['autor'])."',";
+					$autorid_q = "uid = '".$mysqli->escape_string($_POST['autor'])."',";
 				}
 				
 			// Eintragung in Datenbank aktualisieren:
-			if(mysql_query("UPDATE ".$mysql_tables['artikel']." SET 
+			if($mysqli->query("UPDATE ".$mysql_tables['artikel']." SET 
 							timestamp		= '".$start_mysqldate."',
 							endtime			= '".$ende_mysqldate."',
 							hide			= '".$hide."',
-							icon			= '".mysql_real_escape_string($_POST['icon'])."',
-							titel			= '".mysql_real_escape_string(htmlentities($_POST['titel'],$htmlent_flags,$htmlent_encoding_acp))."',
-							newscatid		= '".mysql_real_escape_string($newscats_string)."',
-							text			= '".mysql_real_escape_string($text)."',
+							icon			= '".$mysqli->escape_string($_POST['icon'])."',
+							titel			= '".$mysqli->escape_string(htmlentities($_POST['titel'],$htmlent_flags,$htmlent_encoding_acp))."',
+							newscatid		= '".$mysqli->escape_string($newscats_string)."',
+							text			= '".$mysqli->escape_string($text)."',
 							autozusammen	= '".$autozusammen."',
-							zusammenfassung	= '".mysql_real_escape_string($zusammen)."',
+							zusammenfassung	= '".$mysqli->escape_string($zusammen)."',
 							comments		= '".$comments."',
-							hide_headline	= '".mysql_real_escape_string($_POST['hide_headline'])."',".$autorid_q."
-							top				= '".mysql_real_escape_string($_POST['top'])."',
-							hide_signature	= '".mysql_real_escape_string($_POST['hide_signature'])."',
-							serialized_data = '".mysql_real_escape_string(serialize($ser_fieldarray))."'
-							WHERE id = '".mysql_real_escape_string($_POST['id'])."'"))
+							hide_headline	= '".$mysqli->escape_string($_POST['hide_headline'])."',".$autorid_q."
+							top				= '".$mysqli->escape_string($_POST['top'])."',
+							hide_signature	= '".$mysqli->escape_string($_POST['hide_signature'])."',
+							serialized_data = '".$mysqli->escape_string(serialize($ser_fieldarray))."'
+							WHERE id = '".$mysqli->escape_string($_POST['id'])."'"))
 				$saved = TRUE;
 			else $saved = FALSE;
 			}
@@ -420,7 +415,7 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 		}
 	// Eintrag bearbeiten (Formular anzeigen)
 	else{
-		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($_REQUEST['id'])."'";
+		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE id = '".$mysqli->escape_string($_REQUEST['id'])."'";
 		switch($_REQUEST['static']){
 		  case "0":
 			if($userdata['editarticle'] == 2)
@@ -438,8 +433,8 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 		$query .= " LIMIT 1";
 		
 		// Werte aus DB holen
-		$list = mysql_query($query);
-		while($row = mysql_fetch_array($list)){			
+		$list = $mysqli->query($query);
+		while($row = $list->fetch_assoc()){			
 			$temp_uname = getUserdatafields($row['uid'],"username");
 			$form_data = _01article_fillForm_DataArray($row);
 			$form_data['username'] = $temp_uname['username'];
@@ -483,30 +478,30 @@ if($flag_overview) $_REQUEST['action'] = $_REQUEST['who'];
 	  break;
 	  }
 
-	if(!isset($_GET['search'])) 	$_GET['search'] = "";
-	if(!isset($_GET['sort'])) 		$_GET['sort'] = "";
-	if(!isset($_GET['orderby'])) 	$_GET['orderby'] = "";
+	if(!isset($_GET['search'])) 	$_GET['search']		= "";
+	if(!isset($_GET['sort'])) 		$_GET['sort']		= "";
+	if(!isset($_GET['orderby'])) 	$_GET['orderby']	= "";
 	
 	$filename2 = $filename."&amp;action=".$input_action."&amp;serach=".$_GET['search']."&amp;sort=".$_GET['sort']."&amp;orderby=".$_GET['orderby']."";
 	
 	// Artikel / Seiten freischalten
 	if(isset($_GET['do']) && $_GET['do'] == "free" && isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
 		if($userdata['editarticle'] == 2 && $flag_static == 0 || $userdata['staticarticle'] == 2 && $flag_static == 1)
-		    mysql_query("UPDATE ".$mysql_tables['artikel']." SET frei='1' WHERE id='".mysql_real_escape_string($_GET['id'])."' AND static = '".$flag_static."' LIMIT 1");
+		    $mysqli->query("UPDATE ".$mysql_tables['artikel']." SET frei='1' WHERE id='".$mysqli->escape_string($_GET['id'])."' AND static = '".$flag_static."' LIMIT 1");
 		
 		echo "<p class=\"meldung_erfolg\"><b>".$input_field['bezeichnung']." wurde freigeschaltet</b></p>";
 		}
 		
 	// Artikel veröffentlichen
 	if(isset($_GET['do']) && $_GET['do'] == "publish" && isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
-		mysql_query("UPDATE ".$mysql_tables['artikel']." SET hide='0' WHERE id='".mysql_real_escape_string($_GET['id'])."' AND uid = '".$userdata['id']."' LIMIT 1");
+		$mysqli->query("UPDATE ".$mysql_tables['artikel']." SET hide='0' WHERE id='".$mysqli->escape_string($_GET['id'])."' AND uid = '".$userdata['id']."' LIMIT 1");
 		echo "<p class=\"meldung_erfolg\"><b>".$input_field['bezeichnung']." wurde ver&ouml;ffentlicht</b></p>";
 		}
 
 	// Auflistung
 	
 	// Kategorien zählen um ggf. auszublenden
-	list($catmenge) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['cats'].""));
+	list($catmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['cats']."")->fetch_array(MYSQLI_NUM);
 ?>
 <h1><?PHP echo $input_field['site_titel']; ?></h1>
 <?PHP if($input_action == "statics"){ ?>
@@ -551,8 +546,8 @@ $cat_data = array();
 	elseif(isset($_GET['sort']) && $_GET['sort'] == "desc") $sortorder = "DESC";
 	else $sortorder = "ASC";
 	
-	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,text,zusammenfassung) AGAINST ('".mysql_real_escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
-	elseif(isset($_GET['catid']) && !empty($_GET['catid']) && is_numeric($_GET['catid'])) $where = " WHERE newscatid LIKE '%,".mysql_real_escape_string($_GET['catid']).",%' ";
+	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,text,zusammenfassung) AGAINST ('".$mysqli->escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
+	elseif(isset($_GET['catid']) && !empty($_GET['catid']) && is_numeric($_GET['catid'])) $where = " WHERE newscatid LIKE '%,".$mysqli->escape_string($_GET['catid']).",%' ";
 	else $where = " WHERE static = '".$flag_static."' ";
 	
 	if($userdata['editarticle'] == 1 && $flag_static == 0 || $userdata['staticarticle'] == 1 && $flag_static == 1)
@@ -621,8 +616,9 @@ $cat_data = array();
 
 	// Ausgabe der Datensätze (Liste) aus DB
 	$count = 0;
-	$list = mysql_query($query);
-	while($row = mysql_fetch_array($list)){
+	echo $query;
+	$list = $mysqli->query($query);
+	while($row = $list->fetch_assoc()){
 		if($count == 1){ $class = "tra"; $count--; }else{ $class = "trb"; $count++; }
 		if($row['top'] == 1) $top = "* ";
 		else $top = "";

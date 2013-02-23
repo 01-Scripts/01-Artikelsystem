@@ -27,9 +27,9 @@
 */
 if(!function_exists("_01article_DeleteUser")){
 function _01article_DeleteUser($userid,$username,$mail){
-global $mysql_tables;
+global $mysqli,$mysql_tables;
 
-mysql_query("UPDATE ".$mysql_tables['artikel']." SET uid='0' WHERE uid='".mysql_real_escape_string($userid)."'");
+$mysqli->query("UPDATE ".$mysql_tables['artikel']." SET uid='0' WHERE uid='".$mysqli->escape_string($userid)."'");
 
 return TRUE;
 }
@@ -41,20 +41,20 @@ RETURN: TRUE
 */
 if(!function_exists("_01article_DeleteModul")){
 function _01article_DeleteModul(){
-global $mysql_tables,$modul;
+global $mysqli,$mysql_tables,$modul;
 
-$modul = mysql_real_escape_string($modul);
+$modul = $mysqli->escape_string($modul);
 
 // MySQL-Tabellen löschen
-mysql_query("DROP TABLE `".$mysql_tables['artikel']."`");
-mysql_query("DROP TABLE `".$mysql_tables['cats']."`");
+$mysqli->query("DROP TABLE `".$mysql_tables['artikel']."`");
+$mysqli->query("DROP TABLE `".$mysql_tables['cats']."`");
 
 // Rechte entfernen
-mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_newarticle`");
-mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_editarticle`");
-mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_staticarticle`");
-mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_freischaltung`");
-mysql_query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_editcats`");
+$mysqli->query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_newarticle`");
+$mysqli->query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_editarticle`");
+$mysqli->query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_staticarticle`");
+$mysqli->query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_freischaltung`");
+$mysqli->query("ALTER TABLE `".$mysql_tables['user']."` DROP `".$modul."_editcats`");
 
 return TRUE;
 }
@@ -72,11 +72,10 @@ return TRUE;
 */
 if(!function_exists("_01article_getCommentParentTitle")){
 function _01article_getCommentParentTitle($postid){
-global $mysql_tables;
+global $mysqli,$mysql_tables;
 
-//return "SELECT titel FROM ".$mysql_tables['artikel']." WHERE id='".mysql_real_escape_string($postid)."' LIMIT 1";
-$list = mysql_query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id='".mysql_real_escape_string($postid)."' LIMIT 1");
-while($row = mysql_fetch_assoc($list)){
+$list = $mysqli->query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id='".$mysqli->escape_string($postid)."' LIMIT 1");
+while($row = $list->fetch_assoc()){
 	return stripslashes($row['titel']);
 	}
 }
@@ -224,14 +223,14 @@ RETURN: RSS-XML-Daten
 */
 if(!function_exists("_01article_RSS")){
 function _01article_RSS($show,$entrynrs,$cats){
-global $mysql_tables,$settings,$modul,$names,$lang,$server_domainname;
+global $mysqli,$mysql_tables,$settings,$modul,$names,$lang,$server_domainname;
 
 $rssdata = create_RSSFramework($settings['artikelrsstitel'],$settings['artikelrsstargeturl'],$settings['artikelrssbeschreibung']);
 $write_text = "";
 
 // LIMIT
 if(isset($entrynrs) && is_numeric($entrynrs) && $entrynrs > 0)
-	$limit = mysql_real_escape_string(strip_tags($entrynrs));
+	$limit = $mysqli->escape_string(strip_tags($entrynrs));
 else
 	$limit = $settings['artikelrssanzahl'];	
 	
@@ -241,13 +240,13 @@ $mod = array_flip($mod);
 // RSS-Feed für KOMMENTARE
 if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentarfeed'] == 1){
 	// Newstitel in Array einlesen (um MySQL-Abfragen zu verringern)
-	$list = mysql_query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0')");
-	while($row = mysql_fetch_assoc($list)){
+	$list = $mysqli->query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0')");
+	while($row = $list->fetch_assoc()){
 		$arttitel[$row['id']] = stripslashes($row['titel']);
 		}
 		
-	$list = mysql_query("SELECT postid,timestamp,autor,comment FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY timestamp DESC LIMIT ".mysql_real_escape_string($settings['artikelrssanzahl'])."");
-	while($row = mysql_fetch_assoc($list)){
+	$list = $mysqli->query("SELECT postid,timestamp,autor,comment FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY timestamp DESC LIMIT ".$mysqli->escape_string($settings['artikelrssanzahl'])."");
+	while($row = $list->fetch_assoc()){
 
 		if($settings['modrewrite'] == 1)
 			$echolink = _01article_echo_ArticleLink($row['postid'],$arttitel[$row['postid']],$row['timestamp']);
@@ -278,17 +277,17 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 				   
 		$add2query_cat = " 1=2 ";
 		foreach($cats_array as $value){
-			$add2query_cat .= " OR newscatid LIKE '%,".mysql_real_escape_string($value).",%' ";
+			$add2query_cat .= " OR newscatid LIKE '%,".$mysqli->escape_string($value).",%' ";
 			}
 		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp DESC LIMIT ".$limit."";
 		}
 	elseif(isset($cats) && !empty($cats))
-		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND newscatid LIKE '%,".mysql_real_escape_string($cats).",%' ORDER BY timestamp DESC LIMIT ".$limit."";
+		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND newscatid LIKE '%,".$mysqli->escape_string($cats).",%' ORDER BY timestamp DESC LIMIT ".$limit."";
 	else
 		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') ORDER BY timestamp DESC LIMIT ".$limit."";
 	
-	$list = mysql_query($query);
-	while($row = mysql_fetch_assoc($list)){
+	$list = $mysqli->query($query);
+	while($row = $list->fetch_assoc()){
 
 		if($settings['modrewrite'] == 1)
 			$echolink = _01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['timestamp']);
@@ -354,12 +353,12 @@ return $return;
 */
 if(!function_exists("_01article_CatDropDown")){
 function _01article_CatDropDown(&$plain_data){
-global $mysql_tables;
+global $mysqli,$mysql_tables;
 
 $plain_data = array();
 
-$list = mysql_query("SELECT id,name FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
-while($row = mysql_fetch_assoc($list)){
+$list = $mysqli->query("SELECT id,name FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
+while($row = $list->fetch_assoc()){
 	$plain_data[$row['id']] = stripslashes($row['name']);
 	$return .= "<option value=\"".$row['id']."\">".stripslashes($row['name'])."</option>\n";
 	}
@@ -381,11 +380,11 @@ return $return;
   */
 if(!function_exists("_01article_CatSortDropDown")){
 function _01article_CatSortDropDown($selected=1){
-global $mysql_tables;
+global $mysqli,$mysql_tables;
 
 $return = "";
 $catmenge = 0;
-list($catmenge) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['cats'].""));
+list($catmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['cats']."")->fetch_array(MYSQLI_NUM);
 
 for($x=1;$x<=$catmenge;$x++){
 	if($x == $selected) $return .= "<option selected=\"selected\">".$x."</option>\n";
@@ -434,11 +433,11 @@ RETURN: Array(
   */
 if(!function_exists("_01article_getUserstats")){
 function _01article_getUserstats($userid){
-global $mysql_tables,$modul,$module;
+global $mysqli,$mysql_tables,$modul,$module;
 
 if(isset($userid) && is_integer(intval($userid))){
 	$artmenge = 0;
-	list($artmenge) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND uid = '".mysql_real_escape_string($userid)."'"));
+	list($artmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND uid = '".$mysqli->escape_string($userid)."'")->fetch_array(MYSQLI_NUM);
 	
 	$ustats[] = array("statcat"	=> "Geschriebene Artikel (".$module[$modul]['instname']."):",
 						"statvalue"	=> $artmenge);
@@ -463,6 +462,8 @@ RETURN: MySQL-Query zum Einfügen in ... WHERE ... AND ($add2query) ...
   */
 if(!function_exists("_01article_CreateCatQuery")){
 function _01article_CreateCatQuery($catids=NULL){
+global $mysqli;
+
 $add2query_cat = " 1=1 ";
 
 if($catids != NULL){
@@ -471,11 +472,11 @@ if($catids != NULL){
 
 		$add2query_cat = " 1=2 ";
 		foreach($cats_array as $value){
-			$add2query_cat .= " OR newscatid LIKE '%,".mysql_real_escape_string($value).",%' ";
+			$add2query_cat .= " OR newscatid LIKE '%,".$mysqli->escape_string($value).",%' ";
 			}
 		}
 	else
-		$add2query_cat = " newscatid LIKE '%,".mysql_real_escape_string($catids).",%' ";
+		$add2query_cat = " newscatid LIKE '%,".$mysqli->escape_string($catids).",%' ";
 	}
 return $add2query_cat;
 }
@@ -498,7 +499,7 @@ RETURN: Entsprechend (mod_rewrite) formatierter Link an den weitere Parameter an
   */
 if(!function_exists("_01article_echo_ArticleLink")){
 function _01article_echo_ArticleLink($artid,$arttitle="",$timestamp="",$domain=""){
-global $mysql_tables,$settings,$names,$server_domainname,$filename;
+global $settings,$names,$server_domainname,$filename;
 
 $artid = strip_tags($artid);
 
@@ -541,11 +542,11 @@ else
 */
 if(!function_exists("_01article_getArtTitle")){
 function _01article_getArtTitle($artid){
-global $mysql_tables;
+global $mysqli,$mysql_tables;
 
 if(is_numeric($artid) && $artid != 0 && !empty($artid)){
-	$list = mysql_query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id = '".mysql_real_escape_string($artid)."'");
-	$row = mysql_fetch_assoc($list);
+	$list = $mysqli->query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id = '".$mysqli->escape_string($artid)."'");
+	$row = $list->fetch_assoc();
 	
 	return stripslashes($row['titel']);
 	}

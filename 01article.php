@@ -113,7 +113,6 @@ if(isset($_GET[$names['rss']]) && ($_GET[$names['rss']] == "show_rssfeed" || $_G
 	
 	header("Content-type: text/xml");
 	echo _01article_RSS($_GET[$names['rss']],$_GET['entries'],$_REQUEST[$names['catid']]);
-	mysql_close();
 	exit;
 	}
 elseif(isset($_GET[$names['rss']]) && ($_GET[$names['rss']] == "show_rssfeed" || $_GET[$names['rss']] == "show_commentrssfeed")){
@@ -133,8 +132,8 @@ elseif(isset($settings['csscode']) && !empty($settings['csscode']) && !$flag_noc
 else $echo_css = "";
 
 // Alle Kategorien in einen mehrdimensionalen Array einlesen
-$listcat = mysql_query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
-while($rowcat = mysql_fetch_assoc($listcat)){
+$listcat = $mysqli->query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
+while($rowcat = $listcat->fetch_assoc()){
 	$category[$rowcat['id']]['id'] 		= $rowcat['id'];
 	$category[$rowcat['id']]['name']	= htmlentities(stripslashes($rowcat['name']),$htmlent_flags,$htmlent_encoding_acp);
 	$category[$rowcat['id']]['catpic']	= stripslashes($rowcat['catpic']);
@@ -149,11 +148,11 @@ if(!empty($settings['archiv_time']) && $settings['archiv_time'] > 0 && is_numeri
 
 // Alternative Abfrage, wenn nur ein Artikel / eine Seite angezeigt werden soll
 if(isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) && $_GET[$names['artid']] != "archiv" && $_GET[$names['artid']] > 0 && is_numeric($_GET[$names['artid']])){
-    $query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND id = '".mysql_real_escape_string($_GET[$names['artid']])."' LIMIT 1";
+    $query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND id = '".$mysqli->escape_string($_GET[$names['artid']])."' LIMIT 1";
 	$iderror = 1;
 
     //Hits +1:
-    mysql_query("UPDATE ".$mysql_tables['artikel']." SET hits = hits+1 WHERE id = '".mysql_real_escape_string($_GET[$names['artid']])."' LIMIT 1");
+    $mysqli->query("UPDATE ".$mysql_tables['artikel']." SET hits = hits+1 WHERE id = '".$mysqli->escape_string($_GET[$names['artid']])."' LIMIT 1");
     }
 // Archiv-Ansicht
 elseif(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !empty($settings['archiv_time']) && $settings['archiv_time'] > 0 && is_numeric($settings['archiv_time'])){
@@ -174,9 +173,9 @@ else{
 	
     if(isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]) && $settings['artikelsuche'] == 1){
 		if($flag_utf8)
-			$parsed_searchstring = mysql_real_escape_string(parse_uml(utf8_decode(str_replace("*","",$_REQUEST[$names['search']]))));
+			$parsed_searchstring = $mysqli->escape_string(parse_uml(utf8_decode(str_replace("*","",$_REQUEST[$names['search']]))));
 		else
-			$parsed_searchstring = mysql_real_escape_string(parse_uml(str_replace("*","",$_REQUEST[$names['search']])));
+			$parsed_searchstring = $mysqli->escape_string(parse_uml(str_replace("*","",$_REQUEST[$names['search']])));
 
 		$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
         $add2query = "AND MATCH (titel,text,zusammenfassung) AGAINST ('".$parsed_searchstring."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND (".$add2query_cat.")";
@@ -198,18 +197,18 @@ else{
 	}
 
 // List > 0?
-$list = mysql_query($query);
+$list = $mysqli->query($query);
 echo "<!-- 2559ad821dde361560dbf967c3406f51 -->";
 
 // Wenn nichts angezeigt werden konnte neuer Versuch mit Standardabfrage
-if(mysql_num_rows($list) == 0 && !$flag_IamStandard){
+if($list->num_rows == 0 && !$flag_IamStandard){
 	$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime='0') ".$qt_query."ORDER BY top DESC,timestamp DESC";
 	makepages($query,$sites,$names['page'],$settings['articleperpage']);
-	$list = mysql_query($query);
+	$list = $mysqli->query($query);
 	
 	$_GET[$names['artid']] = "";
 	}
-elseif(mysql_num_rows($list) > 0){
+elseif($list->num_rows > 0){
 	if(isset($_REQUEST[$names['search']]) && !empty($_REQUEST[$names['search']]) && $settings['artikelsuche'] == 1)
 		$iderror = 4;
 	elseif(isset($_REQUEST[$names['catid']]) && !empty($_REQUEST[$names['catid']]))
@@ -233,7 +232,7 @@ if(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !empty
     include($tempdir."archiv_top.html");
     
 	$round = 1;
-	while($row = mysql_fetch_assoc($list)){
+	while($row = $list->fetch_assoc()){
         if($round == 1){
         	$archiv_year = date("Y",$row['timestamp']);
 			$archiv_month = date("n",$row['timestamp']);
@@ -276,7 +275,7 @@ if(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !empty
 	
 // NORMALE AUSGABE
 else{
-	while($row = mysql_fetch_assoc($list)){
+	while($row = $list->fetch_assoc()){
         $datum 		= date("d.m.y",$row['timestamp']);
         $uhrzeit 	= date("G:i",$row['timestamp']);
 
@@ -335,7 +334,7 @@ else{
         // Anzahl bisheriger Kommentare ermitteln
         if($settings['comments'] == 1){ 
 			$comments = 0;
-			list($comments) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['comments']." WHERE frei = '1' AND modul = '".mysql_real_escape_string($modul)."' AND postid = '".$row['id']."'"));
+			list($comments) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['comments']." WHERE frei = '1' AND modul = '".$mysqli->escape_string($modul)."' AND postid = '".$row['id']."'")->fetch_array(MYSQLI_NUM);
 			}
 
         // Weitere Variablen für die Template-Ausgabe aufbereiten
@@ -373,13 +372,13 @@ else{
         if(isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) && $_GET[$names['artid']] != "archiv" && $row['static'] == 0){
 			$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
 		
-			$listnext = mysql_query("SELECT id,timestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp > '".$row['timestamp']."' AND timestamp <= '".time()."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp LIMIT 1");
-            $rownext = mysql_fetch_assoc($listnext);
+			$listnext = $mysqli->query("SELECT id,timestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp > '".$row['timestamp']."' AND timestamp <= '".time()."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp LIMIT 1");
+            $rownext = $listnext->fetch_assoc();
             $next_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rownext['id'],stripslashes($rownext['titel']),$rownext['timestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
             $next_titel = stripslashes($rownext['titel']);
 			
-            $listprev = mysql_query("SELECT id,timestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp < '".$row['timestamp']."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.")  ORDER BY timestamp DESC LIMIT 1");
-            $rowprev = mysql_fetch_assoc($listprev);
+            $listprev = $mysqli->query("SELECT id,timestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp < '".$row['timestamp']."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.")  ORDER BY timestamp DESC LIMIT 1");
+            $rowprev = $listprev->fetch_assoc();
             $prev_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rowprev['id'],stripslashes($rowprev['titel']),$rowprev['timestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
             $prev_titel = stripslashes($rowprev['titel']);
             }
@@ -426,30 +425,30 @@ else{
 
             // KOMMENTARE AUSGEBEN
             $nr = 1;
-            $comment_query = "SELECT * FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND postid='".$row['id']."' AND frei='1' ORDER BY timestamp ".mysql_real_escape_string($comment_desc)."";
+            $comment_query = "SELECT * FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND postid='".$row['id']."' AND frei='1' ORDER BY timestamp ".$mysqli->escape_string($comment_desc)."";
             
 			// Seiten-Funktion
             if($settings['comments_perpage'] > 0){
-                $comment_sc = mysql_num_rows(mysql_query($comment_query));
+                $comment_sc = $mysqli->query($comment_query)->num_rows;
                 $comment_sites = ceil($comment_sc/$settings['comments_perpage']);    //=Anzahl an Seiten
 				
                 if(isset($_GET[$names['cpage']]) && $_GET[$names['cpage']] == "last" && $comment_sites > 1){
                     $_GET[$names['cpage']] = $comment_sites;
                     $commentsstart = $comment_sites*$settings['comments_perpage']-$settings['comments_perpage'];
-                    $comment_query .= " LIMIT ".mysql_real_escape_string($commentsstart).",".mysql_real_escape_string($settings['comments_perpage'])."";
+                    $comment_query .= " LIMIT ".$mysqli->escape_string($commentsstart).",".$mysqli->escape_string($settings['comments_perpage'])."";
                     $nr = $commentsstart+1;
                     }
                 elseif(isset($_GET[$names['cpage']]) && !empty($_GET[$names['cpage']]) && $_GET[$names['cpage']] <= $comment_sites && $comment_sites > 1){
                     $commentsstart = $_GET[$names['cpage']]*$settings['comments_perpage']-$settings['comments_perpage'];
-                    $comment_query .= " LIMIT ".mysql_real_escape_string($commentsstart).",".mysql_real_escape_string($settings['comments_perpage'])."";
+                    $comment_query .= " LIMIT ".$mysqli->escape_string($commentsstart).",".$mysqli->escape_string($settings['comments_perpage'])."";
                     $nr = $commentsstart+1;
                     }
                 else
-                    $comment_query .= " LIMIT ".mysql_real_escape_string($settings['comments_perpage'])."";
+                    $comment_query .= " LIMIT ".$mysqli->escape_string($settings['comments_perpage'])."";
                 }
 
-            $clist = mysql_query($comment_query);
-            while($crow = mysql_fetch_assoc($clist)){
+            $clist = $mysqli->query($comment_query);
+            while($crow = $clist->fetch_assoc()){
                 
 				// URL
                 if(!empty($crow['url']) && $crow['url'] != "http://"){
@@ -522,7 +521,6 @@ else{
             $system_link_form = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$jumpto_csite."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments_add"));
 
             if($row['comments'] == 1 && $settings['comments'] == 1){
-                mt_srand((double)microtime()*1000000); 
 				$zahl = mt_rand(1, 9999999999999);
 				$uid = md5(time().$_SERVER['REMOTE_ADDR'].$zahl.$_GET[$names['artid']]);
 				//Template ausgeben
@@ -584,9 +582,9 @@ if(isset($category) && count($category) > 0){
 	foreach($category as $cat){
 		// Sind Einträge dieser Kategorie zugeordnet?
 		if($qt > 0)
-			list($newsvorhanden) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static = '0' AND timestamp <= '".time()."' AND timestamp>'".$qt."' AND (endtime >= '".time()."' OR endtime='0') AND newscatid LIKE '%,".$cat['id'].",%'"));
+			list($newsvorhanden) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static = '0' AND timestamp <= '".time()."' AND timestamp>'".$qt."' AND (endtime >= '".time()."' OR endtime='0') AND newscatid LIKE '%,".$cat['id'].",%'")->fetch_array(MYSQLI_NUM);
 		else
-			list($newsvorhanden) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static = '0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime='0') AND newscatid LIKE '%,".$cat['id'].",%'"));
+			list($newsvorhanden) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static = '0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime='0') AND newscatid LIKE '%,".$cat['id'].",%'")->fetch_array(MYSQLI_NUM);
 		
 		if($newsvorhanden > 0)
 			$listcats .= "<option value=\"".$cat['id']."\">".$cat['name']." (".$newsvorhanden.")</option>\n";

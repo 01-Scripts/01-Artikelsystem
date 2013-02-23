@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2008 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel-Formular
-	#fv.310#
+	#fv.311#
 */
 
 echo loadTinyMCE("advanced","","","","top");
@@ -39,9 +39,8 @@ der bestehende Artikel wird dabei nicht ver&auml;ndert.</p>
     </tr>
     
 <?PHP
-$cq = mysql_query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
-$cz = mysql_num_rows($cq);
-if($cz > 0 && $input_section == "article"){
+$cq = $mysqli->query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
+if($cq->num_rows > 0 && $input_section == "article"){
 $hiddencat = "";
 ?>
     <tr>
@@ -52,7 +51,7 @@ $hiddencat = "";
 			echo "<option value=\"0\">Kategorie w&auml;hlen...</option>";
 			if(isset($form_data['newscat']) && $form_data['newscat'] != "0") $newscatids_array = explode(",",$form_data['newscat']);
 			
-			while($rowcat = mysql_fetch_assoc($cq)){
+			while($rowcat = $cq->fetch_assoc()){
 				echo "<option value=\"".$rowcat['id']."\"";
 				
 				if(isset($form_data['newscat']) && $form_data['newscat'] != "0" && in_array($rowcat['id'],$newscatids_array)) echo " selected=\"selected\"";

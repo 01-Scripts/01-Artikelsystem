@@ -1,6 +1,6 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2012 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
@@ -26,9 +26,9 @@ if(isset($_POST['do']) && $_POST['do'] == "newnewscat" && isset($_POST['catname'
 	if($passpic && $_FILES['catfile']['size'] <= $picsize){
 		if(move_uploaded_file($_FILES['catfile']['tmp_name'], $catuploaddir.$time.".".$endung)){
 			$sql_insert = "INSERT INTO ".$mysql_tables['cats']." (name,catpic)
-						   VALUES ('".mysql_real_escape_string($_POST['catname'])."',
+						   VALUES ('".$mysqli->escape_string($_POST['catname'])."',
 								   '".$time.".".$endung."')";
-			mysql_query($sql_insert) OR die(mysql_error());
+			$mysqli->query($sql_insert) OR die($mysqli->error);
 
 			echo "<p class=\"meldung_erfolg\">Kategorie wurde erfolgreich angelegt.</p>";
 			}
@@ -51,14 +51,12 @@ if(isset($_POST['do']) && $_POST['do'] == "newnewscat" && isset($_POST['catname'
 elseif(isset($_POST['do']) && $_POST['do'] == "newnewscat" && isset($_POST['catname']) && !empty($_POST['catname']) && isset($_FILES['catfile']['name']) && $_FILES['catfile']['name'] == ""){
 	// Neue Kategorie (ohne Upload)
 	$sql_insert = "INSERT INTO ".$mysql_tables['cats']." (name,catpic)
-				   VALUES ('".mysql_real_escape_string($_POST['catname'])."',
+				   VALUES ('".$mysqli->escape_string($_POST['catname'])."',
 						   '')";
-	mysql_query($sql_insert) OR die(mysql_error());
+	$mysqli->query($sql_insert) OR die($mysqli->error);
 
 	echo "<p class=\"meldung_erfolg\">Kategorie wurde erfolgreich angelegt.</p>";
 	}
-
-
 	
 	
 	
@@ -72,8 +70,8 @@ if(isset($_REQUEST['do']) && $_REQUEST['do'] == "editcat" && isset($_POST['catna
 		if(in_array($endung,$picendungen)) $passpic = TRUE;
 		else $passpic = FALSE;
 
-		$list = mysql_query("SELECT catpic FROM ".$mysql_tables['cats']." WHERE id = '".mysql_real_escape_string($_POST['id'])."' LIMIT 1");
-		while($row = mysql_fetch_array($list)){
+		$list = $mysqli->query("SELECT catpic FROM ".$mysql_tables['cats']." WHERE id = '".$mysqli->escape_string($_POST['id'])."' LIMIT 1");
+		while($row = $list->fetch_assoc()){
 			if(isset($_POST['changepic']) && $_POST['changepic'] == 1 && $row['catpic'] != "" && $passpic)
 				@unlink($catuploaddir.$row['catpic']);
 			}
@@ -81,7 +79,7 @@ if(isset($_REQUEST['do']) && $_REQUEST['do'] == "editcat" && isset($_POST['catna
 		$time = time();
 		if($passpic && $_FILES['catfile']['size'] <= $picsize){
 			if(move_uploaded_file($_FILES['catfile']['tmp_name'],$catuploaddir.$time.".".$endung)){
-				mysql_query("UPDATE ".$mysql_tables['cats']." SET name='".mysql_real_escape_string($_POST['catname'])."', catpic='".$time.".".$endung."' WHERE id='".mysql_real_escape_string($_POST['id'])."' LIMIT 1");
+				$mysqli->query("UPDATE ".$mysql_tables['cats']." SET name='".$mysqli->escape_string($_POST['catname'])."', catpic='".$time.".".$endung."' WHERE id='".$mysqli->escape_string($_POST['id'])."' LIMIT 1");
 
 				echo "<p class=\"meldung_erfolg\">Kategorie wurde bearbeitet</p>";
 				}
@@ -102,12 +100,10 @@ if(isset($_REQUEST['do']) && $_REQUEST['do'] == "editcat" && isset($_POST['catna
 		}
 	else{
 		//Wenn am Bild nichts geändert werden soll:
-		mysql_query("UPDATE ".$mysql_tables['cats']." SET name='".mysql_real_escape_string($_POST['catname'])."' WHERE id='".mysql_real_escape_string($_POST['id'])."' LIMIT 1");
+		$mysqli->query("UPDATE ".$mysql_tables['cats']." SET name='".$mysqli->escape_string($_POST['catname'])."' WHERE id='".$mysqli->escape_string($_POST['id'])."' LIMIT 1");
 		echo "<p class=\"meldung_erfolg\">Kategorie wurde bearbeitet</p>";
 		}
-	}
-
-	
+	}	
 	
 	
 	
@@ -120,18 +116,18 @@ if(isset($_GET['do']) && $_GET['do'] == "editcatform" && isset($_GET['id']) && !
 	//Catpic löschen
     if(isset($_GET['do2']) && $_GET['do2'] == "delpic" && isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['pic']) && !empty($_GET['pic'])){
         
-        $list = mysql_query("SELECT catpic FROM ".$mysql_tables['cats']." WHERE id = '".mysql_real_escape_string($_GET['id'])."' LIMIT 1");
-		while($row = mysql_fetch_array($list)){
+        $list = $mysqli->query("SELECT catpic FROM ".$mysql_tables['cats']." WHERE id = '".$mysqli->escape_string($_GET['id'])."' LIMIT 1");
+		while($row = $list->fetch_assoc()){
 			if($row['catpic'] != "")
 				@unlink($catuploaddir.$row['catpic']);
 			}
-		mysql_query("UPDATE ".$mysql_tables['cats']." SET catpic='' WHERE id='".mysql_real_escape_string($_GET['id'])."' LIMIT 1");
+		$mysqli->query("UPDATE ".$mysql_tables['cats']." SET catpic='' WHERE id='".$mysqli->escape_string($_GET['id'])."' LIMIT 1");
         $do2deldone = 1;
         }
 
-    $sql = "SELECT * FROM ".$mysql_tables['cats']." WHERE id='".mysql_real_escape_string($_GET['id'])."' LIMIT 1";
-    $list = mysql_query($sql);
-    while($row = mysql_fetch_array($list)){
+    $sql = "SELECT * FROM ".$mysql_tables['cats']." WHERE id='".$mysqli->escape_string($_GET['id'])."' LIMIT 1";
+    $list = $mysqli->query($sql);
+    while($row = $list->fetch_assoc()){
 ?>
 <h2>Kategorie bearbeiten</h2>
 
@@ -212,16 +208,14 @@ else{
 </table>
 </form>
 <?PHP
-    }//Ende: if-Abfrage: Neue Kategorie anlegen-Formular
-	
-	
+    }//Ende: if-Abfrage: Neue Kategorie anlegen-Formular	
 	
 	
 	
 if(isset($_POST['sort']) && !empty($_POST['sort'])){
-	$list = mysql_query("SELECT * FROM ".$mysql_tables['cats']."");
-	while($row = mysql_fetch_array($list)){
-		mysql_query("UPDATE ".$mysql_tables['cats']." SET sortid='".mysql_real_escape_string($_POST['cat_'.$row['id']])."' WHERE id='".$row['id']."' LIMIT 1");
+	$list = $mysqli->query("SELECT * FROM ".$mysql_tables['cats']."");
+	while($row = $list->fetch_assoc()){
+		$mysqli->query("UPDATE ".$mysql_tables['cats']." SET sortid='".$mysqli->escape_string($_POST['cat_'.$row['id']])."' WHERE id='".$row['id']."' LIMIT 1");
 		}
 	}
 ?>
@@ -242,8 +236,8 @@ if(isset($_POST['sort']) && !empty($_POST['sort'])){
 
 <?PHP
 $count = 0;
-$list = mysql_query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
-while($row = mysql_fetch_array($list)){
+$list = $mysqli->query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
+while($row = $list->fetch_assoc()){
     if($count == 1){ $class = "tra"; $count--; }else{ $class = "trb"; $count++; }
 
     //Bild verkleinern

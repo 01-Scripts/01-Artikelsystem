@@ -14,31 +14,31 @@ $add2css = "\r\n\r\n.meldungen_01 {
 	border-top: 2px solid #000;
 	border-bottom: 2px solid #000;
 	}";
-$list = mysql_query("SELECT id,wert FROM ".$mysql_tables['settings']." WHERE modul = '".mysql_real_escape_string($modul)."' AND idname = 'csscode'");
-while($row = mysql_fetch_array($list)){
-	mysql_query("UPDATE ".$mysql_tables['settings']." SET `wert` = '".mysql_real_escape_string(str_replace(".table_archiv_headline","td.archiv_month { }\n\ntd.archiv_year{ }\n\n.table_archiv_headline",str_replace("width: 800px;","width: 100%;",stripslashes($row['wert']))).$add2css)."' WHERE `id` = '".$row['id']."' LIMIT 1");
+$list = $mysqli->query("SELECT id,wert FROM ".$mysql_tables['settings']." WHERE modul = '".$mysqli->escape_string($modul)."' AND idname = 'csscode'");
+while($row = $list->fetch_assoc()){
+	$mysqli->query("UPDATE ".$mysql_tables['settings']." SET `wert` = '".$mysqli->escape_string(str_replace(".table_archiv_headline","td.archiv_month { }\n\ntd.archiv_year{ }\n\n.table_archiv_headline",str_replace("width: 800px;","width: 100%;",stripslashes($row['wert']))).$add2css)."' WHERE `id` = '".$row['id']."' LIMIT 1");
 	}
 	
 // #369 Signatur für einzelne Einträge deaktivierbar machen
-mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` ADD `hide_signature` TINYINT( 1 ) DEFAULT '0' AFTER `hits`");
+$mysqli->query("ALTER TABLE `".$mysql_tables['artikel']."` ADD `hide_signature` TINYINT( 1 ) DEFAULT '0' AFTER `hits`");
 
 // #297 Einfacheres Hinzufügen von neuen Feldern
-mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` ADD `serialized_data` MEDIUMBLOB NULL COMMENT 'use unserialize() to get data back'");
+$mysqli->query("ALTER TABLE `".$mysql_tables['artikel']."` ADD `serialized_data` MEDIUMBLOB NULL COMMENT 'use unserialize() to get data back'");
 
 // #427 Right-Anpassung: Nur eigene statische Seiten bearbeitbar machen
-mysql_query("UPDATE `".$mysql_tables['rights']."` SET `formename` = 'Nur eigene Seiten|Alle Seiten|Kein Zugriff',
-`formwerte` = '1|2|0' WHERE `idname` = 'staticarticle' AND `modul` = '".mysql_real_escape_string($modul)."';");
+$mysqli->query("UPDATE `".$mysql_tables['rights']."` SET `formename` = 'Nur eigene Seiten|Alle Seiten|Kein Zugriff',
+`formwerte` = '1|2|0' WHERE `idname` = 'staticarticle' AND `modul` = '".$mysqli->escape_string($modul)."';");
 
 // #427 Darstellung harmonisieren
-mysql_query("UPDATE `".$mysql_tables['rights']."` SET `formename` = 'Nur eigene Artikel bearbeiten|Alle Artikel bearbeiten &amp; freischalten|Kein Zugriff'
-WHERE `idname` = 'editarticle' AND `modul` = '".mysql_real_escape_string($modul)."';");
-mysql_query("UPDATE `".$mysql_tables['rights']."` SET `name` = 'Freischaltung von Artikeln &amp; Seiten', 
+$mysqli->query("UPDATE `".$mysql_tables['rights']."` SET `formename` = 'Nur eigene Artikel bearbeiten|Alle Artikel bearbeiten &amp; freischalten|Kein Zugriff'
+WHERE `idname` = 'editarticle' AND `modul` = '".$mysqli->escape_string($modul)."';");
+$mysqli->query("UPDATE `".$mysql_tables['rights']."` SET `name` = 'Freischaltung von Artikeln &amp; Seiten', 
 `exp` = 'Artikel und statische Seiten dieses Benutzers m&uuml;ssen vor der Ver&ouml;ffentlichung von einem Moderator freigeschaltet werden.',
 `formename` = 'Freischaltung n&ouml;tig|Keine Freischaltung n&ouml;tig'
-WHERE `idname` = 'freischaltung' AND `modul` = '".mysql_real_escape_string($modul)."';");
+WHERE `idname` = 'freischaltung' AND `modul` = '".$mysqli->escape_string($modul)."';");
 
 // #427 Passende Menüeinträge
-mysql_query("INSERT INTO `".$mysql_tables['menue']."` (
+$mysqli->query("INSERT INTO `".$mysql_tables['menue']."` (
 `id` ,
 `name` ,
 `link` ,
@@ -49,30 +49,30 @@ mysql_query("INSERT INTO `".$mysql_tables['menue']."` (
 `sortorder` ,
 `subof` ,
 `hide` ) VALUES
-(NULL , 'Neue statische Seite', '_loader.php?modul=".mysql_real_escape_string($modul)."&amp;action=newstatic&amp;loadpage=article', '".mysql_real_escape_string($modul)."', '1', 'staticarticle', '2', '3', '0', '0'),
-(NULL , 'Statische Seiten bearbeiten', '_loader.php?modul=".mysql_real_escape_string($modul)."&amp;action=statics&amp;loadpage=article', '".mysql_real_escape_string($modul)."', '1', 'staticarticle', '2', '4', '0', '0');");
+(NULL , 'Neue statische Seite', '_loader.php?modul=".$mysqli->escape_string($modul)."&amp;action=newstatic&amp;loadpage=article', '".$mysqli->escape_string($modul)."', '1', 'staticarticle', '2', '3', '0', '0'),
+(NULL , 'Statische Seiten bearbeiten', '_loader.php?modul=".$mysqli->escape_string($modul)."&amp;action=statics&amp;loadpage=article', '".$mysqli->escape_string($modul)."', '1', 'staticarticle', '2', '4', '0', '0');");
 
 // #427 Berechtigung für User mit Level 10 richtig setzen 1 --> 2
-mysql_query("UPDATE `".$mysql_tables['user']."` SET `".mysql_real_escape_string($modul)."_staticarticle` = '2' WHERE `id` = '".$userdata['id']."' OR `level` = '10'");
+$mysqli->query("UPDATE `".$mysql_tables['user']."` SET `".$mysqli->escape_string($modul)."_staticarticle` = '2' WHERE `id` = '".$userdata['id']."' OR `level` = '10'");
 
 // #427 Darstellung harmonisieren
-mysql_query("UPDATE `".$mysql_tables['menue']."` SET `name` = 'Statische Seiten bearbeiten' WHERE `name` = 'Statische Seiten' AND `modul` = '".mysql_real_escape_string($modul)."';");
+$mysqli->query("UPDATE `".$mysql_tables['menue']."` SET `name` = 'Statische Seiten bearbeiten' WHERE `name` = 'Statische Seiten' AND `modul` = '".$mysqli->escape_string($modul)."';");
 
 // #474 Volltext-Index anlegen
-mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` ADD FULLTEXT (titel,text,zusammenfassung);");
+$mysqli->query("ALTER TABLE `".$mysql_tables['artikel']."` ADD FULLTEXT (titel,text,zusammenfassung);");
 
 // Neue Einstellungen anlegen (modrewrite; wenn noch nicht vorhanden)
-$list = mysql_query("SELECT idname FROM ".$mysql_tables['settings']." WHERE modul = '".mysql_real_escape_string($modul)."' AND idname = 'modrewrite' LIMIT 1");
-$row_s = mysql_fetch_array($list);
+$list = $mysqli->query("SELECT idname FROM ".$mysql_tables['settings']." WHERE modul = '".$mysqli->escape_string($modul)."' AND idname = 'modrewrite' LIMIT 1");
+$row_s = $list->fetch_assoc();
 if(!isset($row_s['idname']) || isset($row_s['idname']) && $row_s['idname'] != "modrewrite"){
 	$sql_insert = "INSERT INTO ".$mysql_tables['settings']." (modul,is_cat,catid,sortid,idname,name,exp,formename,formwerte,input_exp,standardwert,wert,nodelete,hide) VALUES
-				('".mysql_real_escape_string($modul)."','0','1','9','modrewrite','mod_rewrite aktivieren','<a href=\"javascript:modulpopup(\'".mysql_real_escape_string($modul)."\',\'mod_rewrite_info\',\'\',\'\',\'\',510,450);\">Anleitung lesen</a>','Aktivieren|Deaktivieren','1|0','','0','0','0','0');";
-	$result = mysql_query($sql_insert) OR die(mysql_error());
+				('".$mysqli->escape_string($modul)."','0','1','9','modrewrite','mod_rewrite aktivieren','<a href=\"javascript:modulpopup(\'".$mysqli->escape_string($modul)."\',\'mod_rewrite_info\',\'\',\'\',\'\',510,450);\">Anleitung lesen</a>','Aktivieren|Deaktivieren','1|0','','0','0','0','0');";
+	$result = $mysqli->query($sql_insert) OR die($mysqli->error);
 	}
 
 
 // Versionsnummer aktualisieren
-mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.1.0' WHERE idname = '".mysql_real_escape_string($modul)."' LIMIT 1");
+$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.1.0' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
 ?>
 <h2>Update Version 3.0.0.4 nach 3.1.0</h2>
 
@@ -109,7 +109,7 @@ mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.1.0' WHERE idna
 // 3.0.0.3 --> 3.0.0.4
 if(isset($_REQUEST['update']) && $_REQUEST['update'] == "3003_zu_3004"){
 // Versionsnummer aktualisieren
-mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.4' WHERE idname = '".mysql_real_escape_string($modul)."' LIMIT 1");
+$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.4' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
 ?>
 <h2>Update Version 3.0.0.3 nach 3.0.0.4</h2>
 
@@ -123,8 +123,8 @@ mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.4' WHERE id
 // 3.0.0.2 --> 3.0.0.3
 elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "3002_zu_3003"){
 // Artikel-Tabelle anpassem:
-mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` CHANGE `autozusammen` `autozusammen` TINYINT( 1 ) NULL");
-mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` CHANGE `top` `top` TINYINT( 1 ) NULL");
+$mysqli->query("ALTER TABLE `".$mysql_tables['artikel']."` CHANGE `autozusammen` `autozusammen` TINYINT( 1 ) NULL");
+$mysqli->query("ALTER TABLE `".$mysql_tables['artikel']."` CHANGE `top` `top` TINYINT( 1 ) NULL");
 
 // CSS-Eigenschaft überarbeiten
 $add2css = "\r\n\r\ndiv.footline_small {
@@ -136,13 +136,13 @@ div.inner_box {
 	width:100%;
 	display:block;
 	}";
-$list = mysql_query("SELECT id,wert FROM ".$mysql_tables['settings']." WHERE modul = '".mysql_real_escape_string($modul)."' AND idname = 'csscode'");
-while($row = mysql_fetch_array($list)){
-	mysql_query("UPDATE `".$mysql_tables['settings']."` SET `wert` = '".mysql_real_escape_string(str_replace("border-bottom: 1px dotted #999;","",stripslashes($row['wert'])).$add2css)."' WHERE `id` = '".$row['id']."' LIMIT 1");
+$list = $mysqli->query("SELECT id,wert FROM ".$mysql_tables['settings']." WHERE modul = '".$mysqli->escape_string($modul)."' AND idname = 'csscode'");
+while($row = $list->fetch_assoc()){
+	$mysqli->query("UPDATE `".$mysql_tables['settings']."` SET `wert` = '".$mysqli->escape_string(str_replace("border-bottom: 1px dotted #999;","",stripslashes($row['wert'])).$add2css)."' WHERE `id` = '".$row['id']."' LIMIT 1");
 	}
 
 // Versionsnummer aktualisieren
-mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.3' WHERE idname = '".mysql_real_escape_string($modul)."' LIMIT 1");
+$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.3' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
 ?>
 <h2>Update Version 3.0.0.2 nach 3.0.0.3</h2>
 
@@ -177,7 +177,7 @@ div.inner_box {<br />
 	<b>Parameter f&uuml;r PHP-include() haben sich ge&auml;ndert:</b><br />
 	Die Parameter f&uuml;r den Include des Artikelsystems via PHP haben sich ge&auml;ndert.<br />
 	Die bisherigen Parameter funktionieren weiterhin, sollten aber durch die neuen Parameter bei Gelegenheit ersetzt werden.
-	Alle Informationen dazu <a href="http://www.01-scripts.de/forum/index.php?page=Thread&threadID=921" target="_blank">finden Sie hier</a>.<br />
+	Alle Informationen dazu <a href="http://www.01-scripts.de/forum/index.php?page=Thread&amp;threadID=921" target="_blank">finden Sie hier</a>.<br />
 	
 	<br />
 	Weitere Informationen zu allen übrigen Änderungen in der Version 3.0.0.3 finden Sie im
@@ -191,32 +191,32 @@ elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "3001_zu_3002"){
 
 // Neues "Recht" einfügen:
 $sql_insert = "INSERT INTO ".$mysql_tables['rights']." (modul,is_cat,catid,sortid,idname,name,exp,formename,formwerte,input_exp,standardwert,nodelete,hide,in_profile) VALUES 
-			( '".mysql_real_escape_string($modul)."', '0', '1', '5', 'editcats', 'Kategorien verwalten', '', 'Ja|Nein', '1|0', '', '0', '0', '0', '0')";
-$result = mysql_query($sql_insert) OR die(mysql_error());
-mysql_query("ALTER TABLE `".$mysql_tables['user']."` ADD `".mysql_real_escape_string($modul)."_editcats` VARCHAR( 255 ) NOT NULL DEFAULT '0'");
-mysql_query("UPDATE `".$mysql_tables['user']."` SET `".mysql_real_escape_string($modul)."_editcats` = '1' WHERE `id` = '".$userdata['id']."' LIMIT 1");
-mysql_query("UPDATE `".$mysql_tables['menue']."` SET `rightname` = 'editcats' WHERE `link` = '_loader.php?modul=".mysql_real_escape_string($modul)."&amp;action=&amp;loadpage=category' LIMIT 1");
+			( '".$mysqli->escape_string($modul)."', '0', '1', '5', 'editcats', 'Kategorien verwalten', '', 'Ja|Nein', '1|0', '', '0', '0', '0', '0')";
+$result = $mysqli->query($sql_insert) OR die($mysqli->error);
+$mysqli->query("ALTER TABLE `".$mysql_tables['user']."` ADD `".$mysqli->escape_string($modul)."_editcats` VARCHAR( 255 ) NOT NULL DEFAULT '0'");
+$mysqli->query("UPDATE `".$mysql_tables['user']."` SET `".$mysqli->escape_string($modul)."_editcats` = '1' WHERE `id` = '".$userdata['id']."' LIMIT 1");
+$mysqli->query("UPDATE `".$mysql_tables['menue']."` SET `rightname` = 'editcats' WHERE `link` = '_loader.php?modul=".$mysqli->escape_string($modul)."&amp;action=&amp;loadpage=category' LIMIT 1");
 
 // Artikel-Tabelle anpassen:
-mysql_query("ALTER TABLE `".$mysql_tables['artikel']."` ADD `top` TINYINT( 1 ) NOT NULL AFTER `static`");
+$mysqli->query("ALTER TABLE `".$mysql_tables['artikel']."` ADD `top` TINYINT( 1 ) NOT NULL AFTER `static`");
 
 // Artikel-Kategorie-Tabelle anpassen:
-mysql_query("ALTER TABLE `".$mysql_tables['cats']."` ADD `sortid` INT( 5 ) NOT NULL DEFAULT '1'");
+$mysqli->query("ALTER TABLE `".$mysql_tables['cats']."` ADD `sortid` INT( 5 ) NOT NULL DEFAULT '1'");
 
 // Neue Einstellungen anlegen:
 $sql_insert = "INSERT INTO ".$mysql_tables['settings']." (modul,is_cat,catid,sortid,idname,name,exp,formename,formwerte,input_exp,standardwert,wert,nodelete,hide) VALUES 
-			('".mysql_real_escape_string($modul)."','0','1','7','artikelcomments','Kommentare f&uuml;r Modul aktivieren','Kommentarsystem muss zus&auml;tzlich in den allgemeinen 01ACP-Einstellungen aktiviert sein.','Ja|Nein','1|0','','1','".$settings['comments']."','0','0'),
-			('".mysql_real_escape_string($modul)."','0','1','8','artikellightbox','Lightbox zur Bildansicht nutzen?','','Ja|Nein','1|0','','1','0','0','0');";
-$result = mysql_query($sql_insert) OR die(mysql_error());
+			('".$mysqli->escape_string($modul)."','0','1','7','artikelcomments','Kommentare f&uuml;r Modul aktivieren','Kommentarsystem muss zus&auml;tzlich in den allgemeinen 01ACP-Einstellungen aktiviert sein.','Ja|Nein','1|0','','1','".$settings['comments']."','0','0'),
+			('".$mysqli->escape_string($modul)."','0','1','8','artikellightbox','Lightbox zur Bildansicht nutzen?','','Ja|Nein','1|0','','1','0','0','0');";
+$result = $mysqli->query($sql_insert) OR die($mysqli->error);
 
 // Umbenennung .small -> .small01acp durchführen
-$list = mysql_query("SELECT id,wert FROM ".$mysql_tables['settings']." WHERE modul = '".mysql_real_escape_string($modul)."' AND idname = 'csscode'");
-while($row = mysql_fetch_array($list)){
-	mysql_query("UPDATE `".$mysql_tables['settings']."` SET `wert` = '".mysql_real_escape_string(str_replace(".small",".small01acp",stripslashes($row['wert']))."\r\n\r\n.lightbox {\r\n\r\n}")."' WHERE `id` = '".$row['id']."' LIMIT 1");
+$list = $mysqli->query("SELECT id,wert FROM ".$mysql_tables['settings']." WHERE modul = '".$mysqli->escape_string($modul)."' AND idname = 'csscode'");
+while($row = $list->fetch_assoc()){
+	$mysqli->query("UPDATE `".$mysql_tables['settings']."` SET `wert` = '".$mysqli->escape_string(str_replace(".small",".small01acp",stripslashes($row['wert']))."\r\n\r\n.lightbox {\r\n\r\n}")."' WHERE `id` = '".$row['id']."' LIMIT 1");
 	}
 
 // Versionsnummer aktualisieren
-mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.2' WHERE idname = '".mysql_real_escape_string($modul)."' LIMIT 1");
+$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.2' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
 ?>
 <h2>Update Version 3.0.0.1 nach 3.0.0.2</h2>
 
@@ -258,7 +258,7 @@ mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.2' WHERE id
 // 3.0.0.0 --> 3.0.0.1
 elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "3000_zu_3001"){
 
-mysql_query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.1' WHERE idname = '".mysql_real_escape_string($modul)."' LIMIT 1");
+$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.0.0.1' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
 ?>
 <h2>Update Version 3.0.0.0 nach 3.0.0.1</h2>
 
