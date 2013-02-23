@@ -616,7 +616,7 @@ $cat_data = array();
 
 	// Ausgabe der Datensätze (Liste) aus DB
 	$count = 0;
-	echo $query;
+
 	$list = $mysqli->query($query);
 	while($row = $list->fetch_assoc()){
 		if($count == 1){ $class = "tra"; $count--; }else{ $class = "trb"; $count++; }

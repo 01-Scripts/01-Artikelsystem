@@ -223,7 +223,7 @@ RETURN: RSS-XML-Daten
 */
 if(!function_exists("_01article_RSS")){
 function _01article_RSS($show,$entrynrs,$cats){
-global $mysqli,$mysql_tables,$settings,$modul,$names,$lang,$server_domainname;
+global $mysqli,$mysql_tables,$settings,$modul,$names,$lang,$server_domainname, $htmlent_flags, $htmlent_encoding_acp;
 
 $rssdata = create_RSSFramework($settings['artikelrsstitel'],$settings['artikelrsstargeturl'],$settings['artikelrssbeschreibung']);
 $write_text = "";
@@ -259,7 +259,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 		$echotext = bb_code_comment($echotext,1,1,0);
 		
 		$write_text .= "<item>
-  <title>Neuer Kommentar zu ".str_replace("&","&amp;",strtr($arttitel[$row['postid']],$mod))."</title>
+  <title>Neuer Kommentar zu ".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, $htmlent_encoding_acp))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext."]]></description>
   <author>".stripslashes(str_replace("&","&amp;",$row['autor']))."</author>
@@ -320,7 +320,7 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 		$signatur 			= "<p>".nl2br(stripslashes(str_replace("&","&amp;",$username_array['signatur'])))."</p>";
 		
 		$write_text .= "<item>
-  <title>".str_replace("&","&amp;",strtr(stripslashes($row['titel']),$mod))."</title>
+  <title>".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, $htmlent_encoding_acp))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext.$signatur."]]></description>
   <author>".$username."</author>
