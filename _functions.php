@@ -586,4 +586,106 @@ return $string;
 }
 }
 
+
+
+
+
+
+
+
+// Callback-Funktion zur Ausgabe von Galeriebild-Thumbnails via preg_replace_callback
+/* @params string $treffer			Zu parsender Galerie-Bild-String
+ * @return string					<div>-Box mit Thumbnails der Galerie-Bilder
+*/
+if(!function_exists("_01article_callback_GetGalThumbs4Article")){
+function _01article_callback_GetGalThumbs4Article($treffer){
+global $moduldir,$settings,$mysql_tables;
+$return = "";
+
+// $treffer[0]: gesamter String {Insert#...GalleryPicsFrom#...}
+// $treffer[1]: 1. Match (Anzahl an auszugebenden Thumbnails)
+// $treffer[2]: 2. Match (Galid)
+if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeric($treffer[2])){
+    $galmodul = array();
+    $module = getModuls(&$galmodul,"01gallery");
+    
+    if(count($galmodul) > 0){
+        $modul = $module[$galmodul[0]]['idname'];
+        $instnr = $module[$galmodul[0]]['nr'];
+        @include($moduldir.$module[$galmodul[0]]['idname']."/_headinclude.php");
+        include($moduldir.$module[$galmodul[0]]['idname']."/_functions.php");
+        
+        // DB: Einstellungen in Array $settings[] einlesen
+        $list = $mysqli->query("SELECT idname,wert FROM ".$mysql_tables['settings']." WHERE is_cat = '0' AND modul = '".mysql_real_escape_string($modul)."'");
+        while($row = $list->fetch_assoc()){
+        	$settings[stripslashes($row['idname'])] = stripslashes($row['wert']);
+        	}
+        
+        $galdir = $moduldir.$modul."/".$galdir;
+        $galid  = $treffer[2];
+        
+        // Galerie-Infos aus Datenbank holen
+    	$list = $mysqli->query("SELECT id,timestamp,password,galeriename,beschreibung,galpic,anzahl_pics FROM ".$mysql_tables['gallery']." WHERE id = '".mysql_real_escape_string($galid)."' AND hide='0' LIMIT 1");
+	    if($list->num_rows == 0)
+            return "";
+    	$galinfo = $list->fetch_assoc();
+    	$galverz = $galdir._01gallery_getGalDir($galinfo['id'],$galinfo['password'])."/";
+        
+	    // Thumbnails auflisten
+	    $query = "SELECT id,filename,title,text FROM ".$mysql_tables['pics']." WHERE galid = '".mysql_real_escape_string($galid)."' ORDER BY sortorder DESC LIMIT ".mysql_real_escape_string($treffer[1]);
+
+		$return .= "\n\n<div class=\"cssgallery_art2gal\">\n";
+	    $list = $mysqli->query($query);
+	    if($list->num_rows == 0)
+            return "";
+            
+		while($pics = $list->fetch_assoc()){
+			if($settings['artikellightbox'] == 1)
+				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['text']))."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb")."</a></div>\n";
+			else
+				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb")."</div>\n";
+			}
+		$return .= "</div><br style=\"clear: both;\">\n\n"; 
+        }
+    }
+
+return $return;
+}
+}
+
+
+
+
+
+
+
+
+// Ausgabe der Galeriedaten (Aufruf über Rekursive Funktion) für SELECT-Felder
+/*$row				Array mit allen MySQL-Feldern aus der Galerie-Tabelle zur entsprechenden Galerie-ID
+  $deep				Aktuelle "Tiefe"
+  $selected			Vorselektierter Wert
+
+RETURN: <option>-Fields
+  */
+if(!function_exists("_01article_echoGalinfo_select")){
+function _01article_echoGalinfo_select($row,$deep,$selected=""){
+
+if($row['hide'] == 1) return "";
+if(!empty($row['password'])) return "";
+
+$return = "";
+$tab = "";
+for($x=0;$x<($deep*2);$x++){
+	$tab .= "-";
+	}
+
+if($row['id'] == $selected) $sel = " selected=\"selected\"";
+else $sel ="";
+
+$return .= "<option value=\"".$row['id']."\"".$sel.">".$tab.htmlentities(stripslashes($row['galeriename']))."</option>\n";
+
+echo $return;
+
+}
+}
 ?>

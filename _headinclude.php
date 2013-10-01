@@ -1,6 +1,6 @@
 <?PHP
 /*
-	01-Artikelsystem V3 - Copyright 2006-2011 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
@@ -40,6 +40,7 @@ define('ANZ_PP_ARCHIV',30);						// Anzahl Artikel pro Seite in der Archivansich
 
 // Language-Variablen
 $lang['weiterlesen'] = " ...";
+$lang['galpics_rss'] = "{Diese Bilder sind im RSS-Feed leider nicht verf&uuml;gbar}";
 
 // Variablennamen-Deklaration
 $names['artid']		= "artid";

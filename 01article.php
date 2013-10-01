@@ -310,6 +310,7 @@ else{
 			$artikeltext = str_replace("../01pics/",$picuploaddir,$artikeltext);
 			$artikeltext = str_replace("../01files/",$attachmentuploaddir,$artikeltext);
 			if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
+			$artikeltext = preg_replace_callback("/\{Insert#(\d+)GalleryPicsFrom#(\d+)\}/","_01article_callback_GetGalThumbs4Article",$artikeltext);
 			}
 		// Zusammenfassung anzeigen
 		else{
@@ -323,6 +324,7 @@ else{
 				$artikeltext = "<p>".substr(strip_tags(stripslashes($row['text'])),0,$settings['artikeleinleitungslaenge']).$lang['weiterlesen']."</p>";
 				if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
 				}
+			$artikeltext = preg_replace_callback("/\{Insert#(\d+)GalleryPicsFrom#(\d+)\}/","_01article_callback_GetGalThumbs4Article",$artikeltext);
 
 			// Weiterlesen-Link nur einbinden, wenn Text länger als Zusammenfassung oder eigener Text eingegeben wurde
 			if($row['autozusammen'] == 0 && !empty($row['zusammenfassung']) || 
