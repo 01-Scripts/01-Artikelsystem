@@ -607,7 +607,7 @@ $return = "";
 // $treffer[2]: 2. Match (Galid)
 if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeric($treffer[2])){
     $galmodul = array();
-    $module = getModuls(&$galmodul,"01gallery");
+    $module = getModuls($galmodul,"01gallery");
     
     if(count($galmodul) > 0){
         $modul = $module[$galmodul[0]]['idname'];

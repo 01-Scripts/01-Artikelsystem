@@ -1,12 +1,12 @@
 <?PHP
 /*
-	01-Artikelsystem V3 - Copyright 2006-2010 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
 	Modul:		01article
 	Dateiinfo:	Popup-Inhalt
-	#fv.3010#
+	#fv.311#
 */
 
 // Mod_rewirte-Info ausgeben
@@ -39,5 +39,10 @@ RewriteRule ^(.*),([0-9]+).html$ /<b>includepage.php</b>?<?php echo $names['arti
 Danach sollten sog. "sprechende" Links zur Verf&uuml;gung stehen.</p>
 
 <?PHP
+	}
+
+// Verbindung 01-Artikelsystem & 01-Gallery
+elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal"){
+	echo "<h1>Test</h1>";
 	}
 ?>

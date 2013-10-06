@@ -9,7 +9,7 @@
 	#fv.311#
 */
 
-echo loadTinyMCE("advanced","","","","top");
+echo loadTinyMCE("advanced","","","","top","","filemanager_gal2art,");
 ?>
 
 <h1><?PHP echo $input_field['site_titel']; ?></h1>
@@ -114,7 +114,8 @@ else
 	
     <tr>
         <td class="tra" colspan="2">
-			<a name="textarea"></a>
+			<input type="hidden" id="modulid" value="<?php echo $modul; ?>" /><!-- Steuert im Filemanager-Modul des TinyMCE welches Modul den Aufruf getätigt hat (um ein modulspezifisches Popup zu öffnen) -->
+            <a name="textarea"></a>
             <textarea name="textfeld" rows="25" cols="100" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-style: normal;"><?PHP echo $form_data['textfeld']; ?></textarea>
         </td>
     </tr>
