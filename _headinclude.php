@@ -31,6 +31,8 @@ $tempdir	= "templates/";						// Template-Verzeichnis
 // Weitere Variablen
 $comment_desc	= "DESC";				 		// Sortierreihenfolge der Kommentare
 $ser_fields     = FALSE;                 		// Einfaches Hinzufügen von Feldern aktivieren
+$art2galsupport = TRUE;							// Unterstützung zum vereinfachten Hinzufügen von Galerie-Bildern in Artikel aktivieren?
+$art2gal_galnr  = 0;							// Index-Nummer der 01-Gallery-Installation von der Bilder in Artikel eingefügt werden dürfen.
 $server_domainname = $_SERVER['SERVER_NAME'];	// ggf. Abweichender Domainname für mod_rewrite (OHNE http://)
 
 define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
@@ -48,6 +50,6 @@ $names['search']	= "search";
 $names['catid']		= "catid";
 $names['page']		= "page";
 $names['cpage']		= "cpage";
-$names['rss']		= "rss";		//Bei Änderung ist zusätzlich eine manuelle Änderung in 01article.php Zeile 31 nötig!
+$names['rss']		= "rss";					//Bei Änderung ist zusätzlich eine manuelle Änderung in 01article.php Zeile 35 nötig!
 
 ?>

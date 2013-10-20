@@ -9,7 +9,11 @@
 	#fv.311#
 */
 
-echo loadTinyMCE("advanced","","","","top","","filemanager_gal2art,");
+// Art2Gal-Support?
+if($art2galsupport && $userdata['dateimanager'] == 2)
+    echo loadTinyMCE("advanced","","","","top","","filemanager_gal2art,");
+else
+    echo loadTinyMCE("advanced","","","","top");
 ?>
 
 <h1><?PHP echo $input_field['site_titel']; ?></h1>

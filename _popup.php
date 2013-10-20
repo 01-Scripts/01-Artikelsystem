@@ -41,8 +41,66 @@ Danach sollten sog. "sprechende" Links zur Verf&uuml;gung stehen.</p>
 <?PHP
 	}
 
+// Normales TinyMCE-UPLOADER-POPUP
+elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "tiny_uploader"){
+	if(!isset($_REQUEST['type'])) $_REQUEST['type'] = $_REQUEST['var1'];
+	if(!isset($_REQUEST['formname'])) $_REQUEST['formname'] = $_REQUEST['var2'];
+	if(!isset($_REQUEST['formfield'])) $_REQUEST['formfield'] = $_REQUEST['var3'];
+	$_REQUEST['returnvalue'] = "tinymce";
+	
+	$filename = $filename."?action=tiny_uploader&amp;";
+	include_once("system/uploader.php");
+	}
+
 // Verbindung 01-Artikelsystem & 01-Gallery
-elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal"){
-	echo "<h1>Test</h1>";
+elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2galsupport && $userdata['dateimanager'] == 2){
+
+    $modul_save = $modul;
+    $galmodul = array();
+    $galmodule = getModuls($galmodul,"01gallery"); 
+    
+    if(count($galmodul) > 0){
+        $modul = $galmodul[$art2gal_galnr];
+        include_once($moduldir.$galmodule[$galmodul[$art2gal_galnr]]['idname']."/_headinclude.php");
+        include_once($moduldir.$galmodule[$galmodul[$art2gal_galnr]]['idname']."/_functions.php");
+        $modul = $modul_save;
+?>        
+
+<h1>Bilder aus Bildergalerie einfügen</h1>
+        
+<p>
+<input type="text" name="pics_anzahl" size="3" value="5" /> Bilder aus
+<select name="galid" id="sel_galid" size="1">
+    <option value="0">Bildergalerie</option>
+    <?PHP _01gallery_getGallerysRek(0,0,-1,"_01gallery_echoGalinfo_select","","",FALSE); ?>
+</select>
+<input type="button" value="Einf&uuml;gen" class="input" onclick="FileDialog.insertgalpics();" />
+</p>
+
+<p>
+	<b>Bitte beachten:</b> Die Bilder sind im Editor nicht sichtbar.
+	Es wird ein Text in folgendem Format im Editor eingefügt:<br />
+	<code>{Insert#5GalleryPicsFrom#2}</code><br />
+	Dieser Text wird während der Ausgabe an der entsprechenden Stelle durch Thumbnails der Bildergalerie ersetzt.<br />
+	<br />
+	<b>Bitte nehmen Sie an diesem Textbaustein keine Änderung vor!</b><br />
+	<br />
+	Entfernen Sie den Textbaustein um die Thumbnails aus dem Artikel wieder zu entfernen.
+</p>
+
+<?PHP
+		}
+	else{
+		echo "<h1>Fehler</h1>
+		<p>Um diese Funktion nutzen zu können muss das Modul 01-Gallery installiert sein.</p>";
+		}
+	}
+elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2galsupport && $userdata['dateimanager'] != 2){
+	echo "<h1>Zugriff verweigert</h1>
+	<p>Sie haben keine Berechtigung diese Funktion zu nutzen.<br />Bitte wenden Sie sich ggf. an den Administrator.</p>";
+	}
+elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && !$art2galsupport){
+	echo "<h1>Fehler</h1>
+	<p>Diese Funktion wurde vom Administrator deaktiviert.</p>";
 	}
 ?>
