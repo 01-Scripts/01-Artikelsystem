@@ -28,7 +28,7 @@ INSERT INTO 01prefix_settings (modul,is_cat,catid,sortid,idname,name,exp,formena
 ('#modul_idname#', 0, 1, 5, 'artikeleinleitungslaenge','L&auml;nge des Einleitungstextes','','text','5','Zeichen','1000','1000','0','0'),
 ('#modul_idname#', 0, 1, 6, 'archiv_time','Alte Beitr&auml;ge ins Archiv verschieben?','Geben Sie an nach wievielen Tagen Beitr&auml;ge ins Archiv verschoben werden sollen.','text','5','Tage','','','0','0'),
 ('#modul_idname#', 0, 1, 7, 'artikelcomments','Kommentare f&uuml;r Modul aktivieren','Kommentarsystem muss zus&auml;tzlich in den allgemeinen 01ACP-Einstellungen aktiviert sein.','Ja|Nein','1|0','','1','1','0','0'),
-('#modul_idname#', 0, 1, 8, 'artikellightbox','Lightbox zur Bildansicht nutzen?','','Ja|Nein','1','','1','1','0','0'),
+('#modul_idname#', 0, 1, 8, 'artikellightbox','Lightbox zur Bildansicht nutzen?','','Ja|Nein','1|0','','1','1','0','0'),
 ('#modul_idname#', 0, 1, 9, 'modrewrite','mod_rewrite aktivieren','<a href="javascript:modulpopup(\'#modul_idname#\',\'mod_rewrite_info\',\'\',\'\',\'\',510,450);">Anleitung lesen</a>','Aktivieren|Deaktivieren','1|0','','0','0','0','0'),
 
 ('#modul_idname#', 1, 3, 2, 'csssettings','CSS-Einstellungen','','','','','','','0','0'),
