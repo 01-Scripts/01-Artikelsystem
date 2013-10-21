@@ -66,7 +66,7 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2ga
         $modul = $modul_save;
 ?>        
 
-<h1>Bilder aus Bildergalerie einfügen</h1>
+<h1>Bilder aus Bildergalerie einfügen<sup style="color:#F8A000;">Beta*</sup></h1>
         
 <p>
 <input type="text" name="pics_anzahl" size="3" value="5" /> Bilder aus
@@ -87,6 +87,10 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2ga
 	<br />
 	Entfernen Sie den Textbaustein um die Thumbnails aus dem Artikel wieder zu entfernen.
 </p>
+
+<br /><br /><br /><br /><br />
+
+<p style="font-size:7pt;">*Diese Funktion befindet sich noch in der Beta-Phase.</p>
 
 <?PHP
 		}
