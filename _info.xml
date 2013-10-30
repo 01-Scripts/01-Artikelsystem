@@ -9,7 +9,7 @@
 	<need01acpv>1.2.1</need01acpv>
 	<datum>07.09.2011</datum>
 	<includeinfo><![CDATA[
-Verwenden Sie folgenden PHP-Code um das 01-Artikelsystem in Ihre Seite zu integrieren:<br />
+<p>Verwenden Sie folgenden PHP-Code um das 01-Artikelsystem in Ihre Seite zu integrieren:<br />
 <code>
 &lt;?PHP<br />
 $subfolder		= "01scripts/"; // Unterverzeichnis<br />
@@ -27,7 +27,7 @@ $show['search']	= "Suchwort"; // Ausgabe der zu &quot;Suchwort&quot; gefundenen 
 $show['page']	= 2; // Ausgabe der x. Seite<br />
 $flag_utf8      = FALSE; // Setzen Sie $flag_utf8 = TRUE; falls Sie Ihre Seite UTF-8-kodiert ausgeben<br />
 $flag_nocss     = FALSE; // Setzen Sie $flag_nocss = TRUE; wenn kein CSS eingebunden werden soll<br />
-</code>
+</code></p>
 	]]></includeinfo>
 
 	<updates>
