@@ -274,6 +274,7 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 				(Titel und Textfeld) ausgef&uuml;llt!</b></p>";
 
 		$form_data = _01article_getForm_DataArray();
+		if(!isset($form_data['username'])) $form_data['username'] = $userdata['username'];
 		$gotget = true;
 		}
 

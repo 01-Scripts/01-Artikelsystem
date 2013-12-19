@@ -94,6 +94,12 @@ if(!function_exists("_01article_getForm_DataArray")){
 function _01article_getForm_DataArray(){
 global $_POST;
 
+if(!isset($_POST['autozusammen'])) 		$_POST['autozusammen'] 		= 0;
+if(!isset($_POST['comments'])) 			$_POST['comments'] 			= 0;
+if(!isset($_POST['top'])) 				$_POST['top'] 				= 0;
+if(!isset($_POST['hide_signature'])) 	$_POST['hide_signature'] 	= 0;
+if(!isset($_POST['id'])) 				$_POST['id'] 				= 0;
+
 $form_data = array("id"				=> $_POST['id'],
 				   "starttime_date"	=> $_POST['starttime_date'],
 				   "starttime_uhr"	=> $_POST['starttime_uhr'],
@@ -107,6 +113,7 @@ $form_data = array("id"				=> $_POST['id'],
 				   "comments" 		=> $_POST['comments'],
 				   "top"			=> $_POST['top'],
 				   "hide_headline"	=> $_POST['hide_headline'],
+				   "hide_signature" => $_POST['hide_signature'],
 				   "uid"			=> $_POST['uid'],
 				   "autor"			=> $_POST['autor']
 				  );

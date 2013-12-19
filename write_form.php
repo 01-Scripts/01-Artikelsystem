@@ -196,11 +196,11 @@ if($settings['artikeleinleitung'] >= 1 && $settings['artikeleinleitungslaenge'] 
 		<?PHP } ?>
             <input type="submit" class="input" name="publish" value="<?PHP echo $input_field['publish']; ?>" />
             <input type="hidden" name="do" value="<?PHP echo $input_do; ?>" />
-            <input type="hidden" name="id" value="<?PHP echo $form_data['id']; ?>" />
-			<input type="hidden" name="uid" value="<?PHP echo $form_data['uid']; ?>" />
-			<input type="hidden" name="static" value="<?PHP echo $flag_static; ?>" />
+            <input type="hidden" name="id" value="<?PHP if(isset($form_data['id'])){ echo $form_data['id']; } ?>" />
+            <input type="hidden" name="uid" value="<?PHP echo $form_data['uid']; ?>" />
+            <input type="hidden" name="static" value="<?PHP echo $flag_static; ?>" />
             <input type="hidden" name="action" value="<?PHP echo $input_action; ?>" />
-			<input type="hidden" name="who" value="<?PHP echo $input_section2; ?>" />
+            <input type="hidden" name="who" value="<?PHP echo $input_section2; ?>" />
         </td>
     </tr>
 
