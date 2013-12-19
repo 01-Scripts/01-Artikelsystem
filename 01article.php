@@ -158,7 +158,7 @@ if(isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) && $_GET[$nam
 elseif(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !empty($settings['archiv_time']) && $settings['archiv_time'] > 0 && is_numeric($settings['archiv_time'])){
     $flag_archiv = "&amp;".$names['artid']."=archiv";
 	$add2query_cat = _01article_CreateCatQuery($_REQUEST[$names['catid']]);
-    $query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static = '0' AND timestamp <= '".$qt."' AND (endtime >= '".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp DESC";
+    $query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static = '0' AND (timestamp <= '".$qt."' OR (endtime <= '".time()."' AND endtime != '0')) AND (endtime <= '".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp DESC";
 
     $settings['articleperpage'] = ANZ_PP_ARCHIV;
 	makepages($query,$sites,$names['page'],$settings['articleperpage']);
