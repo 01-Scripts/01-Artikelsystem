@@ -9,6 +9,9 @@
 	#fv.311#
 */
 
+// Security: Only allow calls from _ajaxloader.php!
+if(basename($_SERVER['SCRIPT_FILENAME']) != "_ajaxloader.php") exit;
+
 // Artikel / Seiten löschen
 if(isset($_REQUEST['ajaxaction']) && $_REQUEST['ajaxaction'] == "delarticle" &&
    isset($_REQUEST['id']) && !empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])){
