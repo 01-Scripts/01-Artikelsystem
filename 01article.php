@@ -49,7 +49,6 @@ include_once($moduldir.$modulvz."_functions.php");
 
 // Variablen
 $imagepf 	= $moduldir.$modulvz.$imagepf;          // Pfad zum Bild-Verzeichnis
-$iconpf 	= $moduldir.$modulvz.$iconpf;			// Verzeichnis mit Icon-Dateien
 $tempdir	= $moduldir.$modulvz.$tempdir;			// Template-Verzeichnis
 $filename	= $_SERVER['PHP_SELF'];					// Variable enthält die Adresse der Datei, auf der das Artikelsystem eingebunden wurde
 $flag_comments_js	= TRUE;							// Kommentar-Feld per Default via JavaScript ausblenden?
@@ -529,7 +528,6 @@ else{
                 include($tempdir."comments_add.html");
                 }
             }
-        unset($icon);
         unset($catimg);
         unset($catname);
         }
@@ -602,7 +600,6 @@ include($tempdir."pages.html");
 include($tempdir."main_bottom.html");
 
 $tempdir	= "templates/";
-$iconpf		= "images/icons/";
 $query		= "";
 
 ?>
