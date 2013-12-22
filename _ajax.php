@@ -22,7 +22,7 @@ if(isset($_REQUEST['ajaxaction']) && $_REQUEST['ajaxaction'] == "delarticle" &&
 		$mysqli->query("DELETE FROM ".$mysql_tables['artikel']." WHERE id='".$mysqli->escape_string($_REQUEST['id'])."' AND uid = '".$userdata['id']."' AND static = '0' LIMIT 1");
 	elseif($_REQUEST['static'] == 1 && $userdata['staticarticle'] == 2)
 		$mysqli->query("DELETE FROM ".$mysql_tables['artikel']." WHERE id='".$mysqli->escape_string($_REQUEST['id'])."' AND static = '1' LIMIT 1");
-	elseif($flag_static == 1 && $userdata['staticarticle'] == 1)
+	elseif($_REQUEST['static'] == 1 && $userdata['staticarticle'] == 1)
 		$mysqli->query("DELETE FROM ".$mysql_tables['artikel']." WHERE id='".$mysqli->escape_string($_REQUEST['id'])."' AND uid = '".$userdata['id']."' AND static = '1' LIMIT 1");
 			
 	if($mysqli->affected_rows == 1){
