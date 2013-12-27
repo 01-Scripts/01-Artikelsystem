@@ -241,6 +241,12 @@ else
 $mod = get_html_translation_table(HTML_ENTITIES);
 $mod = array_flip($mod);
 
+// Config for htmLawed-function:
+$config['cdata'] 			= 1;
+$config['clean_ms_char'] 	= 1;
+$config['comment'] 			= 1;
+$config['safe'] 			= 1;
+
 // RSS-Feed für KOMMENTARE
 if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentarfeed'] == 1){
 	// Newstitel in Array einlesen (um MySQL-Abfragen zu verringern)
@@ -261,6 +267,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 
 		$echotext = stripslashes(str_replace("&","&amp;",$row['comment']));
 		$echotext = bb_code_comment($echotext,1,1,0);
+		$echotext = htmLawed($echotext, $config);
 		
 		$write_text .= "<item>
   <title>Neuer Kommentar zu ".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, $htmlent_encoding_acp))."</title>
@@ -276,6 +283,8 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 	}
 // RSS-Feed für ARTIKEL
 elseif($settings['artikelrssfeedaktiv'] == 1){
+	$config['elements'] = "*+iframe";
+
 	if(isset($cats) && !empty($cats) && substr_count($cats, ",") >= 1){
 		$cats_array = explode(",",$cats);
 				   
@@ -299,20 +308,20 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['id']."#01id".$row['id'];
 		else
 			$echolink = str_replace("&","&amp;",$settings['artikelrsstargeturl'])."&amp;".$names['artid']."=".$row['id']."#01id".$row['id'];
-	
+
 		// Inhalt parsen
 		if($settings['artikelrsslaenge'] == "short"){
 			// Zusammenfassung only:
 			if($row['autozusammen'] == 0 && !empty($row['zusammenfassung']))
-				$echotext = stripslashes($row['zusammenfassung']);
+				$echotext = htmLawed(stripslashes($row['zusammenfassung']), $config);
 			else
-				$echotext = stripslashes(substr($row['text'],0,$settings['artikeleinleitungslaenge']));
+				$echotext = substr(htmLawed(stripslashes($row['text']), $config),0,$settings['artikeleinleitungslaenge']);
 				
 			$echotext .= $lang['weiterlesen'];
 			}
 		else{
 			// kompletter Text
-			$echotext = stripslashes($row['text']);
+			$echotext = htmLawed(stripslashes($row['text']), $config);
 			}
 
 		// Pfade anpassen

@@ -109,6 +109,8 @@ if(isset($_GET[$names['rss']]) && ($_GET[$names['rss']] == "show_rssfeed" || $_G
 	
 	if(!isset($_GET['entries'])) $_GET['entries'] = "";
 	else $_GET['entries'] = strip_tags($_GET['entries']);
+
+	include_once($subfolder."01acp/system/includes/htmLawed.php");
 	
 	header("Content-type: text/xml");
 	echo _01article_RSS($_GET[$names['rss']],$_GET['entries'],$_REQUEST[$names['catid']]);
