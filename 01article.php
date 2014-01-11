@@ -1,6 +1,6 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
@@ -62,11 +62,9 @@ $qt					= 0;
 $svl2a				= "";
 $qt_query			= "";
 $flag_archiv		= "";
-$z					= FALSE;
 $flag_IamStandard	= FALSE;
 
 // ggf. Zuweisung $show[] -> $_GET[]
-if(isset($_REQUEST[$names['catid']]) && isset($show['catid']) && !empty($show['catid']) && $show['catid'] == $_REQUEST[$names['catid']]) $z = true;
 if(!isset($_REQUEST[$names['catid']]) && isset($show['catid']) && !empty($show['catid'])) $_REQUEST[$names['catid']] = $show['catid']; 
 if(!isset($_REQUEST[$names['search']]) && isset($show['search']) && !empty($show['search'])) $_REQUEST[$names['search']] = $show['search'];
 if(!isset($_REQUEST[$names['page']]) && isset($show['page']) && !empty($show['page'])) $_REQUEST[$names['page']] = $show['page'];

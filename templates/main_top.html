@@ -22,22 +22,22 @@ Dieser Abschnitt ist nur für korrekte Pfadangaben an dieser Stelle nötig */
 
 <a name="01jumpartikel"></a>
 
-<?php if (isset($iderror) && $iderror > 0): ?>
+<?php if (isset($iderror) && $iderror > 0 && ($iderror < 5 || $iderror == 5 && !isset($show['catid']))): ?>
     <p class="meldungen_01">
 		<?php if (isset($iderror) && $iderror == 1): ?>
 		<b>Fehler:</b> Es konnten keine passenden Artikel gefunden werden!
 		<?php endif; ?>
 		<?php if (isset($iderror) && $iderror == 2): ?>
-		<b>Fehler:</b> Ihre Suche nach <i><?php echo $_REQUEST[$names['search']]; ?></i> brachte leider kein Ergebnis.
+		<b>Fehler:</b> Ihre Suche nach <i><?php echo strip_tags($_REQUEST[$names['search']]); ?></i> brachte leider kein Ergebnis.
 		<?php endif; ?>
 		<?php if (isset($iderror) && $iderror == 3): ?>
 		<b>Fehler:</b> In dieser Kategorie befinden sich leider noch keine Artikel.
 		<?php endif; ?>
 		<?php if (isset($iderror) && $iderror == 4): ?>
-		[<a href="<?php echo $filename; ?>">Suche beenden</a>] <b>Suche erfolgreich:</b> Ihre Suche nach <i><?php echo $_REQUEST[$names['search']]; ?></i> brachte folgende Ergebnisse:
+		Ihre Suche nach <i><?php echo strip_tags($_REQUEST[$names['search']]); ?></i> war erfolgreich! [<a href="<?php echo $filename; ?>">Suche beenden</a>]
 		<?php endif; ?>
-		<?php if (isset($iderror) && $iderror == 5): ?>
-		[<a href="<?php echo $filename; ?>">Kategorie entfernen</a>] <b>Kategorie <?php echo $category[$_REQUEST[$names['catid']]]['name']; ?>:</b> Es werden ausschlie&szlig;lich Artikel dieser Kategorie angezeigt.
+		<?php if (isset($iderror) && $iderror == 5 && !isset($show['catid'])): ?>
+		Gewählte Kategorie: <b><?php echo $category[$_REQUEST[$names['catid']]]['name']; ?></b> [<a href="<?php echo $filename; ?>">Auswahl aufheben</a>]
 		<?php endif; ?>
 	</p>
 <?php endif; ?>

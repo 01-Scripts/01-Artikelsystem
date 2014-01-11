@@ -39,12 +39,12 @@
 			</td>
 <?php endif; ?>
 
-<?php if (isset($listcats) && !empty($listcats) && !$z): ?>
+<?php if (isset($listcats) && !empty($listcats) && !isset($show['catid'])): ?>
             <td align="center" valign="top">
               <form action="<?PHP echo $filename; ?>#01jumpartikel" method="post">
               <select name="<?php echo $names['catid']; ?>" size="1" class="input_selectfield">
               <?php if (isset($_REQUEST[$names['catid']]) && !empty($_REQUEST[$names['catid']])): ?>
-			  <option value="">Keine Kat.</option>
+			  <option value="">Auswahl aufheben</option>
 			  <?php endif; ?>
 			  <?PHP echo $listcats; ?>
               </select><input type="submit" name="send" value="Go" class="input_button" />
