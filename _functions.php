@@ -1,6 +1,6 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
@@ -590,6 +590,8 @@ $string = str_replace("&ouml;","oe",$string);
 $string = str_replace("&uuml;","ue",$string);
 $string = str_replace("&amp;","und",$string);
 $string = str_replace(" ","-",$string);
+$string = str_replace("/","",$string);
+$string = str_replace("\\","",$string);
 $string = str_replace(",","_",$string);
 $string = str_replace("ß","ss",$string);
 $string = rawurlencode($string);
