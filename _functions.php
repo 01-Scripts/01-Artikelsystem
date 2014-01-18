@@ -229,7 +229,7 @@ if(!function_exists("_01article_RSS")){
 function _01article_RSS($show,$entrynrs,$cats){
 global $mysqli,$mysql_tables,$settings,$modul,$names,$lang,$server_domainname, $htmlent_flags, $htmlent_encoding_acp;
 
-$rssdata = create_RSSFramework($settings['artikelrsstitel'],$settings['artikelrsstargeturl'],$settings['artikelrssbeschreibung']);
+$rssdata = create_RSSFramework($settings['artikelrsstitel'],$settings['artikelrsstargeturl'],$settings['artikelrssbeschreibung'],TRUE);
 $write_text = "";
 
 // LIMIT
@@ -270,10 +270,10 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 		$echotext = htmLawed($echotext, $config);
 		
 		$write_text .= "<item>
-  <title>Neuer Kommentar zu ".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, $htmlent_encoding_acp))."</title>
+  <title>Neuer Kommentar zu ".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, "UTF-8"))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext."]]></description>
-  <author>".stripslashes(str_replace("&","&amp;",$row['autor']))."</author>
+  <author>".str_replace("&","&amp;",utf8_encode(stripslashes($row['autor'])))."</author>
   <pubDate>".date("r",$row['timestamp'])."</pubDate>
   <guid>".$echolink."</guid>
 </item>
@@ -327,16 +327,17 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 		// Pfade anpassen
 		$echotext = str_replace("../01pics/",$settings['absolut_url']."01pics/",$echotext);
 		$echotext = str_replace("../01files/",$settings['absolut_url']."01files/",$echotext);
+		$echotext = utf8_encode($echotext);
 		
 		$username_array 	= getUserdatafields($row['uid'],"username,01acp_signatur");
 		$username 			= stripslashes($username_array['username']);
 		$signatur 			= "<p>".nl2br(stripslashes(str_replace("&","&amp;",$username_array['signatur'])))."</p>";
 		
 		$write_text .= "<item>
-  <title>".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, $htmlent_encoding_acp))."</title>
+  <title>".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, "UTF-8"))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext.$signatur."]]></description>
-  <author>".$username."</author>
+  <author>".utf8_encode($username)."</author>
   <pubDate>".date("r",$row['timestamp'])."</pubDate>
   <guid>".$echolink."</guid>
 </item>
@@ -346,7 +347,7 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 	$return = $rssdata['header'].$write_text.$rssdata['footer'];
 	}
 else{
-	$return = $rssdata['header']."<item>Fehler: der RSS-Feed wurde deaktiviert</item>".$rssdata['footer'];
+	$return = $rssdata['header']."<item>Fehler: Der RSS-Feed wurde deaktiviert</item>".$rssdata['footer'];
 	}
 
 return $return;
