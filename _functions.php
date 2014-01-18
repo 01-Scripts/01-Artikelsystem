@@ -513,7 +513,7 @@ RETURN: Entsprechend (mod_rewrite) formatierter Link an den weitere Parameter an
   */
 if(!function_exists("_01article_echo_ArticleLink")){
 function _01article_echo_ArticleLink($artid,$arttitle="",$timestamp="",$domain=""){
-global $settings,$names,$server_domainname,$filename;
+global $settings,$names,$server_domainname,$filename,$module,$modul;
 
 $artid = strip_tags($artid);
 
@@ -534,7 +534,7 @@ if($settings['modrewrite'] == 1){
 		    $adddate = date("Y/m/d/",$timestamp);
 		else*/ $adddate = "";
 			
-		return "http://".$domain."/".$adddate._01article_parseMod_rewriteLinks($arttitle).",".$artid.".html";
+		return "http://".$domain."/".$adddate._01article_parseMod_rewriteLinks($arttitle).",".$module[$modul]['nr'].",".$artid.".html";
 		}
 	}
 else

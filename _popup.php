@@ -1,6 +1,6 @@
 <?PHP
 /*
-	01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
@@ -23,20 +23,21 @@ muss ihr Server/Webspace folgende Voraussetzungen erf&uuml;llen:</p>
 </ul>
 
 <p>Wenn noch nicht vorhanden, legen Sie im Hauptverzeichnis Ihres Servers eine Textdatei mit Namen
-<i>.htaccess</i> an .<br />
-Achten Sie dabei auf die genaue Bezeichnung (es wird KEINE Endung verwendet)!</p>
+<i>.htaccess</i> an.<br />
+Achten Sie dabei auf die genaue Bezeichnung (KEINE Dateiendung)!</p>
 
 <p>Kopieren Sie folgenden Code in die Datei</p>
 
 <code>
 RewriteEngine On<br />
-RewriteRule ^(.*),([0-9]+).html$ /<b>includepage.php</b>?<?php echo $names['artid']; ?>=$2#01id$2 [L]
+RewriteRule ^(.*),<b><?php echo $module[$modul]['nr']; ?></b>,([0-9]+).html$ /<b>includepage.php</b>?<?php echo $names['artid']; ?>=$2#01id$2 [L]
 </code>
 
-<p><b>includepage.php</b> durch den entsprechenden Dateinamen ersetzen.</p>
+<p><b>1</b> entspricht hier der Installationsnummer dieses Moduls.<br />
+	<b>includepage.php</b> durch den entsprechenden Dateinamen ersetzen.</p>
 
 <p>Speichern Sie die Datei und aktivieren Sie die mod_rewrite-Funktion in den Einstellungen.<br />
-Danach sollten sog. "sprechende" Links zur Verf&uuml;gung stehen.</p>
+Danach sollten sog. <i>sprechende</i> Links zur Verf&uuml;gung stehen.</p>
 
 <?PHP
 	}
