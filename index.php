@@ -85,11 +85,11 @@
 	<h4>5 neueste Kommentare</h4>
 
 	<?PHP
-	$query = "SELECT postid,utimestamp,autor,comment,smilies,bbc FROM ".$mysql_tables['comments']." WHERE modul = '".$modul."' AND frei = '1' ORDER BY utimestamp DESC LIMIT 5";
+	$query = "SELECT postid,utimestamp,autor,message,smilies,bbc FROM ".$mysql_tables['comments']." WHERE modul = '".$modul."' AND frei = '1' ORDER BY utimestamp DESC LIMIT 5";
 	$list = $mysqli->query($query);
 	while($row = $list->fetch_assoc()){
 		echo "<p><a href=\"comments.php?modul=".$modul."&amp;postid=".$row['postid']."\"><img src=\"images/icons/icon_show.gif\" alt=\"Symbol: Auge\" title=\"Kommentar anzeigen\" /></a> Verfasst von <b>".stripslashes($row['autor'])."</b> am <b>".date("d.m.Y",$row['timestamp'])."</b><br />
-		".substr(strip_tags(bb_code_comment(stripslashes($row['comment']),1,$row['bbc'],0)),0,100)."...
+		".substr(strip_tags(bb_code_comment(stripslashes($row['message']),1,$row['bbc'],0)),0,100)."...
 		</p>";
 		}
 	?>

@@ -255,7 +255,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 		$arttitel[$row['id']] = stripslashes($row['titel']);
 		}
 		
-	$list = $mysqli->query("SELECT postid,utimestamp,autor,comment FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY utimestamp DESC LIMIT ".$mysqli->escape_string($settings['artikelrssanzahl'])."");
+	$list = $mysqli->query("SELECT postid,utimestamp,autor,message FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY utimestamp DESC LIMIT ".$mysqli->escape_string($settings['artikelrssanzahl'])."");
 	while($row = $list->fetch_assoc()){
 
 		if($settings['modrewrite'] == 1)
@@ -265,7 +265,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 		else
 			$echolink = str_replace("&","&amp;",$settings['artikelrsstargeturl'])."&amp;".$names['artid']."=".$row['postid']."#01id".$row['postid'];	
 
-		$echotext = stripslashes(str_replace("&","&amp;",$row['comment']));
+		$echotext = stripslashes(str_replace("&","&amp;",$row['message']));
 		$echotext = bb_code_comment($echotext,1,1,0);
 		$echotext = htmLawed($echotext, $config);
 		
