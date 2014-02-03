@@ -35,11 +35,11 @@
 	<h4>5 neueste Artikel</h4>
 
 	<?PHP
-	$query = "SELECT id,titel,text FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND timestamp < '".time()."' AND (endtime = '0' OR endtime >= '".time()."') ORDER BY timestamp DESC LIMIT 5";
+	$query = "SELECT id,titel,content FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND utimestamp < '".time()."' AND (endtime = '0' OR endtime >= '".time()."') ORDER BY utimestamp DESC LIMIT 5";
 	$list = $mysqli->query($query);
 	while($row = $list->fetch_assoc()){
 		echo "<p><b><a href=\"_loader.php?modul=".$modul."&amp;loadpage=article&amp;action=edit&amp;id=".$row['id']."&amp;static=0\">".stripslashes($row['titel'])."</a></b><br />
-		".substr(stripslashes(strip_tags($row['text'])),0,100)."...
+		".substr(stripslashes(strip_tags($row['content'])),0,100)."...
 		</p>";
 		}
 	?>
@@ -85,7 +85,7 @@
 	<h4>5 neueste Kommentare</h4>
 
 	<?PHP
-	$query = "SELECT postid,timestamp,autor,comment,smilies,bbc FROM ".$mysql_tables['comments']." WHERE modul = '".$modul."' AND frei = '1' ORDER BY timestamp DESC LIMIT 5";
+	$query = "SELECT postid,utimestamp,autor,comment,smilies,bbc FROM ".$mysql_tables['comments']." WHERE modul = '".$modul."' AND frei = '1' ORDER BY utimestamp DESC LIMIT 5";
 	$list = $mysqli->query($query);
 	while($row = $list->fetch_assoc()){
 		echo "<p><a href=\"comments.php?modul=".$modul."&amp;postid=".$row['postid']."\"><img src=\"images/icons/icon_show.gif\" alt=\"Symbol: Auge\" title=\"Kommentar anzeigen\" /></a> Verfasst von <b>".stripslashes($row['autor'])."</b> am <b>".date("d.m.Y",$row['timestamp'])."</b><br />

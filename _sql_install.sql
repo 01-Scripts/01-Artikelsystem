@@ -1,4 +1,4 @@
--- 01-Artikelsystem V3 - Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
+-- 01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
 -- Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 -- Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
@@ -104,14 +104,14 @@ UPDATE `01prefix_user` SET `#modul_idname#_editcats` = '1' WHERE `01prefix_user`
 
 CREATE TABLE `01modulprefix_article` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `timestamp` int(15) default '0',
+  `utimestamp` int(15) default '0',
   `endtime` int(15) default '0',
   `frei` tinyint(1),
   `hide` tinyint(1),
   `icon` varchar(25) NULL,
   `titel` varchar(255),
   `newscatid` varchar(255) default '0',
-  `text` text,
+  `content` text,
   `autozusammen` tinyint(1) NULL,
   `zusammenfassung` text,
   `comments` tinyint(1),
@@ -123,7 +123,7 @@ CREATE TABLE `01modulprefix_article` (
   `hide_signature` tinyint(1) default '0',
   `serialized_data` mediumblob COMMENT 'use unserialize() to get data back',
   PRIMARY KEY  (`id`),
-  FULLTEXT (`titel`,`text`,`zusammenfassung`) 
+  FULLTEXT (`titel`,`content`,`zusammenfassung`) 
 ) ENGINE=MyISAM AUTO_INCREMENT=2 ;
 
 -- 
@@ -131,8 +131,8 @@ CREATE TABLE `01modulprefix_article` (
 -- Dummy-Eintrag
 -- 
 
-INSERT INTO `01modulprefix_article` (`id`, `timestamp`, `endtime`, `frei`, `hide`, `icon`, `titel`, `newscatid`, `text`, `autozusammen`, `zusammenfassung`, `comments`, `hide_headline`, `uid`, `static`, `hits`) VALUES
-(1, 1230764401, 0, 1, 0, '13.gif', '01-Artikelsystem V3 erfolgreich installiert', '0', '<p><strong><span style="color: #008000;">Vielen Dank, dass Sie sich f&uuml;r das 01-Artikelsystem entschieden haben!</span></strong><br />Diesen ersten Eintrag k&ouml;nnen Sie l&ouml;schen, nachdem Sie sich in den Administrationsbereich eingeloggt haben.</p>\r\n<p>Bei Fragen oder Problemen rund um das <strong>01-Artikelsystem</strong> oder das <strong>01acp</strong> stehe ich Ihnen gerne im <a href="http://board.01-scripts.de/" target="_blank">01-Supportforum</a> oder <a href="http://www.01-scripts.de/contact.php" target="_blank">per E-Mail</a> zu Verf&uuml;gung.</p>\r\n<p>Bitte beachten Sie die <a href="http://www.01-scripts.de/lizenz.php" target="_blank">g&uuml;ltigen Lizenzbestimmungen</a>! Das <strong>01-Artikelsystem</strong> und das <strong>01acp</strong> werden unter der Creative-Commons-Lizenz "<em><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/de/" target="_blank">Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland</a></em>" ver&ouml;ffentlicht.</p>\r\n<p>Informationen zum Erwerb einer <em>Lizenz zur kommerziellen Nutzung</em> (Gestattet den Einsatz auf kommerziellen Seiten und/oder Firmenseiten) oder eine <em>Non-Copyright-Lizenz</em> (die zum Entfernen des sichtbaren Urheberrechts-Hinweises berechtigt) entnehmen Sie bitte <a href="http://www.01-scripts.de/preise.php" target="_blank">dieser Seite</a>.</p>\r\n<p>MfG,<br />Michael Lorer<br />Web: <a href="http://www.01-scripts.de" target="_blank">http://www.01-scripts.de</a><br />Mail: <a href="mailto:info@01-scripts.de">info@01-scripts.de</a></p>\r\n<p><img style="float: left; margin: 10px; border: 0px none #000000;" title="01-Scripts.de" src="http://www.01-scripts.de/pics/system/01logo.jpg" alt="01-Scripts.de-Logo" width="300" height="40" />Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</p>', 0, '', 1, 0, 0, 0, 0);
+INSERT INTO `01modulprefix_article` (`id`, `utimestamp`, `endtime`, `frei`, `hide`, `icon`, `titel`, `newscatid`, `content`, `autozusammen`, `zusammenfassung`, `comments`, `hide_headline`, `uid`, `static`, `hits`) VALUES
+(1, 1230764401, 0, 1, 0, '', '01-Artikelsystem V3 erfolgreich installiert', '0', '<p><strong><span style="color: #008000;">Vielen Dank, dass Sie sich f&uuml;r das 01-Artikelsystem entschieden haben!</span></strong><br />Diesen ersten Eintrag k&ouml;nnen Sie l&ouml;schen, nachdem Sie sich in den Administrationsbereich eingeloggt haben.</p>\r\n<p>Bei Fragen oder Problemen rund um das <strong>01-Artikelsystem</strong> oder das <strong>01acp</strong> stehe ich Ihnen gerne im <a href="http://board.01-scripts.de/" target="_blank">01-Supportforum</a> oder <a href="http://www.01-scripts.de/contact.php" target="_blank">per E-Mail</a> zu Verf&uuml;gung.</p>\r\n<p>Bitte beachten Sie die <a href="http://www.01-scripts.de/lizenz.php" target="_blank">g&uuml;ltigen Lizenzbestimmungen</a>! Das <strong>01-Artikelsystem</strong> und das <strong>01acp</strong> werden unter der Creative-Commons-Lizenz "<em><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/de/" target="_blank">Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland</a></em>" ver&ouml;ffentlicht.</p>\r\n<p>Informationen zum Erwerb einer <em>Lizenz zur kommerziellen Nutzung</em> (Gestattet den Einsatz auf kommerziellen Seiten und/oder Firmenseiten) oder eine <em>Non-Copyright-Lizenz</em> (die zum Entfernen des sichtbaren Urheberrechts-Hinweises berechtigt) entnehmen Sie bitte <a href="http://www.01-scripts.de/preise.php" target="_blank">dieser Seite</a>.</p>\r\n<p>MfG,<br />Michael Lorer<br />Web: <a href="http://www.01-scripts.de" target="_blank">http://www.01-scripts.de</a><br />Mail: <a href="mailto:info@01-scripts.de">info@01-scripts.de</a></p>\r\n<p><img style="float: left; margin: 10px; border: 0px none #000000;" title="01-Scripts.de" src="http://www.01-scripts.de/pics/system/01logo.jpg" alt="01-Scripts.de-Logo" width="300" height="40" />Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</p>', 0, '', 1, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 

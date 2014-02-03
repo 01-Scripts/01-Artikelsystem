@@ -188,7 +188,7 @@ if(isset($_REQUEST['action']) && ($_REQUEST['action'] == "newarticle" || $_REQUE
 			$autorid = $userdata['id'];
 			
 		//Eintragung in Datenbank vornehmen:
-		$sql_insert = "INSERT INTO ".$mysql_tables['artikel']." (timestamp,endtime,frei,hide,icon,titel,newscatid,text,autozusammen,zusammenfassung,comments,hide_headline,uid,static,top,hits,hide_signature,serialized_data) VALUES (
+		$sql_insert = "INSERT INTO ".$mysql_tables['artikel']." (utimestamp,endtime,frei,hide,icon,titel,newscatid,content,autozusammen,zusammenfassung,comments,hide_headline,uid,static,top,hits,hide_signature,serialized_data) VALUES (
 						'".$start_mysqldate."',
 						'".$ende_mysqldate."',
 						'".$frei."',
@@ -363,12 +363,12 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata
 				
 			// Eintragung in Datenbank aktualisieren:
 			if($mysqli->query("UPDATE ".$mysql_tables['artikel']." SET 
-							timestamp		= '".$start_mysqldate."',
+							utimestamp		= '".$start_mysqldate."',
 							endtime			= '".$ende_mysqldate."',
 							hide			= '".$hide."',
 							titel			= '".$mysqli->escape_string(htmlentities($_POST['titel'],$htmlent_flags,$htmlent_encoding_acp))."',
 							newscatid		= '".$mysqli->escape_string($newscats_string)."',
-							text			= '".$mysqli->escape_string($text)."',
+							content			= '".$mysqli->escape_string($text)."',
 							autozusammen	= '".$autozusammen."',
 							zusammenfassung	= '".$mysqli->escape_string($zusammen)."',
 							comments		= '".$comments."',
@@ -546,7 +546,7 @@ $cat_data = array();
 	elseif(isset($_GET['sort']) && $_GET['sort'] == "desc") $sortorder = "DESC";
 	else $sortorder = "ASC";
 	
-	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,text,zusammenfassung) AGAINST ('".$mysqli->escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
+	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,content,zusammenfassung) AGAINST ('".$mysqli->escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
 	elseif(isset($_GET['catid']) && !empty($_GET['catid']) && is_numeric($_GET['catid'])) $where = " WHERE newscatid LIKE '%,".$mysqli->escape_string($_GET['catid']).",%' ";
 	else $where = " WHERE static = '".$flag_static."' ";
 	
@@ -569,7 +569,7 @@ $cat_data = array();
 	    $orderby = "titel";
 	  break;
 	  default:
-	    $orderby = "top DESC, timestamp";
+	    $orderby = "top DESC, utimestamp";
 	  break;
 	  }
 
@@ -631,15 +631,15 @@ $cat_data = array();
 			$status = "<b class=\"free_wait\">&Uuml;berpr&uuml;fung n&ouml;tig</b>";
 			if($userdata['editarticle'] == 2 && $flag_static == 0 || $userdata['staticarticle'] == 2 && $flag_static == 1) $status .="<a href=\"".$filename2."&amp;do=free&amp;id=".$row['id']."\"><img src=\"images/icons/ok.gif\" alt=\"gr&uuml;ner Hacken\" title=\"Beitrag jetzt freischalten\" /></a>";
 			}
-		elseif($row['endtime'] > 0 && $row['endtime'] > time() && $row['timestamp'] > time())
-			$status = "<b class=\"public\">".date("d.m.y, G:i",$row['timestamp'])." - ".date("d.m.y, G:i",$row['endtime'])."</b>";
+		elseif($row['endtime'] > 0 && $row['endtime'] > time() && $row['utimestamp'] > time())
+			$status = "<b class=\"public\">".date("d.m.y, G:i",$row['utimestamp'])." - ".date("d.m.y, G:i",$row['endtime'])."</b>";
     	elseif($row['endtime'] > 0 && $row['endtime'] > time())
 			$status = "<b class=\"public\">Ver&ouml;ffentlicht bis ".date("d.m.Y, G:i",$row['endtime'])."</b>";
 		elseif($row['endtime'] > 0 && $row['endtime'] < time())
 			$status = "<b class=\"abgelaufen\">Abgelaufen seit ".date("d.m.Y, G:i",$row['endtime'])."</b>";
-		elseif($row['endtime'] == 0 && $row['timestamp'] < time())
+		elseif($row['endtime'] == 0 && $row['utimestamp'] < time())
 			$status = "<b class=\"public\">Ver&ouml;ffentlicht</b>";
-		elseif($row['entdime'] == 0 && $row['timestamp'] > time())
+		elseif($row['entdime'] == 0 && $row['utimestamp'] > time())
 			$status = "<b class=\"public\">Wird ver&ouml;ffentlicht</b>";
 		
 		// Kategorien
@@ -655,9 +655,9 @@ $cat_data = array();
 		if($input_action == "articles" && $catmenge > 0)
 			echo "<td class=\"".$class."\" align=\"center\">".substr($cats,0,(strlen($cats)-2))."</td>";
 		echo "
-		<td class=\"".$class."\">".$top.date("d.m.Y - G:i",$row['timestamp'])."</td>
+		<td class=\"".$class."\">".$top.date("d.m.Y - G:i",$row['utimestamp'])."</td>
 		<td class=\"".$class."\" align=\"center\">".$status."</td>
-		<td class=\"".$class."\" title=\"".strip_tags(stripslashes(substr($row['text'],0,300)))."\" onmouseover=\"fade_element('copyid_".$row['id']."')\" onmouseout=\"fade_element('copyid_".$row['id']."')\">".stripslashes($row['titel'])." <div class=\"moo_inlinehide\" id=\"copyid_".$row['id']."\"><a href=\"".$filename."&amp;action=new".$input_section."&amp;copyid=".$row['id']."\"><img src=\"".$modulpath."images/icon_copy.gif\" alt=\"Kopieren\" title=\"Artikel zum Kopieren ausw&auml;hlen\" /></a></div></td>
+		<td class=\"".$class."\" title=\"".strip_tags(stripslashes(substr($row['content'],0,300)))."\" onmouseover=\"fade_element('copyid_".$row['id']."')\" onmouseout=\"fade_element('copyid_".$row['id']."')\">".stripslashes($row['titel'])." <div class=\"moo_inlinehide\" id=\"copyid_".$row['id']."\"><a href=\"".$filename."&amp;action=new".$input_section."&amp;copyid=".$row['id']."\"><img src=\"".$modulpath."images/icon_copy.gif\" alt=\"Kopieren\" title=\"Artikel zum Kopieren ausw&auml;hlen\" /></a></div></td>
 		<td class=\"".$class."\">".$artuserdata[$row['uid']]['username']."</td>
 		<td class=\"".$class."\" align=\"center\"><a href=\"".$filename."&amp;action=edit&amp;id=".$row['id']."&amp;static=".$row['static'].$add_filename."\"><img src=\"images/icons/icon_edit.gif\" alt=\"Bearbeiten - Stift\" title=\"Eintrag bearbeiten\" style=\"border:0;\" /></a></td>
 		<td class=\"".$class."\" align=\"center\"><img src=\"images/icons/icon_delete.gif\" alt=\"L&ouml;schen - rotes X\" title=\"DiesenEintrag l&ouml;schen\" class=\"fx_opener\" style=\"border:0; float:left;\" align=\"left\" /><div class=\"fx_content tr_red\" style=\"width:60px; display:none;\"><a href=\"#foo\" onclick=\"AjaxRequest.send('modul=".$modul."&ajaxaction=delarticle&id=".$row['id']."&static=".$flag_static."');\">Ja</a> - <a href=\"#foo\">Nein</a></div></td>

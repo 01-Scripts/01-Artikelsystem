@@ -144,11 +144,11 @@ global $ser_fields,$htmlent_flags,$htmlent_encoding_acp;
 
 if(is_array($row)){
 	$form_data = array("id"				=> $row['id'],
-					   "starttime_date"	=> date("d.m.Y",$row['timestamp']),
-					   "starttime_uhr"	=> date("G.i",$row['timestamp']),
+					   "starttime_date"	=> date("d.m.Y",$row['utimestamp']),
+					   "starttime_uhr"	=> date("G.i",$row['utimestamp']),
 					   "newscat"		=> $row['newscatid'],
 					   "titel" 			=> stripslashes($row['titel']),
-					   "textfeld"		=> stripslashes($row['text']),
+					   "textfeld"		=> stripslashes($row['content']),
 					   "autozusammen" 	=> $row['autozusammen'],
 					   "zusammenfassung"=> stripslashes($row['zusammenfassung']),
 					   "hide_headline"	=> $row['hide_headline'],
@@ -250,16 +250,16 @@ $config['safe'] 			= 1;
 // RSS-Feed für KOMMENTARE
 if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentarfeed'] == 1){
 	// Newstitel in Array einlesen (um MySQL-Abfragen zu verringern)
-	$list = $mysqli->query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0')");
+	$list = $mysqli->query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND utimestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0')");
 	while($row = $list->fetch_assoc()){
 		$arttitel[$row['id']] = stripslashes($row['titel']);
 		}
 		
-	$list = $mysqli->query("SELECT postid,timestamp,autor,comment FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY timestamp DESC LIMIT ".$mysqli->escape_string($settings['artikelrssanzahl'])."");
+	$list = $mysqli->query("SELECT postid,utimestamp,autor,comment FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY utimestamp DESC LIMIT ".$mysqli->escape_string($settings['artikelrssanzahl'])."");
 	while($row = $list->fetch_assoc()){
 
 		if($settings['modrewrite'] == 1)
-			$echolink = _01article_echo_ArticleLink($row['postid'],$arttitel[$row['postid']],$row['timestamp']);
+			$echolink = _01article_echo_ArticleLink($row['postid'],$arttitel[$row['postid']],$row['utimestamp']);
 		elseif(substr_count($settings['artikelrsstargeturl'], "?") < 1)
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['postid']."#01id".$row['postid'];
 		else
@@ -274,7 +274,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext."]]></description>
   <author>".str_replace("&","&amp;",utf8_encode(stripslashes($row['autor'])))."</author>
-  <pubDate>".date("r",$row['timestamp'])."</pubDate>
+  <pubDate>".date("r",$row['utimestamp'])."</pubDate>
   <guid>".$echolink."</guid>
 </item>
 ";
@@ -292,18 +292,18 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 		foreach($cats_array as $value){
 			$add2query_cat .= " OR newscatid LIKE '%,".$mysqli->escape_string($value).",%' ";
 			}
-		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY timestamp DESC LIMIT ".$limit."";
+		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND utimestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY utimestamp DESC LIMIT ".$limit."";
 		}
 	elseif(isset($cats) && !empty($cats))
-		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND newscatid LIKE '%,".$mysqli->escape_string($cats).",%' ORDER BY timestamp DESC LIMIT ".$limit."";
+		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND utimestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') AND newscatid LIKE '%,".$mysqli->escape_string($cats).",%' ORDER BY utimestamp DESC LIMIT ".$limit."";
 	else
-		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND timestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') ORDER BY timestamp DESC LIMIT ".$limit."";
+		$query = "SELECT * FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND utimestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0') ORDER BY utimestamp DESC LIMIT ".$limit."";
 	
 	$list = $mysqli->query($query);
 	while($row = $list->fetch_assoc()){
 
 		if($settings['modrewrite'] == 1)
-			$echolink = _01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['timestamp']);
+			$echolink = _01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['utimestamp']);
 		elseif(substr_count($settings['artikelrsstargeturl'], "?") < 1)
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['id']."#01id".$row['id'];
 		else
@@ -315,13 +315,13 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 			if($row['autozusammen'] == 0 && !empty($row['zusammenfassung']))
 				$echotext = htmLawed(stripslashes($row['zusammenfassung']), $config);
 			else
-				$echotext = substr(htmLawed(stripslashes($row['text']), $config),0,$settings['artikeleinleitungslaenge']);
+				$echotext = substr(htmLawed(stripslashes($row['content']), $config),0,$settings['artikeleinleitungslaenge']);
 				
 			$echotext .= $lang['weiterlesen'];
 			}
 		else{
 			// kompletter Text
-			$echotext = htmLawed(stripslashes($row['text']), $config);
+			$echotext = htmLawed(stripslashes($row['content']), $config);
 			}
 
 		// Pfade anpassen
@@ -338,7 +338,7 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext.$signatur."]]></description>
   <author>".utf8_encode($username)."</author>
-  <pubDate>".date("r",$row['timestamp'])."</pubDate>
+  <pubDate>".date("r",$row['utimestamp'])."</pubDate>
   <guid>".$echolink."</guid>
 </item>
 ";
@@ -641,14 +641,14 @@ if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeri
         $galid  = $treffer[2];
         
         // Galerie-Infos aus Datenbank holen
-    	$list = $mysqli->query("SELECT id,timestamp,password,galeriename,beschreibung,galpic,anzahl_pics FROM ".$mysql_tables['gallery']." WHERE id = '".$mysqli->escape_string($galid)."' AND hide='0' LIMIT 1");
+    	$list = $mysqli->query("SELECT id,galtimestamp,password,galeriename,beschreibung,galpic,anzahl_pics FROM ".$mysql_tables['gallery']." WHERE id = '".$mysqli->escape_string($galid)."' AND hide='0' LIMIT 1");
 	    if($list->num_rows == 0)
             return "";
     	$galinfo = $list->fetch_assoc();
     	$galverz = $galdir._01gallery_getGalDir($galinfo['id'],$galinfo['password'])."/";
         
 	    // Thumbnails auflisten
-	    $query = "SELECT id,filename,title,text FROM ".$mysql_tables['pics']." WHERE galid = '".$mysqli->escape_string($galid)."' ORDER BY sortorder DESC LIMIT ".$mysqli->escape_string($treffer[1]);
+	    $query = "SELECT id,filename,title,pictext FROM ".$mysql_tables['pics']." WHERE galid = '".$mysqli->escape_string($galid)."' ORDER BY sortorder DESC LIMIT ".$mysqli->escape_string($treffer[1]);
 
 		$return .= "\n\n<div class=\"cssgallery_art2gal\">\n";
 	    $list = $mysqli->query($query);
@@ -657,7 +657,7 @@ if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeri
             
 		while($pics = $list->fetch_assoc()){
 			if($settings['artikellightbox'] == 1)
-				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['text']))."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb")."</a></div>\n";
+				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext']))."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb")."</a></div>\n";
 			else
 				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb")."</div>\n";
 			}
