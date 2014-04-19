@@ -1,4 +1,80 @@
 <?PHP
+// 3.1.0 --> 3.2.0
+if(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
+
+	// #316 Artikelsystem und Bildergalerie verbinden
+	$add2css = "\r\n\r\n/* Formatierte Ausgabe von Galerie-Thumbnails im Artikelsystem */
+/* Die Breite muss mit der für die Galerie voreingestellten Thumbnail-Breite übereinstimmen */
+.thumbnail_art2gal{
+    float: left;
+    width: 100px; /* Thumbnail-Breite */
+    border: 1px solid #999;
+    margin: 0 10px 10px 0; /* Abstand zwischen den einzelnen Thumbnails */
+    padding: 5px; /* Abstand zwischen Bild und Rand */
+}
+
+/* div um die Thumbnails innerhalb von Artikeln */
+div.cssgallery_art2gal {}";
+	$list = $mysqli->query("SELECT id,wert FROM ".$mysql_tables['settings']." WHERE modul = '".$mysqli->escape_string($modul)."' AND idname = 'csscode'");
+	while($row = $list->fetch_assoc()){
+		$mysqli->query("UPDATE ".$mysql_tables['settings']." SET `wert` = '".$row['wert'].$add2css."' WHERE `id` = '".$row['id']."' LIMIT 1");
+		}
+
+	$mysqli->query("UPDATE ".$mysql_tables['settings']." SET `formwerte` = '1|0' WHERE `idname` = 'artikellightbox' AND modul = '".$mysqli->escape_string($modul)."' LIMIT 1");
+
+	// Spaltenname 'timestamp' umbenennen in 'utimestamp' #692
+	$mysqli->query("ALTER TABLE ".$mysql_tables['artikel']." CHANGE `timestamp` `utimestamp` INT( 15 ) NULL DEFAULT '0'");
+	// Spaltenname 'text' umbenennen in 'content' #692
+	$mysqli->query("ALTER TABLE ".$mysql_tables['artikel']." CHANGE `text` `content` TEXT NULL DEFAULT NULL");
+
+	// Versionsnummer aktualisieren
+	$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.2.0' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
+?>
+<h2>Update Version 3.1.0 nach 3.2.0</h2>
+
+<div class="meldung_erfolg">
+	Das Update von Version 3.1.0 auf Version 3.2.0 wurde erfolgreich durchgef&uuml;hrt.<br />
+	<br />
+	<a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a><br />
+	<br />
+	<b>Achtung: &Uuml;berarbeitung von CSS-Eigenschaften:</b><br />
+	Mit diesem Update wurden zwei neue CSS-Definitionen hinzugef&uuml;gt.
+	Sollten Sie den CSS-Code in eine externe .css-Datei ausgelagert haben, m&uuml;ssen Sie folgende neuen
+	CSS-Klassen manuell hinzuf&uuml;gen:<br />
+<code>
+.thumbnail_art2gal{<br />
+    float: left;<br />
+    width: 100px; /* Thumbnail-Breite */<br />
+    border: 1px solid #999;<br />
+    margin: 0 10px 10px 0; /* Abstand zwischen den einzelnen Thumbnails */<br />
+    padding: 5px; /* Abstand zwischen Bild und Rand */<br />
+}<br />
+<br />
+/* div um die Thumbnails innerhalb von Artikeln */<br />
+div.cssgallery_art2gal {}<br />
+</code><br />
+<br />
+Folgende Dateien und Verzeichnisse werden nach dem Update nicht mehr ben&ouml;tigt und k&ouml;nnen gel&ouml;scht werden:
+<ul>
+	<li>Verzeichnis <i>01module/01article/images/icons/</i></li>
+</ul>
+</div>
+
+<div class="meldung_erfolg">
+	<b>Mit dem Update wurde unter anderem folgendes verbessert:</b>
+	<ul>
+		<li>Direkte Verwendung von Bildern aus der <a href="http://www.01-scripts.de/01gallery.php" target="_blank">01-Gallery</a> innerhalb des Artikelsystems m&ouml;glich.</li>
+		<li>mod_rewrite-Funktionalit&auml;t auch bei mehreren Installationen</li>
+		<li>Verbesserungen beim RSS-Feed</li>
+		<li>UTF8-Kompatibilit&auml;t wesentlich verbessert</li>
+		<li>Spamschutz-Funkton verbessert</li>
+		<li>Diverse weitere Bugfixes. Siehe <a href="http://www.01-scripts.de/down/01article_changelog.txt" target="_blank">changelog.txt</a></li>
+	</ul>
+	<p><a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a></p>
+</div>
+<?PHP
+}
+
 // 3.0.0.4 --> 3.1.0
 if(isset($_REQUEST['update']) && $_REQUEST['update'] == "3004_zu_310"){
 
