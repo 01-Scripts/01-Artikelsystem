@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem Copyright 2006-2013 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Bearbeitung von eingehenden Ajax-Requests
-	#fv.311#
+	#fv.320#
 */
 
 // Security: Only allow calls from _ajaxloader.php!

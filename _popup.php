@@ -6,7 +6,7 @@
 
 	Modul:		01article
 	Dateiinfo:	Popup-Inhalt
-	#fv.311#
+	#fv.320#
 */
 
 // Mod_rewirte-Info ausgeben

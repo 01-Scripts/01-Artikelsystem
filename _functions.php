@@ -6,7 +6,7 @@
 	
 	Modul:		01article
 	Dateiinfo: 	Modulspezifische Funktionen
-	#fv.311#
+	#fv.320#
 */
 
 /* SYNTAKTISCHER AUFBAU VON FUNKTIONSNAMEN BEACHTEN!!!

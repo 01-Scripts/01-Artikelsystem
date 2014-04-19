@@ -4,7 +4,7 @@
 
 -- Modul:		01article
 -- Dateiinfo:	SQL-Befehle für die Erstinstallation des Artikelsystems V3
--- #fv.311#
+-- #fv.320#
 --  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  *  *
 
 -- --------------------------------------------------------

@@ -6,7 +6,7 @@
 	
 	Modul:		01article
 	Dateiinfo: 	Frontend-Ausgabe 01-Artikelsystem
-	#fv.311#
+	#fv.320#
 */
 
 //Hinweis zum Einbinden des Artikelsystems per include();
