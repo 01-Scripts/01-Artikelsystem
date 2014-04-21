@@ -23,7 +23,7 @@ div.cssgallery_art2gal {}";
 	$mysqli->query("UPDATE ".$mysql_tables['settings']." SET `formwerte` = '1|0' WHERE `idname` = 'artikellightbox' AND modul = '".$mysqli->escape_string($modul)."' LIMIT 1");
 
 	// Spaltenname 'timestamp' umbenennen in 'utimestamp' #692
-	$mysqli->query("ALTER TABLE ".$mysql_tables['artikel']." CHANGE `timestamp` `utimestamp` INT( 15 ) NULL DEFAULT '0'");
+	$mysqli->query("ALTER TABLE ".$mysql_tables['artikel']." CHANGE `timestamp` `utimestamp` INT( 15 ) NOT NULL DEFAULT '0'");
 	// Spaltenname 'text' umbenennen in 'content' #692
 	$mysqli->query("ALTER TABLE ".$mysql_tables['artikel']." CHANGE `text` `content` TEXT NULL DEFAULT NULL");
 
