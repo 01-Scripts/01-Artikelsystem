@@ -25,7 +25,6 @@ $loadfile['category']	= "category.php";
 
 // Weitere Pfadangaben
 $imagepf 	= "images/";						// Pfad zum Bild-Verzeichnis
-$iconpf 	= "images/icons/";					// Verzeichnis mit Icon-Dateien
 $tempdir	= "templates/";						// Template-Verzeichnis
 
 // Weitere Variablen

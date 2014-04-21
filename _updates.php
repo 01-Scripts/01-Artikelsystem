@@ -60,6 +60,18 @@ Folgende Dateien und Verzeichnisse werden nach dem Update nicht mehr ben&ouml;ti
 </ul>
 </div>
 
+<?PHP if($settings['modrewrite'] == 1) { ?>
+<div class="meldung_error">
+	<b>Achtung:</b> Für die Nutzung der mod_rewrite-Funktion hat sich die Syntax geändert.<br />
+	Bitte passen Sie ihre <i>.htaccess</i>-Datei an:<br />
+	<br />
+	Bisherige Syntax:<br />
+	<code>RewriteRule ^(.*),([0-9]+).html$ /<b>includepage.php</b>?<?php echo $names['artid']; ?>=$2#01id$2 [L]</code><br />
+	<b>Neue Syntax</b>:<br />
+	<code>RewriteRule ^(.*),<b class="red"><?php echo $module[$modul]['nr']; ?></b>,([0-9]+).html$ /<b>includepage.php</b>?<?php echo $names['artid']; ?>=$2#01id$2 [L]</code>
+</div>
+<?PHP } ?>
+
 <div class="meldung_erfolg">
 	<b>Mit dem Update wurde unter anderem folgendes verbessert:</b>
 	<ul>
