@@ -5,7 +5,7 @@ Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 Modul:		01article
 Dateiinfo: 	Frontend JavaScript-Funktion
-Unkomprimierte Version der Datei: https://github.com/01-Scripts/01-Artikelsystem/blob/V3.1.1/01article/templates/javas.js
+Unkomprimierte Version der Datei: https://github.com/01-Scripts/01-Artikelsystem/blob/V3.2.0/01article/templates/javas.js
 #fv.320#
 */
 
