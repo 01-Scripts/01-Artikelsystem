@@ -44,7 +44,7 @@ elseif(isset($_REQUEST['ajaxaction']) && $_REQUEST['ajaxaction'] == "delcat" &&
 		}
 
 	$newscatidlist = $mysqli->query("SELECT id,newscatid FROM ".$mysql_tables['artikel']."");
-	while($row = $newscatidlist->fetch_assoc(){
+	while($row = $newscatidlist->fetch_assoc()){
 		$testarray = explode(",",substr($row['newscatid'],1,strlen($row['newscatid'])-2));
 		if(is_array($testarray) && count($testarray) > 1){
 			unset($testarray[array_search($_REQUEST['id'],$testarray)]);
