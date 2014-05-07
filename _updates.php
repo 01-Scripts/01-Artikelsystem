@@ -3,7 +3,8 @@
 if(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
 
 	// #316 Artikelsystem und Bildergalerie verbinden
-	$add2css = "\r\n\r\n/* Formatierte Ausgabe von Galerie-Thumbnails im Artikelsystem */
+	$add2css = "\r\n\r\n/* SLIMBOX */\r\n\r\n#lbOverlay {\r\n	position: fixed;\r\n	z-index: 9999;\r\n	left: 0;\r\n	top: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #000;				/* Overlay-Hintergrundfarbe der Lightbox-Abdunklung */\r\n	cursor: pointer;\r\n}\r\n\r\n#lbCenter, #lbBottomContainer {\r\n	position: absolute;\r\n	z-index: 9999;\r\n	overflow: hidden;\r\n	background-color: #fff;				/* Hintergrundfarbe des Untertitel-Bereichs */\r\n}\r\n\r\n#lbImage {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	border: 10px solid #fff;			/* Bildrahmenfarbe um das in der Lightbox geöffnete Bild herum */\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lbPrevLink, #lbNextLink {\r\n	display: block;\r\n	position: absolute;\r\n	top: 0;\r\n	width: 50%;\r\n	outline: none;\r\n}\r\n\r\n#lbPrevLink {\r\n	left: 0;\r\n}\r\n#lbNextLink {\r\n	right: 0;\r\n}\r\n\r\n/* Untertitel-Textdefinition */\r\n#lbBottom {\r\n	font-family: Verdana, Arial, Geneva, Helvetica, sans-serif;\r\n	font-size: 10px;\r\n	color: #666;\r\n	line-height: 1.4em;\r\n	text-align: left;\r\n	border: 10px solid #fff;\r\n	border-top-style: none;\r\n}\r\n\r\n#lbCloseLink {\r\n	display: block;\r\n	float: right;\r\n	width: 66px;\r\n	height: 22px;\r\n	margin: 5px 0;\r\n	outline: none;\r\n}\r\n\r\n#lbCaption, #lbNumber {\r\n	margin-right: 71px;\r\n}\r\n#lbCaption {\r\n	font-weight: bold;\r\n}\r\n\r\n
+\r\n\r\n/* Formatierte Ausgabe von Galerie-Thumbnails im Artikelsystem */
 /* Die Breite muss mit der für die Galerie voreingestellten Thumbnail-Breite übereinstimmen */
 .thumbnail_art2gal{
     float: left;
@@ -35,29 +36,27 @@ div.cssgallery_art2gal {}";
 <div class="meldung_erfolg">
 	Das Update von Version 3.1.0 auf Version 3.2.0 wurde erfolgreich durchgef&uuml;hrt.<br />
 	<br />
-	<a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a><br />
-	<br />
 	<b>Achtung: &Uuml;berarbeitung von CSS-Eigenschaften:</b><br />
 	Mit diesem Update wurden zwei neue CSS-Definitionen hinzugef&uuml;gt.
 	Sollten Sie den CSS-Code in eine externe .css-Datei ausgelagert haben, m&uuml;ssen Sie folgende neuen
 	CSS-Klassen manuell hinzuf&uuml;gen:<br />
-<code>
-.thumbnail_art2gal{<br />
-    float: left;<br />
-    width: 100px; /* Thumbnail-Breite */<br />
-    border: 1px solid #999;<br />
-    margin: 0 10px 10px 0; /* Abstand zwischen den einzelnen Thumbnails */<br />
-    padding: 5px; /* Abstand zwischen Bild und Rand */<br />
-}<br />
-<br />
-/* div um die Thumbnails innerhalb von Artikeln */<br />
-div.cssgallery_art2gal {}<br />
-</code><br />
-<br />
-Folgende Dateien und Verzeichnisse werden nach dem Update nicht mehr ben&ouml;tigt und k&ouml;nnen gel&ouml;scht werden:
-<ul>
-	<li>Verzeichnis <i>01module/01article/images/icons/</i></li>
-</ul>
+	<a href="https://gist.github.com/01-Scripts/ede65f4ff6a182fa320f" target="_blank">Neuen CSS-Code auf Github aufrufen</a>
+	<br />
+	Folgende Dateien und Verzeichnisse werden nach dem Update nicht mehr ben&ouml;tigt und k&ouml;nnen gel&ouml;scht werden:
+	<ul>
+		<li>Verzeichnis <i>01module/01article/images/icons/</i></li>
+	</ul>
+
+	<b>Mit dem Update wurde unter anderem folgendes verbessert:</b>
+	<ul>
+		<li>Direkte Verwendung von Bildern aus der <a href="http://www.01-scripts.de/01gallery.php" target="_blank">01-Gallery</a> innerhalb des Artikelsystems m&ouml;glich.</li>
+		<li>mod_rewrite-Funktionalit&auml;t auch bei mehreren Installationen</li>
+		<li>Verbesserungen beim RSS-Feed</li>
+		<li>UTF8-Kompatibilit&auml;t wesentlich verbessert</li>
+		<li>Spamschutz-Funkton verbessert</li>
+		<li>Diverse weitere Bugfixes. Siehe <a href="http://www.01-scripts.de/down/01article_changelog.txt" target="_blank">changelog.txt</a></li>
+	</ul>
+	<p><a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a></p>
 </div>
 
 <?PHP if($settings['modrewrite'] == 1) { ?>
@@ -70,21 +69,8 @@ Folgende Dateien und Verzeichnisse werden nach dem Update nicht mehr ben&ouml;ti
 	<b>Neue Syntax</b>:<br />
 	<code>RewriteRule ^(.*),<b class="red"><?php echo $module[$modul]['nr']; ?></b>,([0-9]+).html$ /<b>includepage.php</b>?<?php echo $names['artid']; ?>=$2#01id$2 [L]</code>
 </div>
-<?PHP } ?>
+<?PHP } 
 
-<div class="meldung_erfolg">
-	<b>Mit dem Update wurde unter anderem folgendes verbessert:</b>
-	<ul>
-		<li>Direkte Verwendung von Bildern aus der <a href="http://www.01-scripts.de/01gallery.php" target="_blank">01-Gallery</a> innerhalb des Artikelsystems m&ouml;glich.</li>
-		<li>mod_rewrite-Funktionalit&auml;t auch bei mehreren Installationen</li>
-		<li>Verbesserungen beim RSS-Feed</li>
-		<li>UTF8-Kompatibilit&auml;t wesentlich verbessert</li>
-		<li>Spamschutz-Funkton verbessert</li>
-		<li>Diverse weitere Bugfixes. Siehe <a href="http://www.01-scripts.de/down/01article_changelog.txt" target="_blank">changelog.txt</a></li>
-	</ul>
-	<p><a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a></p>
-</div>
-<?PHP
 }
 
 // 3.0.0.4 --> 3.1.0
