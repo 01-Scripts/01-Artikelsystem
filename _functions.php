@@ -615,21 +615,24 @@ return $string;
 */
 if(!function_exists("_01article_callback_GetGalThumbs4Article")){
 function _01article_callback_GetGalThumbs4Article($treffer){
-global $moduldir,$settings,$mysql_tables,$art2gal_galnr,$mysqli;
+global $moduldir,$settings,$mysql_tables,$art2gal_galnr,$mysqli,$module,$instnr;
 $return = "";
 
 // $treffer[0]: gesamter String {Insert#...GalleryPicsFrom#...}
 // $treffer[1]: 1. Match (Anzahl an auszugebenden Thumbnails)
 // $treffer[2]: 2. Match (Galid)
 if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeric($treffer[2])){
-    $galmodul = array();
-    $module = getModuls($galmodul,"01gallery");
-    
-    if(count($galmodul) > 0){
-        $modul = $module[$galmodul[$art2gal_galnr]]['idname'];
-        $instnr = $module[$galmodul[$art2gal_galnr]]['nr'];
-        @include($moduldir.$module[$galmodul[$art2gal_galnr]]['idname']."/_headinclude.php");
-        include($moduldir.$module[$galmodul[$art2gal_galnr]]['idname']."/_functions.php");
+    $galmodule = array();
+    $galmodule = getModuls($module,"01gallery");
+
+    foreach($galmodule as $gm){
+    	if($gm['nr'] == $art2gal_galnr)
+    		$modul = $gm['idname'];
+    }
+
+    if(!empty($modul)){
+        @include($moduldir.$modul."/_headinclude.php");
+        @include($moduldir.$modul."/_functions.php");
         
         // DB: Einstellungen in Array $settings[] einlesen
         $list = $mysqli->query("SELECT idname,wert FROM ".$mysql_tables['settings']." WHERE is_cat = '0' AND modul = '".$mysqli->escape_string($modul)."'");
@@ -641,11 +644,11 @@ if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeri
         $galid  = $treffer[2];
         
         // Galerie-Infos aus Datenbank holen
-    	$list = $mysqli->query("SELECT id,galtimestamp,password,galeriename,beschreibung,galpic,anzahl_pics FROM ".$mysql_tables['gallery']." WHERE id = '".$mysqli->escape_string($galid)."' AND hide='0' LIMIT 1");
+    	$list = $mysqli->query("SELECT id,galtimestamp,galpassword,galeriename,beschreibung,galpic,anzahl_pics FROM ".$mysql_tables['gallery']." WHERE id = '".$mysqli->escape_string($galid)."' AND hide='0' LIMIT 1");
 	    if($list->num_rows == 0)
             return "";
     	$galinfo = $list->fetch_assoc();
-    	$galverz = $galdir._01gallery_getGalDir($galinfo['id'],$galinfo['password'])."/";
+    	$galverz = $galdir._01gallery_getGalDir($galinfo['id'],$galinfo['galpassword'])."/";
         
 	    // Thumbnails auflisten
 	    $query = "SELECT id,filename,title,pictext FROM ".$mysql_tables['pics']." WHERE galid = '".$mysqli->escape_string($galid)."' ORDER BY sortorder DESC LIMIT ".$mysqli->escape_string($treffer[1]);

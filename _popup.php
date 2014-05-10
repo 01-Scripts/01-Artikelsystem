@@ -54,16 +54,19 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "tiny_uploader"){
 	}
 
 // Verbindung 01-Artikelsystem & 01-Gallery
-elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2galsupport && $userdata['dateimanager'] == 2){
+elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2galsupport && $art2gal_galnr > 0 && is_numeric($art2gal_galnr) && $userdata['dateimanager'] == 2){
 
-    $modul_save = $modul;
-    $galmodul = array();
-    $galmodule = getModuls($galmodul,"01gallery"); 
-    
-    if(count($galmodul) > 0){
-        $modul = $galmodul[$art2gal_galnr];
-        include_once($moduldir.$galmodule[$galmodul[$art2gal_galnr]]['idname']."/_headinclude.php");
-        include_once($moduldir.$galmodule[$galmodul[$art2gal_galnr]]['idname']."/_functions.php");
+    $galmodule = array();
+    $galmodule = getModuls($module,"01gallery");
+
+    foreach($galmodule as $gm){
+    	if($gm['nr'] == $art2gal_galnr)
+    		$modul = $gm['idname'];
+    }
+
+    if(!empty($modul)){
+        include($moduldir.$modul."/_headinclude.php");
+        include($moduldir.$modul."/_functions.php");
         $modul = $modul_save;
 ?>        
 

@@ -11,7 +11,7 @@
 
 // Art2Gal-Support?
 list($galmodmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['module']." WHERE modulname = '01gallery'")->fetch_array(MYSQLI_NUM);
-if($art2galsupport && $galmodmenge > 0 && $userdata['dateimanager'] == 2)
+if($art2galsupport && $art2gal_galnr > 0 && is_numeric($art2gal_galnr) && $galmodmenge > 0 && $userdata['dateimanager'] == 2)
     echo loadTinyMCE("advanced","","","","top","","filemanager_gal2art,");
 else
     echo loadTinyMCE("advanced","","","","top");
