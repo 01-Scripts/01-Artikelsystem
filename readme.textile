@@ -1,0 +1,31 @@
+h1. 01-Artikelsystem
+
+Mit dem "_01-Artikelsystem_":http://www.01-scripts.de/01article.php können Sie Newseinträge verfassen, Kategorien verwalten und ihren Mitarbeitern und Redakteuren über die Benutzerverwaltung gezielt die passenden Rechte vergeben.
+Ein integriertes Kommentarsystem, die Datei- und Bild-Upload-Verwaltung des Administrationsbereichs und ein WYSIWYG-Editor zur Erstellung der Beiträge runden das Script neben der Verwaltung von statischen Seiten (z.B. für das Impressum o.ä.) ab.
+"Weitere Informationen...":http://www.01-scripts.de/01article.php
+
+h2. Download
+
+Die jeweils aktuellste Version des 01-Artikelsystems kann unter
+"http://www.01-scripts.de/01article.php":http://www.01-scripts.de/01article.php
+heruntergeladen werden.
+
+Einzelne Update-Pakete für alle veröffentlichten Updates sind hier zu finden:
+"http://www.01-scripts.de/01article.php?updates":http://www.01-scripts.de/01article.php?updates
+
+h2. Repository
+
+Das vorliegende Github-Repository enthält den aktuellen Entwicklungsstand des Moduls.
+
+h2. Lizenz
+
+Das 01-Artikelsystem ist unter "CC BY-NC-SA":http://www.01-scripts.de/lizenz.php -Lizenz veröffentlicht:
+
+*Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland*
+
+* Alle PHP-Scripte von "01-Scripts.de":http://www.01-scripts.de können für den privaten, nicht-kommerziellen Einsatz kostenlos genutzt werden. 
+* Für die kommerzielle Nutzung (darunter fällt auch der Einsatz auf Firmenseiten!) können Sie eine Lizenz zur kommerziellen Nutzung erwerben.
+* Wenn Sie den sichtbaren Urheberrechtshinweis entfernen möchten, erwerben Sie bitte eine Non-Copyright-Lizenz.
+
+Lizenzen können hier erworben werden:
+"http://www.01-scripts.de/shop.php":http://www.01-scripts.de/shop.php
