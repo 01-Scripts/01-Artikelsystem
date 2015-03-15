@@ -1,0 +1,32 @@
+{
+  "Version": "3.2.0",
+  "PrevVersion": "3.1.0",
+  "Files2Minimize": [
+    "modul.css",
+    "java.js",
+    "templates/javas.js",
+    "templates/slimbox.js"
+  ],
+  "Files2Delete": [
+    "readme.textile",
+    "_build.json",
+    "update_liesmich.txt"
+  ],
+  "Files4Update": [
+    "images/",
+    "templates/",
+    "01article.php",
+    "_ajax.php",
+    "_functions.php",
+    "_headinclude.php",
+    "_info.xml",
+    "_popup.php",
+    "_updates.php",
+    "article.php",
+    "category.php",
+    "index.php",
+    "java.js",
+    "modul.css",
+    "write_form.php"
+  ]
+}
