@@ -91,6 +91,7 @@ if(!isset($static))						$static						= 0;
 if(!isset($_POST['deaktiv_bbc']))		$_POST['deaktiv_bbc']		= 0;
 else $_POST['deaktiv_bbc']				= strip_tags($_POST['deaktiv_bbc']);
 if(!isset($_GET[$names['page']]) || isset($_GET[$names['page']]) && $_GET[$names['page']] != $_REQUEST[$names['page']]) $_GET[$names['page']] = $_REQUEST[$names['page']];  
+if(!isset($_POST['antispam']))          $_POST['antispam'] = "";
 
 //Link-String generieren
 $system_link 		= addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]);
@@ -418,7 +419,7 @@ else{
             // Neuen Kommentar hinzufügen
             if(isset($_POST['send_comment']) && $_POST['send_comment'] == 1 &&
 			   isset($_POST['modul_comment']) && $_POST['modul_comment'] == $modul){
-					$message = insert_Comment($_POST['autor'],$_POST['email'],$_POST['url'],$_POST['comment'],$_POST['antispam'],$_POST['deaktiv_bbc'],$row['id'],$_POST['uid']);
+					$message = insert_Comment($_POST['autor'],$_POST['email'],$_POST['url'],$_POST['comment'],$_POST['antispam'],$_POST['deaktiv_bbc'],$row['id'],$_POST['uid'],0,$_POST['link'],$_POST['time']);
 				}
 
 			//Template einbinden
