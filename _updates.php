@@ -1,6 +1,19 @@
 <?PHP
+// 3.2.0 --> 3.2.1
+if(isset($_REQUEST['update']) && $_REQUEST['update'] == "320_zu_321"){
+	// 01article #720 - Disqus-Support hinzufügen
+	$mysqli->query("UPDATE ".$mysql_tables['settings']." SET 
+	`name` = 'Kommentarsystem w&auml;hlen', 
+    `exp` = 'Zur Nutzung von Disqus muss der Username in den allgemeinen Einstellungen hinterlegt werden.', 
+    `formename` =  '01ACP Kommentarsystem|Disqus|Kommentare deaktivieren', 
+    `formwerte` =  '1|2|0'
+    WHERE `idname` = 'artikelcomments' AND modul = '".$mysqli->escape_string($modul)."' LIMIT 1");
+
+	// Versionsnummer aktualisieren
+	$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.2.1' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
+}
 // 3.1.0 --> 3.2.0
-if(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
+elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
 
 	// #316 Artikelsystem und Bildergalerie verbinden
 	$add2css = "\r\n\r\n/* SLIMBOX */\r\n\r\n#lbOverlay {\r\n	position: fixed;\r\n	z-index: 9999;\r\n	left: 0;\r\n	top: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #000;				/* Overlay-Hintergrundfarbe der Lightbox-Abdunklung */\r\n	cursor: pointer;\r\n}\r\n\r\n#lbCenter, #lbBottomContainer {\r\n	position: absolute;\r\n	z-index: 9999;\r\n	overflow: hidden;\r\n	background-color: #fff;				/* Hintergrundfarbe des Untertitel-Bereichs */\r\n}\r\n\r\n#lbImage {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	border: 10px solid #fff;			/* Bildrahmenfarbe um das in der Lightbox geöffnete Bild herum */\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lbPrevLink, #lbNextLink {\r\n	display: block;\r\n	position: absolute;\r\n	top: 0;\r\n	width: 50%;\r\n	outline: none;\r\n}\r\n\r\n#lbPrevLink {\r\n	left: 0;\r\n}\r\n#lbNextLink {\r\n	right: 0;\r\n}\r\n\r\n/* Untertitel-Textdefinition */\r\n#lbBottom {\r\n	font-family: Verdana, Arial, Geneva, Helvetica, sans-serif;\r\n	font-size: 10px;\r\n	color: #666;\r\n	line-height: 1.4em;\r\n	text-align: left;\r\n	border: 10px solid #fff;\r\n	border-top-style: none;\r\n}\r\n\r\n#lbCloseLink {\r\n	display: block;\r\n	float: right;\r\n	width: 66px;\r\n	height: 22px;\r\n	margin: 5px 0;\r\n	outline: none;\r\n}\r\n\r\n#lbCaption, #lbNumber {\r\n	margin-right: 71px;\r\n}\r\n#lbCaption {\r\n	font-weight: bold;\r\n}\r\n\r\n

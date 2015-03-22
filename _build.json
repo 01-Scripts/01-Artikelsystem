@@ -13,8 +13,13 @@
     "update_liesmich.txt"
   ],
   "Files4Update": [
+    "templates/artikel.html",
     "templates/comments_add.html",
+    "templates/comments_end.html",
     "templates/comments_head.html",
-    "01article.php"
+    "templates/comments_disqus.html",
+    "01article.php",
+    "_updates.php",
+    "write_form.php"
   ]
 }

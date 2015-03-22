@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel-Formular
-	#fv.320#
+	#fv.321#
 */
 
 // Art2Gal-Support?
@@ -123,7 +123,7 @@ if($settings['artikeleinleitung'] >= 1 && $settings['artikeleinleitungslaenge'] 
     </tr>
 <?PHP
 		}
-	if($settings['comments'] == 1 && $settings['artikelcomments'] == 1){
+	if($settings['comments'] == 1 && $settings['artikelcomments'] >= 1){
 ?>
     <tr>
         <td class="trb" colspan="2"><input type="checkbox" name="comments" value="1"<?PHP if($form_data['comments'] == 1){ echo " checked=\"checked\""; } ?> /> Kommentare in diesem Beitrag <b>de</b>aktivieren?</td>

@@ -1,5 +1,14 @@
 <a name="01jumpcomments_add"></a>
 
+<?php if ($flag_comments_js): ?>
+<script type="text/javascript">
+    window.addEvent('load', function() {
+    document.getElementById('addcomment<?PHP echo $modul; ?>').style.display = 'none';
+    document.getElementById('addcomment<?PHP echo $modul; ?>_link').style.display = 'block';
+});
+</script>
+<?php endif; ?>
+
 <?php if (isset($message) && $message >= 1): ?>
 <p class="meldungen_01">
     <?php if (isset($message) && $message == 1): ?>

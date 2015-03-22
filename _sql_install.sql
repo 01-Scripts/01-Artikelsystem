@@ -1,10 +1,10 @@
--- 01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+-- 01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 -- Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 -- Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
 -- Modul:		01article
 -- Dateiinfo:	SQL-Befehle für die Erstinstallation des Artikelsystems V3
--- #fv.320#
+-- #fv.321#
 --  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  **  *  *
 
 -- --------------------------------------------------------
@@ -27,7 +27,7 @@ INSERT INTO 01prefix_settings (modul,is_cat,catid,sortid,idname,name,exp,formena
 ('#modul_idname#', 0, 1, 4, 'artikeleinleitung','Einleitungstext verwenden?','','Erzwingen|Verwenden, wenn vorhanden|Unterdr&uuml;cken (deaktivieren)','1|2|0','','2','2','0','0'),
 ('#modul_idname#', 0, 1, 5, 'artikeleinleitungslaenge','L&auml;nge des Einleitungstextes','','text','5','Zeichen','1000','1000','0','0'),
 ('#modul_idname#', 0, 1, 6, 'archiv_time','Alte Beitr&auml;ge ins Archiv verschieben?','Geben Sie an nach wievielen Tagen Beitr&auml;ge ins Archiv verschoben werden sollen.','text','5','Tage','','','0','0'),
-('#modul_idname#', 0, 1, 7, 'artikelcomments','Kommentare f&uuml;r Modul aktivieren','Kommentarsystem muss zus&auml;tzlich in den allgemeinen 01ACP-Einstellungen aktiviert sein.','Ja|Nein','1|0','','1','1','0','0'),
+('#modul_idname#', 0, 1, 7, 'artikelcomments','Kommentarsystem w&auml;hlen','Zur Nutzung von Disqus muss der Username in den allgemeinen Einstellungen hinterlegt werden.','01ACP Kommentarsystem|Disqus|Kommentare deaktivieren','1|2|0','','1','1','0','0'),
 ('#modul_idname#', 0, 1, 8, 'artikellightbox','Lightbox zur Bildansicht nutzen?','','Ja|Nein','1|0','','1','1','0','0'),
 ('#modul_idname#', 0, 1, 9, 'modrewrite','mod_rewrite aktivieren','<a href="javascript:modulpopup(\'#modul_idname#\',\'mod_rewrite_info\',\'\',\'\',\'\',510,450);">Anleitung lesen</a>','Aktivieren|Deaktivieren','1|0','','0','0','0','0'),
 

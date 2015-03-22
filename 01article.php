@@ -402,7 +402,7 @@ else{
 		// KOMMENTAR-AUSGABE & FORMULAR, etc.
 		if(isset($_GET[$names['artid']]) && !empty($_GET[$names['artid']]) && $_GET[$names['artid']] > 0 && 
 		   is_numeric($_GET[$names['artid']]) && $_GET[$names['artid']] != "archiv" && 
-		   $settings['comments'] == 1 && $settings['artikelcomments'] == 1 && $row['comments'] == 1){
+		   $settings['comments'] == 1 && $settings['artikelcomments'] >= 1 && $row['comments'] == 1){
             
             // Anti-XSS
             if(isset($_POST['send_comment']))	$_POST['send_comment']		= strip_tags($_POST['send_comment']);
@@ -522,11 +522,14 @@ else{
 			
             $system_link_form = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$jumpto_csite."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments_add"));
 
-            if($row['comments'] == 1 && $settings['comments'] == 1){
+            if($settings['artikelcomments'] == 1){
 				$zahl = mt_rand(1, 9999999999999);
 				$uid = md5(time().$_SERVER['REMOTE_ADDR'].$zahl.$_GET[$names['artid']]);
 				//Template ausgeben
                 include($tempdir."comments_add.html");
+                }
+            elseif ($settings['artikelcomments'] == 2 && !empty($settings['Disqus_Username'])) {
+                include($tempdir."comments_disqus.html");
                 }
             }
         unset($catimg);
