@@ -11,7 +11,7 @@
     "_build.json",
     "update_liesmich.txt"
   ],
-  "Files4Update": [,
+  "Files4Update": [
     "templates/artikel.html",
     "templates/comments_add.html",
     "templates/comments_end.html",
