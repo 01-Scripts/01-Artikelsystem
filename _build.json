@@ -4,22 +4,23 @@
   "Files2Minimize": [
     "modul.css",
     "java.js",
-    "templates/javas.js",
-    "templates/slimbox.js"
+    "templates/javas.js"
   ],
   "Files2Delete": [
     "readme.textile",
     "_build.json",
     "update_liesmich.txt"
   ],
-  "Files4Update": [
+  "Files4Update": [,
     "templates/artikel.html",
     "templates/comments_add.html",
     "templates/comments_end.html",
     "templates/comments_head.html",
     "templates/comments_disqus.html",
     "01article.php",
+    "_headinclude.php",
     "_updates.php",
+    "_popup.php",
     "write_form.php"
   ]
 }
