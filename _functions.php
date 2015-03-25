@@ -542,7 +542,7 @@ return $string;
 */
 if(!function_exists("_01article_callback_GetGalThumbs4Article")){
 function _01article_callback_GetGalThumbs4Article($treffer){
-global $moduldir,$settings,$mysql_tables,$art2gal_galnr,$mysqli,$module,$instnr;
+global $moduldir,$settings,$mysql_tables,$art2gal_galnr,$mysqli,$module,$instnr,$flag_utf8;
 $return = "";
 
 // $treffer[0]: gesamter String {Insert#...GalleryPicsFrom#...}
@@ -586,10 +586,15 @@ if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeri
             return "";
             
 		while($pics = $list->fetch_assoc()){
-			if($settings['artikellightbox'] == 1)
-				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext']))."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext'])))."</a></div>\n";
+			if($flag_utf8)
+				$descr = utf8_encode(strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext'])));
 			else
-				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext'])))."</div>\n";
+				$descr = strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext']));
+			
+			if($settings['artikellightbox'] == 1)
+				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".$descr."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,$descr)."</a></div>\n";
+			else
+				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,$descr)."</div>\n";
 			}
 		$return .= "</div><br style=\"clear: both;\">\n\n"; 
         }
