@@ -18,6 +18,7 @@
     "templates/comments_head.html",
     "templates/comments_disqus.html",
     "01article.php",
+    "_functions.php",
     "_headinclude.php",
     "_updates.php",
     "_popup.php",

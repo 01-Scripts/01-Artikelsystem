@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Modulspezifische Funktionen
-	#fv.320#
+	#fv.321#
 */
 
 /* SYNTAKTISCHER AUFBAU VON FUNKTIONSNAMEN BEACHTEN!!!
@@ -16,8 +16,6 @@
 		_example_TolleFunktion($parameter){ ... }
 		}
 */
-
-// Globale Funktionen - nötig!
 
 // Funktion wird zentral aufgerufen, wenn ein Benutzer gelöscht wird.
 /* @param int $userid			UserID des gelöschten Benutzers
@@ -34,6 +32,7 @@ $mysqli->query("UPDATE ".$mysql_tables['artikel']." SET uid='0' WHERE uid='".$my
 return TRUE;
 }
 }
+
 
 // Funktion wird zentral aufgerufen, wenn das Modul gelöscht werden soll
 /*
@@ -61,9 +60,30 @@ return TRUE;
 }
 
 
+// Userstatistiken holen
+/* @param int $userid			UserID, zu der die Infos geholt werden sollen
 
+RETURN: Array(
+			statcat[x] 		=> "Statistikbezeichnung für Frontend-Ausgabe"
+			statvalue[x] 	=> "Auszugebender Wert"
+			)
+  */
+if(!function_exists("_01article_getUserstats")){
+function _01article_getUserstats($userid){
+global $mysqli,$mysql_tables,$modul,$module;
 
-
+if(isset($userid) && is_integer(intval($userid))){
+	$artmenge = 0;
+	list($artmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND uid = '".$mysqli->escape_string($userid)."'")->fetch_array(MYSQLI_NUM);
+	
+	$ustats[] = array("statcat"	=> "Geschriebene Artikel (".$module[$modul]['instname']."):",
+						"statvalue"	=> $artmenge);
+	return $ustats;
+	}
+else
+	return false;
+}
+}
 
 
 // String des Artikels, Beitrags, Bildes etc. dem der übergebene IdentifizierungsID zugeordnet ist
@@ -80,11 +100,6 @@ while($row = $list->fetch_assoc()){
 	}
 }
 }
-
-
-
-
-
 
 
 // $form_data mit übergebenen Post-Werten füllen
@@ -124,11 +139,6 @@ else
 return $form_data;
 }
 }
-
-
-
-
-
 
 
 // $form_data mit Werten aus der Datenbank / Standardwerten füllen
@@ -212,11 +222,6 @@ $form_data = array("starttime_date"	=> date("d.m.Y"),
 return $form_data;
 }
 }
-
-
-
-
-
 
 
 // Ausgabe für RSS-Feed. RSS-Header-Daten werden global zur Verfügung gestellt. Siehe 01example.rss
@@ -355,12 +360,6 @@ return $return;
 }
 
 
-
-
-
-
-
-
 // Dropdown-Box aus angelegten Kategorien generieren (ohne Select-Tag)
 /* @param array $plain_data		Optionaler Parameter. Enthält danach einen Array mit den Cat-Namen
  * @return string				Option-Elemente für Select-Formularelement
@@ -380,12 +379,6 @@ while($row = $list->fetch_assoc()){
 return $return;
 }
 }
-
-
-
-
-
-
 
 
 // Sortierungs-Dropdown (Kategorien) generieren
@@ -410,11 +403,6 @@ return $return;
 }
 
 
-
-
-
-
-
 // Aus CSS-Eigenschaften aus der DB eine CSS-Datei schreiben / cachen
 /* @param string $zieldatei
    @return true
@@ -430,43 +418,6 @@ fclose($cachefile);
 return TRUE;
 }
 }
-
-
-
-
-
-
-
-// Userstatistiken holen
-/* @param int $userid			UserID, zu der die Infos geholt werden sollen
-
-RETURN: Array(
-			statcat[x] 		=> "Statistikbezeichnung für Frontend-Ausgabe"
-			statvalue[x] 	=> "Auszugebender Wert"
-			)
-  */
-if(!function_exists("_01article_getUserstats")){
-function _01article_getUserstats($userid){
-global $mysqli,$mysql_tables,$modul,$module;
-
-if(isset($userid) && is_integer(intval($userid))){
-	$artmenge = 0;
-	list($artmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND uid = '".$mysqli->escape_string($userid)."'")->fetch_array(MYSQLI_NUM);
-	
-	$ustats[] = array("statcat"	=> "Geschriebene Artikel (".$module[$modul]['instname']."):",
-						"statvalue"	=> $artmenge);
-	return $ustats;
-	}
-else
-	return false;
-}
-}
-
-
-
-
-
-
 
 
 // Add2Query-String für Kategorien generieren
@@ -495,12 +446,6 @@ if($catids != NULL){
 return $add2query_cat;
 }
 }
-
-
-
-
-
-
 
 
 // Artikellink als mod_rewrite oder ohne entsprechend generieren und ausgeben
@@ -544,12 +489,6 @@ else
 }
 
 
-
-
-
-
-
-
 // Artikelnamen aus DB holen
 /* @params string $artid			ArtikelID
  * @return string					Artikel-Titel
@@ -567,12 +506,6 @@ if(is_numeric($artid) && $artid != 0 && !empty($artid)){
 else return "";
 }
 }
-
-
-
-
-
-
 
 
 // Artikelnamen aus DB holen
@@ -601,12 +534,6 @@ return $string;
 
 }
 }
-
-
-
-
-
-
 
 
 // Callback-Funktion zur Ausgabe von Galeriebild-Thumbnails via preg_replace_callback
@@ -660,9 +587,9 @@ if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeri
             
 		while($pics = $list->fetch_assoc()){
 			if($settings['artikellightbox'] == 1)
-				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext']))."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb")."</a></div>\n";
+				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext']))."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext'])))."</a></div>\n";
 			else
-				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb")."</div>\n";
+				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext'])))."</div>\n";
 			}
 		$return .= "</div><br style=\"clear: both;\">\n\n"; 
         }
