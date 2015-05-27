@@ -6,7 +6,7 @@
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel: Übersicht, Bearbeiten, Erstellen
-	#fv.320#
+	#fv.321#
 */
 
 // Berechtigungsabfragen
@@ -15,7 +15,6 @@ if((isset($_REQUEST['action']) && $_REQUEST['action'] == "newarticle" && $userda
    (isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata['editarticle'] >= 1 || $userdata['staticarticle'] >= 1)) ||
    (isset($_REQUEST['action']) && ($_REQUEST['action'] == "newstatic" || $_REQUEST['action'] == "statics") && $userdata['staticarticle'] >= 1))
 {
-_01article_CreateCSSCache(CSS_CACHE_DATEI);
 
 // Variablen
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit"){

@@ -9,6 +9,10 @@
 	#fv.321#
 */
 
+// Patch CSS-Datei
+if(isset($settings['extern_css']) && empty($settings['extern_css']))
+    $settings['extern_css'] = $modulpath.CSS_CACHE_DATEI;
+
 // Art2Gal-Support?
 list($galmodmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['module']." WHERE modulname = '01gallery'")->fetch_array(MYSQLI_NUM);
 if($art2galsupport && $art2gal_galnr > 0 && is_numeric($art2gal_galnr) && $galmodmenge > 0 && $userdata['dateimanager'] == 2)

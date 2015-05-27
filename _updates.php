@@ -9,6 +9,12 @@ if(isset($_REQUEST['update']) && $_REQUEST['update'] == "320_zu_321"){
     `formwerte` =  '1|2|0'
     WHERE `idname` = 'artikelcomments' AND modul = '".$mysqli->escape_string($modul)."' LIMIT 1");
 
+	// 01article #726 - CSS-Code aus Datenbank/Settings in Datei auslagern
+	$mysqli->query("UPDATE ".$mysql_tables['settings']." SET 
+	`exp` = 'Geben Sie einen absoluten Pfad inkl. <b>http://</b> zu einer externen CSS-Datei an.\nIst dieses Feld leer, wird die Datei templates/style.css aus dem Modulverzeichnis verwendet.'
+	WHERE `modul` = '".$mysqli->escape_string($modul)."' AND `idname` = 'extern_css' LIMIT 1");
+	$mysqli->query("DELETE FROM ".$mysql_tables['settings']." WHERE `modul` = '".$mysqli->escape_string($modul)."' AND `idname` = 'csscode' LIMIT 1");
+
 	// Versionsnummer aktualisieren
 	$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.2.1' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
 }

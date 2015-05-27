@@ -403,23 +403,6 @@ return $return;
 }
 
 
-// Aus CSS-Eigenschaften aus der DB eine CSS-Datei schreiben / cachen
-/* @param string $zieldatei
-   @return true
-*/
-if(!function_exists("_01article_CreateCSSCache")){
-function _01article_CreateCSSCache($zieldatei){
-global $settings;
-
-$cachefile = fopen($zieldatei,"w");
-$wrotez = fwrite($cachefile, $settings['csscode']);
-fclose($cachefile);
-
-return TRUE;
-}
-}
-
-
 // Add2Query-String für Kategorien generieren
 /* @params string $catids			Kommaseparierter CatID-String
 
