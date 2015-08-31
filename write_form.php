@@ -169,6 +169,7 @@ if($settings['artikeleinleitung'] >= 1 && $settings['artikeleinleitungslaenge'] 
             <input type="hidden" name="static" value="<?PHP echo $flag_static; ?>" />
             <input type="hidden" name="action" value="<?PHP echo $input_action; ?>" />
             <input type="hidden" name="who" value="<?PHP echo $input_section2; ?>" />
+            <input type="hidden" name="catid" value="<?PHP echo intval($_REQUEST['catid']); ?>" />
         </td>
     </tr>
 
