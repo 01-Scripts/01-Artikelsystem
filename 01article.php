@@ -341,6 +341,7 @@ else{
 		$username = htmlentities($username_array['username'],$htmlent_flags,$htmlent_encoding_acp);
 		if(!empty($username_array['signatur']) && $more == 0 && $row['hide_signature'] == 0)
 			$signatur = "<p class=\"signatur\">".nl2br(str_replace("&","&amp;",$username_array['signatur']))."</p>";
+            if($flag_utf8) $signatur = utf8_encode($signatur);
 		else
 			$signatur = "";
 		
