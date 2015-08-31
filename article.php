@@ -1,6 +1,6 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
@@ -545,7 +545,8 @@ $cat_data = array();
 	elseif(isset($_GET['sort']) && $_GET['sort'] == "desc") $sortorder = "DESC";
 	else $sortorder = "ASC";
 	
-	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,content,zusammenfassung) AGAINST ('".$mysqli->escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
+	if(isset($_GET['search']) && !empty($_GET['search']) && is_numeric($_GET['search'])) $where = " WHERE id = '".$mysqli->escape_string($_GET['search'])."' AND static = '".$flag_static."' ";
+	elseif(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,content,zusammenfassung) AGAINST ('".$mysqli->escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
 	elseif(isset($_GET['catid']) && !empty($_GET['catid']) && is_numeric($_GET['catid'])) $where = " WHERE newscatid LIKE '%,".$mysqli->escape_string($_GET['catid']).",%' ";
 	else $where = " WHERE static = '".$flag_static."' ";
 	
