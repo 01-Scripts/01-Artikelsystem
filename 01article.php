@@ -132,8 +132,8 @@ else $echo_css = "";
 $listcat = $mysqli->query("SELECT * FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
 while($rowcat = $listcat->fetch_assoc()){
 	$category[$rowcat['id']]['id'] 		= $rowcat['id'];
-	$category[$rowcat['id']]['name']	= htmlentities(stripslashes($rowcat['name']),$htmlent_flags,$htmlent_encoding_acp);
-	$category[$rowcat['id']]['catpic']	= stripslashes($rowcat['catpic']);
+	$category[$rowcat['id']]['name']	= htmlentities($rowcat['name'],$htmlent_flags,$htmlent_encoding_acp);
+	$category[$rowcat['id']]['catpic']	= $rowcat['catpic'];
 	}
 
 
@@ -248,10 +248,10 @@ if(isset($_GET[$names['artid']]) && $_GET[$names['artid']] == "archiv" && !empty
 			}
 		
 		$datum = date("d.m.y",$row['utimestamp']).", ".date("G:i",$row['utimestamp']);
-        $titel = stripslashes($row['titel']);
+        $titel = $row['titel'];
 		
         $username_array = getUserdatafields($row['uid'],"username");
-		$autor = stripslashes($username_array['username']);
+		$autor = htmlentities($username_array['username'],$htmlent_flags,$htmlent_encoding_acp);
 		
         include($tempdir."archiv_bit.html");
         $round++;
@@ -303,7 +303,7 @@ else{
 		   $settings['artikeleinleitung'] == 2 && $row['autozusammen'] == 0 && empty($row['zusammenfassung'])) &&
 		   (!isset($_REQUEST[$names['search']]) || isset($_REQUEST[$names['search']]) && empty($_REQUEST[$names['search']]) || $iderror == 2)){
 
-	        $artikeltext = stripslashes($row['content']);
+	        $artikeltext = $row['content'];
 			$artikeltext = str_replace("../01pics/",$picuploaddir,$artikeltext);
 			$artikeltext = str_replace("../01files/",$attachmentuploaddir,$artikeltext);
 			if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
@@ -312,20 +312,20 @@ else{
 		// Zusammenfassung anzeigen
 		else{
 	        if($row['autozusammen'] == 0 && !empty($row['zusammenfassung'])){
-	            $artikeltext = stripslashes($row['zusammenfassung']);
+	            $artikeltext = $row['zusammenfassung'];
 				$artikeltext = str_replace("../01pics/",$picuploaddir,$artikeltext);
 				$artikeltext = str_replace("../01files/",$attachmentuploaddir,$artikeltext);
 				if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
 	            }
 	        else{
-				$artikeltext = "<p>".substr(strip_tags(stripslashes($row['content'])),0,$settings['artikeleinleitungslaenge']).$lang['weiterlesen']."</p>";
+				$artikeltext = "<p>".substr(strip_tags($row['content']),0,$settings['artikeleinleitungslaenge']).$lang['weiterlesen']."</p>";
 				if($settings['artikellightbox'] == 1) $artikeltext = str_replace("class=\"lightbox\"","class=\"lightbox\" rel=\"lightbox-art".$row['id']."\"",$artikeltext);
 				}
 			$artikeltext = preg_replace_callback("/\{Insert#(\d+)GalleryPicsFrom#(\d+)\}/","_01article_callback_GetGalThumbs4Article",$artikeltext);
 
 			// Weiterlesen-Link nur einbinden, wenn Text länger als Zusammenfassung oder eigener Text eingegeben wurde
 			if($row['autozusammen'] == 0 && !empty($row['zusammenfassung']) || 
-			   strlen($artikeltext) < strlen(stripslashes($row['content'])))
+			   strlen($artikeltext) < strlen($row['content']))
 				$more = 1;
 			else $more = 0;
 			}
@@ -338,15 +338,15 @@ else{
 
         // Weitere Variablen für die Template-Ausgabe aufbereiten
         $username_array = getUserdatafields($row['uid'],"username,01acp_signatur");
-		$username = stripslashes($username_array['username']);
+		$username = htmlentities($username_array['username'],$htmlent_flags,$htmlent_encoding_acp);
 		if(!empty($username_array['signatur']) && $more == 0 && $row['hide_signature'] == 0)
-			$signatur = "<p class=\"signatur\">".nl2br(stripslashes(str_replace("&","&amp;",$username_array['signatur'])))."</p>";
+			$signatur = "<p class=\"signatur\">".nl2br(str_replace("&","&amp;",$username_array['signatur']))."</p>";
 		else
 			$signatur = "";
 		
-        $titel = stripslashes($row['titel']);
+        $titel = $row['titel'];
 		$static = $row['static'];
-        $system_link_row = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['utimestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
+        $system_link_row = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($row['id'],$row['titel'],$row['utimestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]));
         
 		// Get serialized data
 		if($ser_fields){
@@ -359,7 +359,7 @@ else{
 				}
 			else{
 				for($x=1;$x<=ANZ_SER_FIELDS;$x++){
-					$row['ser_field_'.$x] = htmlspecialchars(stripslashes($return_temp['field_'.$x]),$htmlent_flags,$htmlent_encoding_acp);
+					$row['ser_field_'.$x] = htmlspecialchars($return_temp['field_'.$x],$htmlent_flags,$htmlent_encoding_acp);
 					}
 				}
 			}
@@ -373,13 +373,13 @@ else{
 		
 			$listnext = $mysqli->query("SELECT id,utimestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND utimestamp > '".$row['utimestamp']."' AND utimestamp <= '".time()."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.") ORDER BY utimestamp LIMIT 1");
             $rownext = $listnext->fetch_assoc();
-            $next_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rownext['id'],stripslashes($rownext['titel']),$rownext['utimestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
-            $next_titel = stripslashes($rownext['titel']);
+            $next_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rownext['id'],$rownext['titel'],$rownext['utimestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
+            $next_titel = $rownext['titel'];
 			
             $listprev = $mysqli->query("SELECT id,utimestamp,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND utimestamp < '".$row['utimestamp']."' AND (endtime>='".time()."' OR endtime = '0') AND (".$add2query_cat.")  ORDER BY utimestamp DESC LIMIT 1");
             $rowprev = $listprev->fetch_assoc();
-            $prev_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rowprev['id'],stripslashes($rowprev['titel']),$rowprev['utimestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
-            $prev_titel = stripslashes($rowprev['titel']);
+            $prev_link = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($rowprev['id'],$rowprev['titel'],$rowprev['utimestamp']),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpartikel"));
+            $prev_titel = $rowprev['titel'];
             }
 
         // Template einbinden
@@ -452,19 +452,19 @@ else{
 				// URL
                 if(!empty($crow['url']) && $crow['url'] != "http://"){
                     if(substr_count($crow['url'], "http://") < 1)
-						$url = "http://".stripslashes($crow['url']);
+						$url = "http://".$crow['url'];
 					else
-						$url = stripslashes($crow['url']); 
+						$url = $crow['url']; 
                     }
                 else $url = "";
 
                 // Weitere Variablen für die Template-Ausgabe aufbereiten
                 $datum = date("d.m.y - G:i",$crow['utimestamp']);
-                $autorenname = stripslashes($crow['autor']);
+                $autorenname = $crow['autor'];
                 $comment_id = $crow['id'];
 
                 // BB-Code & Smilies
-                $comment = stripslashes($crow['message']);
+                $comment = $crow['message'];
                 if($crow['bbc'] == 1 && $settings['comments_bbc'] == 1 && $crow['smilies'] == 1 && $settings['comments_smilies'] == 1)
 					$comment = bb_code_comment($comment,1,1,1);
 				elseif($crow['bbc'] == 1 && $settings['comments_bbc'] == 1 && ($crow['smilies'] == 0 || $settings['comments_smilies'] == 0))
