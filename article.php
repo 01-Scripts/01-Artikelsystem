@@ -87,7 +87,7 @@ if(isset($_POST['do']) && (isset($_POST['save']) || isset($_POST['publish'])) &&
 		}
 	elseif($settings['artikeleinleitung'] >= 1){
 		$autozusammen = 0;
-		$zusammen = substr(stripslashes($_POST['zusammenfassung']),0,$settings['artikeleinleitungslaenge']);
+		$zusammen = substr($_POST['zusammenfassung'],0,$settings['artikeleinleitungslaenge']);
 		}
 	else{
 		$autozusammen = 0;
@@ -95,7 +95,7 @@ if(isset($_POST['do']) && (isset($_POST['save']) || isset($_POST['publish'])) &&
 		}
 		
 	// Text parsen
-	$text = stripslashes($_POST['textfeld']);
+	$text = $_POST['textfeld'];
 		
 	// Freischaltung
 	if($userdata['freischaltung'] == 1 && $settings['artikelfreischaltung'] == 1)
@@ -247,7 +247,7 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 			// Es werden 10 beliebige Benutzer mit den entsprechenden Rechten per E-Mail informiert.
 			$list = $mysqli->query("SELECT id,username,mail FROM ".$mysql_tables['user']." WHERE ".$mysqli->escape_string($modul)."_editarticle = '2' AND sperre = '0' AND 01acp_".$mysqli->escape_string($modul)." = '1' ORDER BY rand() LIMIT 10");
 			while($row = $list->fetch_assoc()){
-		        mail(stripslashes($row['mail']),$email_betreff,$emailbody,$header);
+		        mail($row['mail'],$email_betreff,$emailbody,$header);
 				}
 			}
 		else
@@ -578,7 +578,7 @@ $cat_data = array();
 	
 	// Fehlermeldung bei erfolgloser Suche
 	if($sites == 0 && isset($_GET['search']) && !empty($_GET['search']))
-		echo "<p class=\"meldung_error\">Es konnten leider kein passenden Eintr&auml;ge zu Ihrer Sucheingabe \"".stripslashes($_GET['search'])."\" gefunden werden!<br />
+		echo "<br /><p class=\"meldung_error\">Es konnten leider kein passenden Eintr&auml;ge zu Ihrer Sucheingabe \"".htmlentities($_GET['search'])."\" gefunden werden!<br />
 			Bitte probieren Sie es erneut.</p>";
 
 ?>
@@ -656,7 +656,7 @@ $cat_data = array();
 		echo "
 		<td class=\"".$class."\">".$top.date("d.m.Y - G:i",$row['utimestamp'])."</td>
 		<td class=\"".$class."\" align=\"center\">".$status."</td>
-		<td class=\"".$class."\" title=\"".strip_tags(stripslashes(substr($row['content'],0,300)))."\" onmouseover=\"fade_element('copyid_".$row['id']."')\" onmouseout=\"fade_element('copyid_".$row['id']."')\">".stripslashes($row['titel'])." <div class=\"moo_inlinehide\" id=\"copyid_".$row['id']."\"><a href=\"".$filename."&amp;action=new".$input_section."&amp;copyid=".$row['id']."\"><img src=\"".$modulpath."images/icon_copy.gif\" alt=\"Kopieren\" title=\"Artikel zum Kopieren ausw&auml;hlen\" /></a></div></td>
+		<td class=\"".$class."\" title=\"".strip_tags(substr($row['content'],0,300))."\" onmouseover=\"fade_element('copyid_".$row['id']."')\" onmouseout=\"fade_element('copyid_".$row['id']."')\">".$row['titel']." <div class=\"moo_inlinehide\" id=\"copyid_".$row['id']."\"><a href=\"".$filename."&amp;action=new".$input_section."&amp;copyid=".$row['id']."\"><img src=\"".$modulpath."images/icon_copy.gif\" alt=\"Kopieren\" title=\"Artikel zum Kopieren ausw&auml;hlen\" /></a></div></td>
 		<td class=\"".$class."\">".$artuserdata[$row['uid']]['username']."</td>
 		<td class=\"".$class."\" align=\"center\"><a href=\"".$filename."&amp;action=edit&amp;id=".$row['id']."&amp;static=".$row['static'].$add_filename."\"><img src=\"images/icons/icon_edit.gif\" alt=\"Bearbeiten - Stift\" title=\"Eintrag bearbeiten\" style=\"border:0;\" /></a></td>
 		<td class=\"".$class."\" align=\"center\"><img src=\"images/icons/icon_delete.gif\" alt=\"L&ouml;schen - rotes X\" title=\"DiesenEintrag l&ouml;schen\" class=\"fx_opener\" style=\"border:0; float:left;\" align=\"left\" /><div class=\"fx_content tr_red\" style=\"width:60px; display:none;\"><a href=\"#foo\" onclick=\"AjaxRequest.send('modul=".$modul."&ajaxaction=delarticle&id=".$row['id']."&static=".$flag_static."');\">Ja</a> - <a href=\"#foo\">Nein</a></div></td>

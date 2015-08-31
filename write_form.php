@@ -65,7 +65,7 @@ $hiddencat = "";
 				
 				if(isset($form_data['newscat']) && $form_data['newscat'] != "0" && in_array($rowcat['id'],$newscatids_array)) echo " selected=\"selected\"";
 				
-				echo ">".stripslashes($rowcat['name'])."</option>";
+				echo ">".htmlentities($rowcat['name'])."</option>";
 				}
 			echo "</select>";
             ?>

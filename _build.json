@@ -24,6 +24,7 @@
     "_updates.php",
     "_popup.php",
     "article.php",
+    "index.php",
     "write_form.php"
   ]
 }

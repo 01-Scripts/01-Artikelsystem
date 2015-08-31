@@ -96,7 +96,7 @@ global $mysqli,$mysql_tables;
 
 $list = $mysqli->query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id='".$mysqli->escape_string($postid)."' LIMIT 1");
 while($row = $list->fetch_assoc()){
-	return stripslashes($row['titel']);
+	return $row['titel'];
 	}
 }
 }
@@ -120,10 +120,10 @@ $form_data = array("id"				=> $_POST['id'],
 				   "starttime_uhr"	=> $_POST['starttime_uhr'],
 				   "endtime_date" 	=> $_POST['endtime_date'],
 				   "endtime_uhr" 	=> $_POST['endtime_uhr'],
-				   "titel" 			=> stripslashes($_POST['titel']),
-				   "textfeld"		=> stripslashes($_POST['textfeld']),
+				   "titel" 			=> $_POST['titel'],
+				   "textfeld"		=> $_POST['textfeld'],
 				   "autozusammen" 	=> $_POST['autozusammen'],
-				   "zusammenfassung"=> stripslashes($_POST['zusammenfassung']),
+				   "zusammenfassung"=> $_POST['zusammenfassung'],
 				   "comments" 		=> $_POST['comments'],
 				   "top"			=> $_POST['top'],
 				   "hide_headline"	=> $_POST['hide_headline'],
@@ -157,10 +157,10 @@ if(is_array($row)){
 					   "starttime_date"	=> date("d.m.Y",$row['utimestamp']),
 					   "starttime_uhr"	=> date("G.i",$row['utimestamp']),
 					   "newscat"		=> $row['newscatid'],
-					   "titel" 			=> stripslashes($row['titel']),
-					   "textfeld"		=> stripslashes($row['content']),
+					   "titel" 			=> $row['titel'],
+					   "textfeld"		=> $row['content'],
 					   "autozusammen" 	=> $row['autozusammen'],
-					   "zusammenfassung"=> stripslashes($row['zusammenfassung']),
+					   "zusammenfassung"=> $row['zusammenfassung'],
 					   "hide_headline"	=> $row['hide_headline'],
 					   "top"			=> $row['top'],
 					   "uid"			=> $row['uid'],
@@ -190,7 +190,7 @@ if(is_array($row)){
 			}
 		else{
 			for($x=1;$x<=ANZ_SER_FIELDS;$x++){
-				$form_data['ser_field_'.$x] = htmlspecialchars(stripslashes($return['field_'.$x]),$htmlent_flags,$htmlent_encoding_acp);
+				$form_data['ser_field_'.$x] = htmlspecialchars($return['field_'.$x],$htmlent_flags,$htmlent_encoding_acp);
 				}
 			}
 		}
@@ -257,7 +257,7 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 	// Newstitel in Array einlesen (um MySQL-Abfragen zu verringern)
 	$list = $mysqli->query("SELECT id,titel FROM ".$mysql_tables['artikel']." WHERE frei='1' AND hide='0' AND static='0' AND utimestamp <= '".time()."' AND (endtime >= '".time()."' OR endtime = '0')");
 	while($row = $list->fetch_assoc()){
-		$arttitel[$row['id']] = stripslashes($row['titel']);
+		$arttitel[$row['id']] = $row['titel'];
 		}
 		
 	$list = $mysqli->query("SELECT postid,utimestamp,autor,message FROM ".$mysql_tables['comments']." WHERE modul='".$modul."' AND frei='1' ORDER BY utimestamp DESC LIMIT ".$mysqli->escape_string($settings['artikelrssanzahl'])."");
@@ -270,15 +270,15 @@ if(isset($show) && $show == "show_commentrssfeed" && $settings['artikelkommentar
 		else
 			$echolink = str_replace("&","&amp;",$settings['artikelrsstargeturl'])."&amp;".$names['artid']."=".$row['postid']."#01id".$row['postid'];	
 
-		$echotext = stripslashes(str_replace("&","&amp;",$row['message']));
+		$echotext = str_replace("&","&amp;",$row['message']);
 		$echotext = bb_code_comment($echotext,1,1,0);
 		$echotext = htmLawed($echotext, $config);
 		
 		$write_text .= "<item>
-  <title>Neuer Kommentar zu ".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, "UTF-8"))."</title>
+  <title>Neuer Kommentar zu ".str_replace("&","&amp;",html_entity_decode($row['titel'], $htmlent_flags, "UTF-8"))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext."]]></description>
-  <author>".str_replace("&","&amp;",utf8_encode(stripslashes($row['autor'])))."</author>
+  <author>".str_replace("&","&amp;",utf8_encode($row['autor']))."</author>
   <pubDate>".date("r",$row['utimestamp'])."</pubDate>
   <guid>".$echolink."</guid>
 </item>
@@ -308,7 +308,7 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 	while($row = $list->fetch_assoc()){
 
 		if($settings['modrewrite'] == 1)
-			$echolink = _01article_echo_ArticleLink($row['id'],stripslashes($row['titel']),$row['utimestamp']);
+			$echolink = _01article_echo_ArticleLink($row['id'],$row['titel'],$row['utimestamp']);
 		elseif(substr_count($settings['artikelrsstargeturl'], "?") < 1)
 			$echolink = $settings['artikelrsstargeturl']."?".$names['artid']."=".$row['id']."#01id".$row['id'];
 		else
@@ -318,15 +318,15 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 		if($settings['artikelrsslaenge'] == "short"){
 			// Zusammenfassung only:
 			if($row['autozusammen'] == 0 && !empty($row['zusammenfassung']))
-				$echotext = htmLawed(stripslashes($row['zusammenfassung']), $config);
+				$echotext = htmLawed($row['zusammenfassung'], $config);
 			else
-				$echotext = substr(htmLawed(stripslashes($row['content']), $config),0,$settings['artikeleinleitungslaenge']);
+				$echotext = substr(htmLawed($row['content'], $config),0,$settings['artikeleinleitungslaenge']);
 				
 			$echotext .= $lang['weiterlesen'];
 			}
 		else{
 			// kompletter Text
-			$echotext = htmLawed(stripslashes($row['content']), $config);
+			$echotext = htmLawed($row['content'], $config);
 			}
 
 		// Pfade anpassen
@@ -335,11 +335,11 @@ elseif($settings['artikelrssfeedaktiv'] == 1){
 		$echotext = utf8_encode($echotext);
 		
 		$username_array 	= getUserdatafields($row['uid'],"username,01acp_signatur");
-		$username 			= stripslashes($username_array['username']);
-		$signatur 			= "<p>".nl2br(stripslashes(str_replace("&","&amp;",$username_array['signatur'])))."</p>";
+		$username 			= $username_array['username'];
+		$signatur 			= "<p>".nl2br(str_replace("&","&amp;",$username_array['signatur']))."</p>";
 		
 		$write_text .= "<item>
-  <title>".str_replace("&","&amp;",html_entity_decode(stripslashes($row['titel']), $htmlent_flags, "UTF-8"))."</title>
+  <title>".str_replace("&","&amp;",html_entity_decode($row['titel'], $htmlent_flags, "UTF-8"))."</title>
   <link>".$echolink."</link>
   <description><![CDATA[".$echotext.$signatur."]]></description>
   <author>".utf8_encode($username)."</author>
@@ -372,8 +372,8 @@ $plain_data = array();
 
 $list = $mysqli->query("SELECT id,name FROM ".$mysql_tables['cats']." ORDER BY sortid,name");
 while($row = $list->fetch_assoc()){
-	$plain_data[$row['id']] = stripslashes($row['name']);
-	$return .= "<option value=\"".$row['id']."\">".stripslashes($row['name'])."</option>\n";
+	$plain_data[$row['id']] = $row['name'];
+	$return .= "<option value=\"".$row['id']."\">".$row['name']."</option>\n";
 	}
 	
 return $return;
@@ -484,7 +484,7 @@ if(is_numeric($artid) && $artid != 0 && !empty($artid)){
 	$list = $mysqli->query("SELECT titel FROM ".$mysql_tables['artikel']." WHERE id = '".$mysqli->escape_string($artid)."'");
 	$row = $list->fetch_assoc();
 	
-	return stripslashes($row['titel']);
+	return $row['titel'];
 	}
 else return "";
 }
@@ -547,7 +547,7 @@ if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeri
         // DB: Einstellungen in Array $settings[] einlesen
         $list = $mysqli->query("SELECT idname,wert FROM ".$mysql_tables['settings']." WHERE is_cat = '0' AND modul = '".$mysqli->escape_string($modul)."'");
         while($row = $list->fetch_assoc()){
-        	$settings[stripslashes($row['idname'])] = stripslashes($row['wert']);
+        	$settings[$row['idname']] = $row['wert'];
         	}
         
         $galdir = $moduldir.$modul."/".$galdir;
@@ -570,14 +570,14 @@ if(isset($treffer) && is_array($treffer) && is_numeric($treffer[1]) && is_numeri
             
 		while($pics = $list->fetch_assoc()){
 			if($flag_utf8)
-				$descr = utf8_encode(strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext'])));
+				$descr = utf8_encode(strip_tags($pics['title'])." - ".strip_tags($pics['pictext']));
 			else
-				$descr = strip_tags(stripslashes($pics['title']))." - ".strip_tags(stripslashes($pics['pictext']));
+				$descr = strip_tags($pics['title'])." - ".strip_tags($pics['pictext']);
 			
 			if($settings['artikellightbox'] == 1)
-				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".$descr."\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,$descr)."</a></div>\n";
+				$return .= "<div class=\"thumbnail_art2gal\"><a href=\"".$galverz.$pics['filename']."\" class=\"lightbox\" rel=\"lightbox-art2gal".$galid."set\" title=\"".$descr."\">"._01gallery_getThumb($galverz,$pics['filename'],"_tb",FALSE,$descr)."</a></div>\n";
 			else
-				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,stripslashes($pics['filename']),"_tb",FALSE,$descr)."</div>\n";
+				$return .= "<div class=\"thumbnail_art2gal\">"._01gallery_getThumb($galverz,$pics['filename'],"_tb",FALSE,$descr)."</div>\n";
 			}
 		$return .= "</div><br style=\"clear: both;\">\n\n"; 
         }
