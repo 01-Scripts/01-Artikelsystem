@@ -3,11 +3,6 @@ Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe un
 Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 =========================================================
 
-Neuinstallation:
-================
-Informationen zur Neuinstallation des 01-Artikelsystems in beiliegender Installationsanleitung.pdf oder online:
-http://www.01-scripts.de/01article.php?install
-
 
 Update:	01-Artikelsystem V 3.2.0 nach V 3.2.1
 =============================================
@@ -19,6 +14,11 @@ Sie können diese Version ggf. hier herunterladen: http://www.01-scripts.de/01acp
 
 - Legen Sie ein Backup ihrer Datenbank an!
 - Legen Sie ein Backup ihrer Daten via FTP-Programm an!
+
+Achtung:
+- Die Datei templates/artikel.html hat sich verändert und wird beim Updatevorgang standardmäßig überschrieben.
+  Sollten Sie diese Datei selbst verändert haben, sichern Sie bitte ihre Änderungen und nehmen Sie die Änderungen
+  nach dem Update erneut vor!
 
 - Markieren Sie alle im Verzeichnis 01article/ enthaltenen Dateien und Unterverzeichnisse und
   laden Sie sie per FTP-Programm in das entsprechende Modul-Verzeichnis (01scripts/01module/.....) auf ihren Webspace hoch.

@@ -17,7 +17,7 @@ if(isset($_REQUEST['update']) && $_REQUEST['update'] == "320_zu_321"){
 
 	// Versionsnummer aktualisieren
 	$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.2.1' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
-}?>
+?>
 <h2>Update Version 3.2.0 nach 3.2.1</h2>
 
 <div class="meldung_erfolg">
@@ -41,6 +41,7 @@ if(isset($_REQUEST['update']) && $_REQUEST['update'] == "320_zu_321"){
 	<p><a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a></p>
 </div>
 <?PHP
+}
 // 3.1.0 --> 3.2.0
 elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
 
