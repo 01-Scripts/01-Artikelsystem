@@ -9,7 +9,7 @@
 		<?php if ($row['hide_headline'] == 0 || $static == 0): ?>
 			<p class="headline_small">
 				Geschrieben von <?PHP echo $username; ?> am <?php echo $datum; ?> um <?php echo $uhrzeit; ?> Uhr &bull;
-				<?php if ($settings['comments'] == 1 && $settings['artikelcomments'] >= 1 && $row['comments'] == 1): ?><a href="<?php echo $system_link_row; ?>#01jumpcomments">Kommentare</a> (<?php echo $comments; ?>) &bull; <?php endif; ?>
+				<?php if ($settings['comments'] == 1 && $settings['artikelcomments'] >= 1 && $row['comments'] == 1): ?><a href="<?php echo $system_link_row; ?>#disqus_thread" data-disqus-identifier="<?php echo $module[$modul]['nr']; ?>-<?php echo $row['id']; ?>">Kommentare (<?php echo $comments; ?>)</a> &bull; <?php endif; ?>
 				<a href="<?php echo $system_link_row; ?>#01id<?PHP echo $row['id']; ?>">Artikel lesen</a>
 			</p>
 		<?php endif; ?>
