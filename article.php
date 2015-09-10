@@ -87,7 +87,7 @@ if(isset($_POST['do']) && (isset($_POST['save']) || isset($_POST['publish'])) &&
 		}
 	elseif($settings['artikeleinleitung'] >= 1){
 		$autozusammen = 0;
-		$zusammen = substr($_POST['zusammenfassung'],0,$settings['artikeleinleitungslaenge']);
+		$zusammen = substr(stripslashes($_POST['zusammenfassung']),0,$settings['artikeleinleitungslaenge']);
 		}
 	else{
 		$autozusammen = 0;
@@ -95,7 +95,7 @@ if(isset($_POST['do']) && (isset($_POST['save']) || isset($_POST['publish'])) &&
 		}
 		
 	// Text parsen
-	$text = $_POST['textfeld'];
+	$text = stripslashes($_POST['textfeld']);
 		
 	// Freischaltung
 	if($userdata['freischaltung'] == 1 && $settings['artikelfreischaltung'] == 1)
@@ -247,7 +247,7 @@ und überprüfen Sie ihn.\n\n---\nWebmailer";
 			// Es werden 10 beliebige Benutzer mit den entsprechenden Rechten per E-Mail informiert.
 			$list = $mysqli->query("SELECT id,username,mail FROM ".$mysql_tables['user']." WHERE ".$mysqli->escape_string($modul)."_editarticle = '2' AND sperre = '0' AND 01acp_".$mysqli->escape_string($modul)." = '1' ORDER BY rand() LIMIT 10");
 			while($row = $list->fetch_assoc()){
-		        mail($row['mail'],$email_betreff,$emailbody,$header);
+		        mail(stripslashes($row['mail']),$email_betreff,$emailbody,$header);
 				}
 			}
 		else
