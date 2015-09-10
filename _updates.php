@@ -17,7 +17,30 @@ if(isset($_REQUEST['update']) && $_REQUEST['update'] == "320_zu_321"){
 
 	// Versionsnummer aktualisieren
 	$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.2.1' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
-}
+}?>
+<h2>Update Version 3.2.0 nach 3.2.1</h2>
+
+<div class="meldung_erfolg">
+	Das Update von Version 3.2.0 auf Version 3.2.1 wurde erfolgreich durchgef&uuml;hrt.<br />
+	<br />
+	<b>Achtung:</b><br />
+	Mit diesem Update wurde der CSS-Code zur Gestaltung des Artikelsystems in eine separate Datei ausgelagert
+	und kann nicht mehr im 01ACP in den Einstellungen direkt bearbeitet werden.<br />
+	Der CSS-Code befindet sich nun in der Datei <i>01module/01article/templates/style.css</i> und kann
+	dort ggf. bearbeitet werden.<br />
+	<br />
+
+	<b>Mit dem Update wurde unter anderem folgendes verbessert:</b>
+	<ul>
+		<li>Verwendung von <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA</a> als Spamschutz-Alternative</li>
+		<li><a href="https://disqus.com/" target="_blank">Disqus</a> als Kommentarsystem integriert</li>
+		<li>Bearbeiten von Artikeln verbessert</li>
+		<li>Art2Gal-Funktion verbessert</li>
+		<li>Diverse Fehler behoben. Siehe <a href="http://www.01-scripts.de/down/01article_changelog.txt" target="_blank">changelog.txt</a></li>
+	</ul>
+	<p><a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a></p>
+</div>
+<?PHP
 // 3.1.0 --> 3.2.0
 elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
 
