@@ -31,6 +31,7 @@ Achtung:
 
 Changelog 01-Artikelsystem - 3.2.1
 ==================================
+- 0000725: [Frontend]   Disqus als Kommentarmöglichkeit hinzufügen (Admin) - erledigt.
 - 0000719: [Backend]    Kategorie-Filter nach Bearbeitung eines Artikels im ACP vergessen (Admin) - erledigt.
 - 0000716: [Global]     Kleinere Bugs beheben (Admin) - erledigt.
 - 0000726: [Frontend]   CSS-Code aus Datenbank/Settings in Datei auslagern (Admin) - erledigt.
