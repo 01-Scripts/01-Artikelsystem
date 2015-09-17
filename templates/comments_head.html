@@ -1,17 +1,2 @@
 <a name="01jumpcomments"></a><a name="01comment"></a>
 <br />
-
-<?php if (isset($message) && $message >= 1): ?>
-<p class="meldungen_01">
-	<?php if (isset($message) && $message == 1): ?>
-	Ihr Kommentar wurde erfolgreich hinzugef&uuml;gt und wird so schnell wie m&ouml;glich freigeschaltet.
-	<?php elseif (isset($message) && $message == 2): ?>
-	Ihr Kommentar wurde erfolgreich hinzugef&uuml;gt.
-	<?php elseif (isset($message) && $message == 3): ?>
-	<b>Fehler:</b> Sie haben vor kurzem bereits einen Kommentar abgegeben.
-	<?php elseif (isset($message) && $message == 4): ?>
-	<b>Fehler:</b> Sie haben nicht alle ben&ouml;tigten Felder (Name, Kommentar, Spamschutz) ausgef&uuml;llt,
-	oder Ihr Kommentar wurde vom Anti-Spam-System abgewiesen!
-	<?php endif; ?>
-</p>
-<?php endif; ?>

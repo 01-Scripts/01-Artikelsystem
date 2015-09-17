@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikelsystem - Modul-Startseite (acp)
-	#fv.320#
+	#fv.321#
 */
 ?>
 
@@ -38,8 +38,8 @@
 	$query = "SELECT id,titel,content FROM ".$mysql_tables['artikel']." WHERE frei = '1' AND hide = '0' AND static = '0' AND utimestamp < '".time()."' AND (endtime = '0' OR endtime >= '".time()."') ORDER BY utimestamp DESC LIMIT 5";
 	$list = $mysqli->query($query);
 	while($row = $list->fetch_assoc()){
-		echo "<p><b><a href=\"_loader.php?modul=".$modul."&amp;loadpage=article&amp;action=edit&amp;id=".$row['id']."&amp;static=0\">".stripslashes($row['titel'])."</a></b><br />
-		".substr(stripslashes(strip_tags($row['content'])),0,100)."...
+		echo "<p><b><a href=\"_loader.php?modul=".$modul."&amp;loadpage=article&amp;action=edit&amp;id=".$row['id']."&amp;static=0\">".$row['titel']."</a></b><br />
+		".substr(strip_tags($row['content']),0,100)."...
 		</p>";
 		}
 	?>
@@ -88,8 +88,8 @@
 	$query = "SELECT postid,utimestamp,autor,message,smilies,bbc FROM ".$mysql_tables['comments']." WHERE modul = '".$modul."' AND frei = '1' ORDER BY utimestamp DESC LIMIT 5";
 	$list = $mysqli->query($query);
 	while($row = $list->fetch_assoc()){
-		echo "<p><a href=\"comments.php?modul=".$modul."&amp;postid=".$row['postid']."\"><img src=\"images/icons/icon_show.gif\" alt=\"Symbol: Auge\" title=\"Kommentar anzeigen\" /></a> Verfasst von <b>".stripslashes($row['autor'])."</b> am <b>".date("d.m.Y",$row['timestamp'])."</b><br />
-		".substr(strip_tags(bb_code_comment(stripslashes($row['message']),1,$row['bbc'],0)),0,100)."...
+		echo "<p><a href=\"comments.php?modul=".$modul."&amp;postid=".$row['postid']."\"><img src=\"images/icons/icon_show.gif\" alt=\"Symbol: Auge\" title=\"Kommentar anzeigen\" /></a> Verfasst von <b>".$row['autor']."</b> am <b>".date("d.m.Y",$row['timestamp'])."</b><br />
+		".substr(strip_tags(bb_code_comment($row['message'],1,$row['bbc'],0)),0,100)."...
 		</p>";
 		}
 	?>

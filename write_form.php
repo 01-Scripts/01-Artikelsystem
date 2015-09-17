@@ -1,13 +1,17 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel-Formular
-	#fv.320#
+	#fv.321#
 */
+
+// Patch CSS-Datei
+if(isset($settings['extern_css']) && empty($settings['extern_css']))
+    $settings['extern_css'] = $modulpath.CSS_CACHE_DATEI;
 
 // Art2Gal-Support?
 list($galmodmenge) = $mysqli->query("SELECT COUNT(*) FROM ".$mysql_tables['module']." WHERE modulname = '01gallery'")->fetch_array(MYSQLI_NUM);
@@ -61,7 +65,7 @@ $hiddencat = "";
 				
 				if(isset($form_data['newscat']) && $form_data['newscat'] != "0" && in_array($rowcat['id'],$newscatids_array)) echo " selected=\"selected\"";
 				
-				echo ">".stripslashes($rowcat['name'])."</option>";
+				echo ">".htmlentities($rowcat['name'])."</option>";
 				}
 			echo "</select>";
             ?>
@@ -123,7 +127,7 @@ if($settings['artikeleinleitung'] >= 1 && $settings['artikeleinleitungslaenge'] 
     </tr>
 <?PHP
 		}
-	if($settings['comments'] == 1 && $settings['artikelcomments'] == 1){
+	if($settings['comments'] == 1 && $settings['artikelcomments'] >= 1){
 ?>
     <tr>
         <td class="trb" colspan="2"><input type="checkbox" name="comments" value="1"<?PHP if($form_data['comments'] == 1){ echo " checked=\"checked\""; } ?> /> Kommentare in diesem Beitrag <b>de</b>aktivieren?</td>
@@ -165,6 +169,7 @@ if($settings['artikeleinleitung'] >= 1 && $settings['artikeleinleitungslaenge'] 
             <input type="hidden" name="static" value="<?PHP echo $flag_static; ?>" />
             <input type="hidden" name="action" value="<?PHP echo $input_action; ?>" />
             <input type="hidden" name="who" value="<?PHP echo $input_section2; ?>" />
+            <input type="hidden" name="catid" value="<?PHP echo intval($_REQUEST['catid']); ?>" />
         </td>
     </tr>
 

@@ -15,12 +15,3 @@
     </tr>
 </table>
 <?php endif; ?>
-
-<?php if ($flag_comments_js): ?>
-<script type="text/javascript">
-	window.addEvent('load', function() {
-	document.getElementById('addcomment<?PHP echo $modul; ?>').style.display = 'none';
-	document.getElementById('addcomment<?PHP echo $modul; ?>_link').style.display = 'block';
-});
-</script>
-<?php endif; ?>

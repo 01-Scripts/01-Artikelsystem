@@ -1,57 +1,40 @@
-01ACP - Copyright 2008-2014 by Michael Lorer - 01-Scripts.de
+01-Artikelsystem - Copyright 2008-2015 by Michael Lorer - 01-Scripts.de
 Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 =========================================================
 
-Neuinstallation:
-================
-Informationen zur Neuinstallation des 01-Artikelsystems in beiliegender Installationsanleitung.pdf oder online:
-http://www.01-scripts.de/01article.php?install
 
-
-Update:	01-Artikelsystem V 3.1.0 nach V 3.2.0
+Update:	01-Artikelsystem V 3.2.0 nach V 3.2.1
 =============================================
 
 !!! ACHTUNG !!!
-Voraussetzung für dieses Update ist die Version 1.3.0 oder größer des 01ACP!
-Sie können diese Version hier herunterladen: http://www.01-scripts.de/01acp.php
+Voraussetzung für dieses Update ist die Version 1.3.1 oder größer des 01ACP!
+Sie können diese Version ggf. hier herunterladen: http://www.01-scripts.de/01acp.php
 !!! ACHTUNG !!!
 
 - Legen Sie ein Backup ihrer Datenbank an!
 - Legen Sie ein Backup ihrer Daten via FTP-Programm an!
 
-- Löschen Sie das Verzeichnis 01module/01article/images/icons/*
+Achtung:
+- Die Datei templates/artikel.html hat sich verändert und wird beim Updatevorgang standardmäßig überschrieben.
+  Sollten Sie diese Datei selbst verändert haben, sichern Sie bitte ihre Änderungen und nehmen Sie die Änderungen
+  nach dem Update erneut vor!
 
 - Markieren Sie alle im Verzeichnis 01article/ enthaltenen Dateien und Unterverzeichnisse und
-  laden Sie sie per FTP-Programm in das entsprechende Modul-Verzeichnis (01scripts/01module/.....) auf Ihren Webspace hoch.
+  laden Sie sie per FTP-Programm in das entsprechende Modul-Verzeichnis (01scripts/01module/.....) auf ihren Webspace hoch.
   Überschreiben Sie dabei alle bereits existierende Dateien.
 
 - Loggen Sie sich in den Administrationsbereich ein und wählen Sie auf der Startseite im linken Menü
   den Punkt "Module verwalten".
   Starten Sie den Update-Vorgang für das 01-Artikelsystem durch einen Klick auf das Zahnrad-Symbol.
 
-- Wenn Sie die Erweiterung "Artikelteaser auf externer Seite ausgeben" verwenden, müssen Sie auch diese
-  Erweiterung nun aktualisieren.
 
-
-
-Changelog 01-Artikelsystem - 3.2.0
+Changelog 01-Artikelsystem - 3.2.1
 ==================================
-- 0000569: [Global] 	Behebung kleinerer Bugs
-- 0000316: [Frontend] 	Einbinden von mehreren Bildern via 01-Gallery-Link + Slimbox statt Remooz als Lightbox
-- 0000692: [Global] 	Der Spaltenname 'text' und 'timestamp ist ein reserviertes MySQL-Schlüsselwort
-- 0000550: [Frontend] 	mod_rewrite-Funktionalität bei mehreren Installationen, Kategorien etc.
-- 0000567: [Frontend] 	Schrägstrich / in Titel führt zu Error in mod_rewrite-Links
-- 0000521: [Frontend] 	Anzeige des [Kategorie entfernen]-Hinweis
-- 0000552: [Frontend] 	RSS-Funktion gegen JavaScript im Beitrag absichern
-- 0000684: [Frontend] 	Zeichenkodierung des RSS-Feeds auf UTF-8 ändern
-- 0000590: [Global] 	Icons entfernen
-- 0000515: [Frontend] 	$filename wird nicht an allen Stellen berücksichtigt
-- 0000624: [Frontend] 	Beiträge mit Ablaufdatum werden nicht ins Archiv verschoben
-- 0000611: [Backend] 	Javascript-Datei-Handling
-- 0000574: [Backend] 	ID in der Kategorieverwaltung ausgeben
-- 0000546: [Backend] 	mod_rewrite-Funktion standardmäßig deaktivieren
-- 0000665: [Global] 	Replace all deprecated mysql_-functions
-- 0000576: [Global] 	UTF8-Kompatibilität
-- 0000531: [Frontend] 	Spamschutz durch hidden-field + Zeit
-- 0000686: [Frontend] 	Keine CSS lightbox-Klasse für File-Download-Links (Admin) - geschlossen.
+- 0000725: [Frontend]   Disqus als Kommentarmöglichkeit hinzufügen (Admin) - erledigt.
+- 0000719: [Backend]    Kategorie-Filter nach Bearbeitung eines Artikels im ACP vergessen (Admin) - erledigt.
+- 0000716: [Global]     Kleinere Bugs beheben (Admin) - erledigt.
+- 0000726: [Frontend]   CSS-Code aus Datenbank/Settings in Datei auslagern (Admin) - erledigt.
+- 0000718: [Frontend]   Verbesserungen an Art2Gal-Funktion (Admin) - erledigt.
+- 0000704: [Backend]    Artikel lassen sich nicht löschen (Admin) - erledigt.
+- 0000733: [Frontend]   Support für ReCaptcha hinzufügen (Admin) - erledigt.

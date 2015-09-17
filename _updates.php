@@ -1,6 +1,49 @@
 <?PHP
+// 3.2.0 --> 3.2.1
+if(isset($_REQUEST['update']) && $_REQUEST['update'] == "320_zu_321"){
+	// 01article #720 - Disqus-Support hinzufügen
+	$mysqli->query("UPDATE ".$mysql_tables['settings']." SET 
+	`name` = 'Kommentarsystem w&auml;hlen', 
+    `exp` = 'Zur Nutzung von Disqus muss der Username in den allgemeinen Einstellungen hinterlegt werden.', 
+    `formename` =  '01ACP Kommentarsystem|Disqus|Kommentare deaktivieren', 
+    `formwerte` =  '1|2|0'
+    WHERE `idname` = 'artikelcomments' AND modul = '".$mysqli->escape_string($modul)."' LIMIT 1");
+
+	// 01article #726 - CSS-Code aus Datenbank/Settings in Datei auslagern
+	$mysqli->query("UPDATE ".$mysql_tables['settings']." SET 
+	`exp` = 'Geben Sie einen absoluten Pfad inkl. <b>http://</b> zu einer externen CSS-Datei an.\nIst dieses Feld leer, wird die Datei templates/style.css aus dem Modulverzeichnis verwendet.'
+	WHERE `modul` = '".$mysqli->escape_string($modul)."' AND `idname` = 'extern_css' LIMIT 1");
+	$mysqli->query("DELETE FROM ".$mysql_tables['settings']." WHERE `modul` = '".$mysqli->escape_string($modul)."' AND `idname` = 'csscode' LIMIT 1");
+
+	// Versionsnummer aktualisieren
+	$mysqli->query("UPDATE ".$mysql_tables['module']." SET version = '3.2.1' WHERE idname = '".$mysqli->escape_string($modul)."' LIMIT 1");
+?>
+<h2>Update Version 3.2.0 nach 3.2.1</h2>
+
+<div class="meldung_erfolg">
+	Das Update von Version 3.2.0 auf Version 3.2.1 wurde erfolgreich durchgef&uuml;hrt.<br />
+	<br />
+	<b>Achtung:</b><br />
+	Mit diesem Update wurde der CSS-Code zur Gestaltung des Artikelsystems in eine separate Datei ausgelagert
+	und kann nicht mehr im 01ACP in den Einstellungen direkt bearbeitet werden.<br />
+	Der CSS-Code befindet sich nun in der Datei <i>01module/01article/templates/style.css</i> und kann
+	dort ggf. bearbeitet werden.<br />
+	<br />
+
+	<b>Mit dem Update wurde unter anderem folgendes verbessert:</b>
+	<ul>
+		<li>Verwendung von <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA</a> als Spamschutz-Alternative (<a href="http://www.01-scripts.de/forum/index.php?page=Thread&amp;threadID=1846" target="_blank">Anleitung</a>)</li>
+		<li><a href="https://disqus.com/" target="_blank">Disqus</a> als Kommentarsystem integriert (<a href="http://www.01-scripts.de/forum/index.php?page=Thread&amp;threadID=1847" target="_blank">Anleitung</a>)</li>
+		<li>Bearbeiten von Artikeln verbessert</li>
+		<li>Art2Gal-Funktion verbessert</li>
+		<li>Diverse Fehler behoben. Siehe <a href="http://www.01-scripts.de/down/01article_changelog.txt" target="_blank">changelog.txt</a></li>
+	</ul>
+	<p><a href="module.php">Zur&uuml;ck zur Modul-&Uuml;bersicht &raquo;</a></p>
+</div>
+<?PHP
+}
 // 3.1.0 --> 3.2.0
-if(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
+elseif(isset($_REQUEST['update']) && $_REQUEST['update'] == "310_zu_320"){
 
 	// #316 Artikelsystem und Bildergalerie verbinden
 	$add2css = "\r\n\r\n/* SLIMBOX */\r\n\r\n#lbOverlay {\r\n	position: fixed;\r\n	z-index: 9999;\r\n	left: 0;\r\n	top: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #000;				/* Overlay-Hintergrundfarbe der Lightbox-Abdunklung */\r\n	cursor: pointer;\r\n}\r\n\r\n#lbCenter, #lbBottomContainer {\r\n	position: absolute;\r\n	z-index: 9999;\r\n	overflow: hidden;\r\n	background-color: #fff;				/* Hintergrundfarbe des Untertitel-Bereichs */\r\n}\r\n\r\n#lbImage {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	border: 10px solid #fff;			/* Bildrahmenfarbe um das in der Lightbox geöffnete Bild herum */\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lbPrevLink, #lbNextLink {\r\n	display: block;\r\n	position: absolute;\r\n	top: 0;\r\n	width: 50%;\r\n	outline: none;\r\n}\r\n\r\n#lbPrevLink {\r\n	left: 0;\r\n}\r\n#lbNextLink {\r\n	right: 0;\r\n}\r\n\r\n/* Untertitel-Textdefinition */\r\n#lbBottom {\r\n	font-family: Verdana, Arial, Geneva, Helvetica, sans-serif;\r\n	font-size: 10px;\r\n	color: #666;\r\n	line-height: 1.4em;\r\n	text-align: left;\r\n	border: 10px solid #fff;\r\n	border-top-style: none;\r\n}\r\n\r\n#lbCloseLink {\r\n	display: block;\r\n	float: right;\r\n	width: 66px;\r\n	height: 22px;\r\n	margin: 5px 0;\r\n	outline: none;\r\n}\r\n\r\n#lbCaption, #lbNumber {\r\n	margin-right: 71px;\r\n}\r\n#lbCaption {\r\n	font-weight: bold;\r\n}\r\n\r\n

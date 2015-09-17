@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel: Übersicht, Bearbeiten, Erstellen
-	#fv.320#
+	#fv.321#
 */
 
 // Berechtigungsabfragen
@@ -15,7 +15,6 @@ if((isset($_REQUEST['action']) && $_REQUEST['action'] == "newarticle" && $userda
    (isset($_REQUEST['action']) && $_REQUEST['action'] == "edit" && ($userdata['editarticle'] >= 1 || $userdata['staticarticle'] >= 1)) ||
    (isset($_REQUEST['action']) && ($_REQUEST['action'] == "newstatic" || $_REQUEST['action'] == "statics") && $userdata['staticarticle'] >= 1))
 {
-_01article_CreateCSSCache(CSS_CACHE_DATEI);
 
 // Variablen
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == "edit"){
@@ -546,8 +545,9 @@ $cat_data = array();
 	elseif(isset($_GET['sort']) && $_GET['sort'] == "desc") $sortorder = "DESC";
 	else $sortorder = "ASC";
 	
-	if(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,content,zusammenfassung) AGAINST ('".$mysqli->escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
-	elseif(isset($_GET['catid']) && !empty($_GET['catid']) && is_numeric($_GET['catid'])) $where = " WHERE newscatid LIKE '%,".$mysqli->escape_string($_GET['catid']).",%' ";
+	if(isset($_GET['search']) && !empty($_GET['search']) && is_numeric($_GET['search'])) $where = " WHERE id = '".$mysqli->escape_string($_GET['search'])."' AND static = '".$flag_static."' ";
+	elseif(isset($_GET['search']) && !empty($_GET['search'])) $where = " WHERE MATCH (titel,content,zusammenfassung) AGAINST ('".$mysqli->escape_string(parse_uml(str_replace("*","",$_GET['search'])))."') >= ".FULLTEXT_INDEX_SEARCH_SCHWELLE." AND static = '".$flag_static."' ";
+	elseif(isset($_REQUEST['catid']) && !empty($_REQUEST['catid']) && is_numeric($_REQUEST['catid'])) $where = " WHERE newscatid LIKE '%,".$mysqli->escape_string($_REQUEST['catid']).",%' ";
 	else $where = " WHERE static = '".$flag_static."' ";
 	
 	if($userdata['editarticle'] == 1 && $flag_static == 0 || $userdata['staticarticle'] == 1 && $flag_static == 1)
@@ -579,7 +579,7 @@ $cat_data = array();
 	
 	// Fehlermeldung bei erfolgloser Suche
 	if($sites == 0 && isset($_GET['search']) && !empty($_GET['search']))
-		echo "<p class=\"meldung_error\">Es konnten leider kein passenden Eintr&auml;ge zu Ihrer Sucheingabe \"".stripslashes($_GET['search'])."\" gefunden werden!<br />
+		echo "<br /><p class=\"meldung_error\">Es konnten leider kein passenden Eintr&auml;ge zu Ihrer Sucheingabe \"".htmlentities($_GET['search'])."\" gefunden werden!<br />
 			Bitte probieren Sie es erneut.</p>";
 
 ?>
@@ -657,16 +657,16 @@ $cat_data = array();
 		echo "
 		<td class=\"".$class."\">".$top.date("d.m.Y - G:i",$row['utimestamp'])."</td>
 		<td class=\"".$class."\" align=\"center\">".$status."</td>
-		<td class=\"".$class."\" title=\"".strip_tags(stripslashes(substr($row['content'],0,300)))."\" onmouseover=\"fade_element('copyid_".$row['id']."')\" onmouseout=\"fade_element('copyid_".$row['id']."')\">".stripslashes($row['titel'])." <div class=\"moo_inlinehide\" id=\"copyid_".$row['id']."\"><a href=\"".$filename."&amp;action=new".$input_section."&amp;copyid=".$row['id']."\"><img src=\"".$modulpath."images/icon_copy.gif\" alt=\"Kopieren\" title=\"Artikel zum Kopieren ausw&auml;hlen\" /></a></div></td>
+		<td class=\"".$class."\" title=\"".strip_tags(substr($row['content'],0,300))."\" onmouseover=\"fade_element('copyid_".$row['id']."')\" onmouseout=\"fade_element('copyid_".$row['id']."')\">".$row['titel']." <div class=\"moo_inlinehide\" id=\"copyid_".$row['id']."\"><a href=\"".$filename."&amp;action=new".$input_section."&amp;copyid=".$row['id']."\"><img src=\"".$modulpath."images/icon_copy.gif\" alt=\"Kopieren\" title=\"Artikel zum Kopieren ausw&auml;hlen\" /></a></div></td>
 		<td class=\"".$class."\">".$artuserdata[$row['uid']]['username']."</td>
-		<td class=\"".$class."\" align=\"center\"><a href=\"".$filename."&amp;action=edit&amp;id=".$row['id']."&amp;static=".$row['static'].$add_filename."\"><img src=\"images/icons/icon_edit.gif\" alt=\"Bearbeiten - Stift\" title=\"Eintrag bearbeiten\" style=\"border:0;\" /></a></td>
+		<td class=\"".$class."\" align=\"center\"><a href=\"".$filename."&amp;action=edit&amp;id=".$row['id']."&amp;catid=".$_REQUEST['catid']."&amp;static=".$row['static'].$add_filename."\"><img src=\"images/icons/icon_edit.gif\" alt=\"Bearbeiten - Stift\" title=\"Eintrag bearbeiten\" style=\"border:0;\" /></a></td>
 		<td class=\"".$class."\" align=\"center\"><img src=\"images/icons/icon_delete.gif\" alt=\"L&ouml;schen - rotes X\" title=\"DiesenEintrag l&ouml;schen\" class=\"fx_opener\" style=\"border:0; float:left;\" align=\"left\" /><div class=\"fx_content tr_red\" style=\"width:60px; display:none;\"><a href=\"#foo\" onclick=\"AjaxRequest.send('modul=".$modul."&ajaxaction=delarticle&id=".$row['id']."&static=".$flag_static."');\">Ja</a> - <a href=\"#foo\">Nein</a></div></td>
 	</tr>";		
 	}
 	
 	echo "</table>\n<br />";
 	
-	echo echopages($sites,"80%","site","action=".$input_action."&amp;search=".$_GET['search']."&amp;catid=".$_GET['catid']."&amp;sort=".$_GET['sort']."&amp;orderby=".$_GET['orderby']."");	
+	echo echopages($sites,"80%","site","action=".$input_action."&amp;search=".$_GET['search']."&amp;catid=".$_REQUEST['catid']."&amp;sort=".$_GET['sort']."&amp;orderby=".$_GET['orderby']."");	
 	}
 
 }else $flag_loginerror = true;

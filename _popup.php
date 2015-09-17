@@ -1,12 +1,12 @@
 <?PHP
 /*
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
 	Modul:		01article
 	Dateiinfo:	Popup-Inhalt
-	#fv.320#
+	#fv.321#
 */
 
 // Mod_rewirte-Info ausgeben
@@ -70,13 +70,13 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2ga
         $modul = $modul_save;
 ?>        
 
-<h1>Bilder aus Bildergalerie einfügen<sup style="color:#F8A000;">Beta*</sup></h1>
+<h1>Bilder aus Bildergalerie einfügen</h1>
         
 <p>
 <input type="text" name="pics_anzahl" size="3" value="5" /> Bilder aus
 <select name="galid" id="sel_galid" size="1">
     <option value="0">Bildergalerie</option>
-    <?PHP _01gallery_getGallerysRek(0,0,-1,"_01gallery_echoGalinfo_select","","",FALSE); ?>
+    <?PHP _01gallery_getGallerysRek(0,0,-1,"_01gallery_echoGalinfo_select","",""); ?>
 </select>
 <input type="button" value="Einf&uuml;gen" class="input" onclick="FileDialog.insertgalpics();" />
 </p>
@@ -91,10 +91,6 @@ elseif(isset($_REQUEST['action']) && $_REQUEST['action'] == "art2gal" && $art2ga
 	<br />
 	Entfernen Sie den Textbaustein um die Thumbnails aus dem Artikel wieder zu entfernen.
 </p>
-
-<br /><br /><br /><br /><br />
-
-<p style="font-size:7pt;">*Diese Funktion befindet sich noch in der Beta-Phase.</p>
 
 <?PHP
 		}

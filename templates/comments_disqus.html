@@ -1,0 +1,15 @@
+<a name="01jumpcomments_add"></a>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = '<?PHP echo $settings['Disqus_Username']; ?>'; // Required
+    var disqus_identifier = '<?PHP echo $module[$modul]['nr']; ?>-<?PHP echo $row['id']; ?>';
+    var disqus_title = '<?php echo $titel; ?>';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>

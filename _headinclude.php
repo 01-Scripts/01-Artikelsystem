@@ -1,13 +1,13 @@
 <?PHP
 /*
-	01-Artikelsystem V3 - Copyright 2006-2014 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 
 	Modul:		01article
 	Dateiinfo: 	Modulspezifische Grundeinstellungen, Variablendefinitionen etc.
 				Wird automatisch am Anfang jeden Modulaufrufs automatisch includiert.
-	#fv.320#
+	#fv.321#
 */
 
 // Modul-Spezifische MySQL-Tabellen
@@ -31,10 +31,10 @@ $tempdir	= "templates/";						// Template-Verzeichnis
 $comment_desc	= "DESC";				 		// Sortierreihenfolge der Kommentare
 $ser_fields     = FALSE;                 		// Einfaches Hinzufügen von Feldern aktivieren
 $art2galsupport = TRUE;							// Unterstützung zum vereinfachten Hinzufügen von Galerie-Bildern in Artikel aktivieren?
-$art2gal_galnr  = 0;							// Index-Nummer der 01-Gallery-Installation von der Bilder in Artikel eingefügt werden dürfen.
+$art2gal_galnr  = 1;							// Index-Nummer der 01-Gallery-Installation von der Bilder in Artikel eingefügt werden dürfen.
 $server_domainname = $_SERVER['SERVER_NAME'];	// ggf. Abweichender Domainname für mod_rewrite (OHNE http://)
 
-define('CSS_CACHE_DATEI', $admindir.'cache/cache_css.css');
+define('CSS_CACHE_DATEI', $tempdir.'style.css');
 define('ANZ_SER_FIELDS',25);            		// Max. Anzahl an zusätzlichen Feldern für $ser_fields
 define('FULLTEXT_INDEX_SEARCH_SCHWELLE',1.5);	// Schwellenwert für Suchergebnisse vgl. http://dev.mysql.com/doc/refman/5.1/de/fulltext-search.html
 define('ANZ_PP_ARCHIV',30);						// Anzahl Artikel pro Seite in der Archivansicht
