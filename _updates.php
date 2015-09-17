@@ -32,8 +32,8 @@ if(isset($_REQUEST['update']) && $_REQUEST['update'] == "320_zu_321"){
 
 	<b>Mit dem Update wurde unter anderem folgendes verbessert:</b>
 	<ul>
-		<li>Verwendung von <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA</a> als Spamschutz-Alternative</li>
-		<li><a href="https://disqus.com/" target="_blank">Disqus</a> als Kommentarsystem integriert</li>
+		<li>Verwendung von <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA</a> als Spamschutz-Alternative (<a href="http://www.01-scripts.de/forum/index.php?page=Thread&amp;threadID=1846" target="_blank">Anleitung</a>)</li>
+		<li><a href="https://disqus.com/" target="_blank">Disqus</a> als Kommentarsystem integriert (<a href="http://www.01-scripts.de/forum/index.php?page=Thread&amp;threadID=1847" target="_blank">Anleitung</a>)</li>
 		<li>Bearbeiten von Artikeln verbessert</li>
 		<li>Art2Gal-Funktion verbessert</li>
 		<li>Diverse Fehler behoben. Siehe <a href="http://www.01-scripts.de/down/01article_changelog.txt" target="_blank">changelog.txt</a></li>
