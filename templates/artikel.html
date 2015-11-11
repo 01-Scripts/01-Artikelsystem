@@ -4,6 +4,7 @@
 <div class="artikel_self">
 	<div class="inner_box artikel_headline">
 		<h2 class="titel"><a href="<?PHP echo $system_link_row; ?>#01id<?PHP echo $row['id']; ?>" class="titel">
+			<?php if ($row['icon'] != 0): ?><img src="<?php echo $iconpf.$row['icon']; ?>" alt="Symbol-Icon" style="border:0;" /><?php endif; ?>
             <?php echo $titel; ?>
         </a></h2>
 		<?php if ($row['hide_headline'] == 0 || $static == 0): ?>

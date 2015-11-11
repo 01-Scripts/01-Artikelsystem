@@ -38,7 +38,7 @@ der bestehende Artikel wird dabei nicht ver&auml;ndert.</p>
 <table border="0" align="center" width="100%" cellpadding="3" cellspacing="5" class="rundrahmen">
 
     <tr>
-        <td class="tra" width="190"><b>Datum &amp; Uhrzeit (Start)</b></td>
+        <td class="tra" width="35%"><b>Datum &amp; Uhrzeit (Start)</b></td>
         <td class="tra" valign="bottom"><input type="text" name="starttime_date" value="<?PHP echo $form_data['starttime_date']; ?>" class="DatePicker" size="10" /> - <input type="text" name="starttime_uhr" value="<?PHP echo $form_data['starttime_uhr']; ?>" size="5" /> Uhr</td>
     </tr>
 	
@@ -77,6 +77,43 @@ else
     $hiddencat = "<input type=\"hidden\" name=\"newscat\" value=\"0\" />";
 ?>
 
+    <tr>
+        <td class="tra" colspan="2" valign="bottom">
+            <?PHP
+            echo $hiddencat;
+			$iconpf = $modulpath.$iconpf;
+			$verz = opendir($iconpf);
+            $linkl = array("0");
+			
+            while($file = readdir($verz)){
+                if($file != "." && $file != ".."){
+                    if(isset($form_data['icon']) && $file == $form_data['icon']){
+                        array_push($linkl, "<input type=\"radio\" name=\"icon\" value=\"".$file."\" checked=\"checked\" /><img src=\"".$iconpf.$file."\" style=\"border:0;\" alt=\"".$file."\" /> "); //Alle Ordner/Files werden in den Array geschrieben (immer ans Ende)
+                        $icongew = 1;
+                        }
+                    else
+                        array_push($linkl, "<input type=\"radio\" name=\"icon\" value=\"".$file."\" /><img src=\"".$iconpf.$file."\" style=\"border:0;\" alt=\"".$file."\" /> "); //Alle Ordner/Files werden in den Array geschrieben (immer ans Ende)
+                    }
+                }
+
+            if(isset($icongew) && $icongew == 1)
+                echo "<input type=\"radio\" name=\"icon\" value=\"0\" />keins";
+            else
+                echo "<input type=\"radio\" name=\"icon\" value=\"0\" checked=\"checked\" />keins";
+
+            $anzahl = count($linkl);
+            $half = $anzahl/2;
+            sort($linkl); 
+            for($x=1;$x<$anzahl;$x++){
+                echo $linkl[$x];
+                if($x == $half && $half > 18)
+                    echo "<br />";
+                }
+            closedir($verz);
+            ?>
+        </td>
+    </tr>
+	
     <tr>
         <td class="tra" colspan="2">
 			<h2 style="margin:0; float:left;"><?PHP echo $input_field['bezeichnung']; ?>-&Uuml;berschrift</h2>
