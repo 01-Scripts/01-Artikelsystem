@@ -521,7 +521,7 @@ else{
             $system_link_form = parse_cleanerlinks(addParameter2Link(_01article_echo_ArticleLink($_GET[$names['artid']]),$names['page']."=".$_REQUEST[$names['page']]."&amp;".$names['cpage']."=".$jumpto_csite."&amp;".$names['search']."=".$_REQUEST[$names['search']]."&amp;".$names['catid']."=".$_REQUEST[$names['catid']]."#01jumpcomments_add"));
 
             if($settings['artikelcomments'] == 1){
-				$zahl = mt_rand(1, 9999999999999);
+				$zahl = mt_rand();
 				$uid = md5(time().$_SERVER['REMOTE_ADDR'].$zahl.$_GET[$names['artid']]);
 				//Template ausgeben
                 include($tempdir."comments_add.html");
