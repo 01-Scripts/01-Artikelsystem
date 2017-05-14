@@ -1,12 +1,12 @@
 <?PHP
 /* 
-	01-Artikelsystem V3 - Copyright 2006-2015 by Michael Lorer - 01-Scripts.de
+	01-Artikelsystem V3 - Copyright 2006-2017 by Michael Lorer - 01-Scripts.de
 	Lizenz: Creative-Commons: Namensnennung-Keine kommerzielle Nutzung-Weitergabe unter gleichen Bedingungen 3.0 Deutschland
 	Weitere Lizenzinformationen unter: http://www.01-scripts.de/lizenz.php
 	
 	Modul:		01article
 	Dateiinfo: 	Artikel: Übersicht, Bearbeiten, Erstellen
-	#fv.321#
+	#fv.322#
 */
 
 // Berechtigungsabfragen
@@ -25,7 +25,6 @@ else{
 	$input_field['publish'] 	= "Veröffentlichen";
 	$input_field['save'] 		= "Zwischenspeichern";
 	}
-if(!isset($_REQUEST['who']))	$_REQUEST['who'] 	= "";
 	
 // Notice: Undefined index: ... beheben
 if(!isset($_GET['search'])) 	$_GET['search']		= "";
@@ -33,13 +32,11 @@ if(!isset($_GET['sort'])) 		$_GET['sort']		= "";
 if(!isset($_GET['orderby'])) 	$_GET['orderby']	= "";
 if(!isset($_GET['site'])) 		$_GET['site']		= "";
 if(!isset($_GET['catid']))		$_GET['catid']		= "";
+if(!isset($_REQUEST['catid']))	$_REQUEST['catid']		= "";
+if(!isset($_REQUEST['who']))	$_REQUEST['who'] 	= "";
 
 $add_filename 	= "&amp;search=".$_GET['search']."&amp;sort=".$_GET['sort']."&amp;orderby=".$_GET['orderby']."&amp;site=".$_GET['site']."";
 $flag_overview 	= FALSE;
-	
-	
-	
-	
 	
 	
 // Formular wurde abgeschickt - Daten überprüfen
@@ -670,5 +667,4 @@ $cat_data = array();
 	}
 
 }else $flag_loginerror = true;
-
 ?>
