@@ -1,27 +1,27 @@
-
 # 01-Artikelsystem
 
 Das **01-Artikelsystem** ermöglicht es ihnen alle Texte auf ihrer Internetseite direkt online zu verwalten. Realisiert als Modul für das [01ACP](https://github.com/01-Scripts/01ACP), bettet es sich nahtlos in den zentralen Administrationsbereich ein und ermöglicht die komplette Verwaltung über eine Oberfläche.  
 Mit dem 01-Artikelsystem können Sie Newseinträge verfassen, Kategorien verwalten und ihren Mitarbeitern und Redakteuren über die Benutzerverwaltung gezielt die passenden Rechte vergeben.  
 Ein integriertes Kommentarsystem sowie die Integration von [Disqus](https://disqus.com/), die Datei- und Bild-Upload-Verwaltung des Administrationsbereichs und ein WYSIWYG-Editor zur Erstellung der Beiträge runden das Script ab.  
-Seit Version 3.2.0 ist es außerdem möglich in News-Einträgen direkt Bilder aus Alben einer ebenfalls installierten [01-Gallery](https://github.com/01-Scripts/01-Gallery) zu verwenden.
+Seit Version 3.2.0 ist es außerdem möglich in News-Einträgen direkt Bilder aus Alben einer ebenfalls installierten [01-Gallery](https://github.com/01-Scripts/01-Gallery) zu verwenden.  
+[Demo und weitere Informationen](https://www.01-scripts.de/downloads.php)
 
 ## Features
 
-* Einsetzbar als Blog-System, CMS, Newsscript, Artikelsystem, etc...
-* WYSIWYG-Editor (TinyMCE) zum Erstellen und Bearbeiten von Artikeln und Seiten.
-* Integriertes Datei- und Bildupload-System sowie Unterstützung der [01-Gallery](https://github.com/01-Scripts/01-Gallery)
-* Lightbox zur komfortablen Präsentation von Bildern
-* RSS-Feed für Einträge und Kommentare sowie eine Archiv-Funktion
-* *Sprechende Links* durch mod_rewrite-Unterstützung
-* Unterstützung für [Disqus](https://disqus.com/) oder eigenes Kommentarsystem
-* [reCAPTCHA](https://www.google.com/recaptcha/admin) oder eigenes Antispam-System
-* Template-System inkl. komplettem CSS-Layout für einfache Design-Änderungen
-* kostenlos (CC BY-NC-SA-Lizenz)
+-   Einsetzbar als Blog-System, CMS, Newsscript, Artikelsystem, etc...
+-   WYSIWYG-Editor (TinyMCE) zum Erstellen und Bearbeiten von Artikeln und Seiten.
+-   Integriertes Datei- und Bildupload-System sowie Unterstützung der [01-Gallery](https://github.com/01-Scripts/01-Gallery)
+-   Lightbox zur komfortablen Präsentation von Bildern
+-   RSS-Feed für Einträge und Kommentare sowie eine Archiv-Funktion
+-   *Sprechende Links-   durch mod_rewrite-Unterstützung
+-   Unterstützung für [Disqus](https://disqus.com/) oder eigenes Kommentarsystem
+-   [reCAPTCHA](https://www.google.com/recaptcha/admin) oder eigenes Antispam-System
+-   Template-System inkl. komplettem CSS-Layout für einfache Design-Änderungen
+-   kostenlos (CC BY-NC-SA-Lizenz)
 
 ## Download
 
-Die jeweils aktuellste Version des 01ACP kann unter
+Die jeweils aktuellste Version des 01-Artikelsystem kann unter
 [https://www.01-scripts.de/down_zip.php?godownload=1&01article=1&01acp=1](https://www.01-scripts.de/down_zip.php?godownload=1&01article=1&01acp=1)
 heruntergeladen werden.
 
