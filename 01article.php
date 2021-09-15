@@ -50,7 +50,7 @@ include_once($moduldir.$modulvz."_functions.php");
 // Variablen
 $imagepf 	= $moduldir.$modulvz.$imagepf;          // Pfad zum Bild-Verzeichnis
 $tempdir	= $moduldir.$modulvz.$tempdir;			// Template-Verzeichnis
-$filename	= $_SERVER['PHP_SELF'];					// Variable enthält die Adresse der Datei, auf der das Artikelsystem eingebunden wurde
+$filename	= $_SERVER['SCRIPT_NAME'];	            // Variable enthält die Adresse der Datei, auf der das Artikelsystem eingebunden wurde
 $flag_comments_js	= TRUE;							// Kommentar-Feld per Default via JavaScript ausblenden?
 
 // Language-File einbinden
